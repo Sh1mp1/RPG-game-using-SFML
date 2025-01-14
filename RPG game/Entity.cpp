@@ -17,6 +17,11 @@ void Entity::initMovementComponent(const float maxVelocity, const float minVeloc
 	this->movementComponent = new MovementComponent(this->sprite, maxVelocity, minVelocity, acceleration, deceleration, canAccelerate);
 }
 
+void Entity::initAnimationComponent(sf::Texture& texture_sheet)
+{
+	this->animationComponent = new AnimationComponent(this->sprite, texture_sheet);
+}
+
 Entity::Entity(const float x, const float y, sf::Texture& texture)
 {
 	this->initVariables();
@@ -30,7 +35,7 @@ Entity::~Entity()
 {
 	
 	delete this->movementComponent;
-	
+	delete this->animationComponent;
 }
 
 const sf::Vector2f& Entity::getPosition() const
@@ -54,6 +59,9 @@ void Entity::move(const float& dt, sf::Vector2f dir)
 	if (this->movementComponent)
 		this->movementComponent->move(dt, dir, &this->sprite);	//Sets velocity from movement component
 
+	if (this->animationComponent)
+	{
+	}
 		
 }
 

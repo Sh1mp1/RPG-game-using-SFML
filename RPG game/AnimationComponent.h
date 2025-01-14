@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 
 class AnimationComponent
 {
@@ -10,6 +9,7 @@ private:
 	public:
 		//Variables
 		sf::Texture& textureSheet;
+		sf::Sprite& sprite;
 
 		sf::IntRect startFrame;
 		sf::IntRect currentFrame;
@@ -18,25 +18,28 @@ private:
 		float animationTimer;
 		float timer;
 
-		Animation(sf::Texture& textureSheet, sf::Vector2i startPos, sf::Vector2i endPos, sf::Vector2i size, float animationTimer)
-			:textureSheet(textureSheet), animationTimer(animationTimer)
+		Animation(sf::Sprite& sprite, sf::Texture& textureSheet, sf::Vector2i startPos, sf::Vector2i endPos, sf::Vector2i size, float animationTimer)
+			:textureSheet(textureSheet), animationTimer(animationTimer), sprite(sprite), startFrame(startPos, size), endFrame(endPos, size)
 		{
+			this->timer = 0.f;
 			this->startFrame = sf::IntRect(startPos, size);
 			this->currentFrame = this->startFrame;
-			this->endFrame = sf::IntRect(endPos, size);
+			this->endFrame = sf::IntRect(endPos , size);
+
+			this->sprite.setTextureRect(this->currentFrame);
 		}
 
 		//Functions
-		void update(const float& dt)
+		void play(const float& dt)
 		{
-			this->timer = 10 * dt;
+			this->timer += 100 * dt;
 
 			if (this->timer >= this->animationTimer)
 			{
 				//reset timer;
 				this->timer = 0.f;
 
-				if (this->currentFrame != this->endFrame)
+				if (this->currentFrame.left < this->endFrame.left)
 				{
 					this->currentFrame.left += this->currentFrame.width;
 				}
@@ -45,11 +48,16 @@ private:
 					//reset to starting frame
 					this->currentFrame = this->startFrame;
 				}
-			}
+				this->sprite.setTextureRect(this->currentFrame);
+				
+			} 
 		}
 
-		void pause();
-		void reset();
+		void reset()
+		{
+			this->currentFrame = this->startFrame;
+			this->timer = 0.f;
+		}
 	};
 
 	sf::Sprite& sprite;
@@ -57,20 +65,16 @@ private:
 	
 
 
-	std::map <std::string, Animation> animations;
+	std::map <std::string, Animation*> animations;
 
 public:
 	AnimationComponent(sf::Sprite& sprite, sf::Texture& texture);
 	~AnimationComponent();
 
 	//Functions
-	void addAnimation(const std::string key);
+	void addAnimation(const std::string key, sf::Vector2i startPos, sf::Vector2i endPos, sf::Vector2i size, float animationTimer);
 
 
-	void startAnimation(const std::string animation);
-	void pauseAnimation(const std::string animation);
-	void resetAnimation(const std::string animation);
-
-	void update(const float& dt);
+	void play(const std::string key, const float& dt);
 };
 

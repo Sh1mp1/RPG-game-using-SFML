@@ -12,6 +12,9 @@ private:
 	Entity* player;
 	sf::Texture playerTexture;
 
+	std::vector<sf::Sound> shootSounds;
+	sf::SoundBuffer shootBuffer;
+
 	std::vector<Entity*> bullets;
 	sf::Texture bulletTexture;
 	float bulletTimer;
@@ -19,10 +22,11 @@ private:
 
 	std::map <std::string, int> keybinds;
 	
-	//Functions
+	//Initialization functions
 	void initKeybinds();
 	void initPlayer();
 	void initBullet();
+	void initAudio();
 
 public:
 	GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states);

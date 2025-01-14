@@ -20,7 +20,7 @@ void GameState::initKeybinds()
 
 void GameState::initPlayer()
 {
-	this->playerTexture.loadFromFile("Textures/block.png");
+	this->playerTexture.loadFromFile("Textures/playersheet.png");
 
 	this->textures.emplace("player", &this->playerTexture);
 
@@ -34,15 +34,29 @@ void GameState::initBullet()
 	{
 		std::cout << "ERROR::GAMESTATE::COULDNT LOAD BULLET TEXTURE";
 	}
-	this->bulletTimerMax = 0.06f;
+	this->bulletTimerMax = 0.07f;
 	this->bulletTimer = -0.5f;
+}
+
+void GameState::initAudio()
+{
+	if (!this->shootBuffer.loadFromFile("Audio/shoot.mp3"))
+	{
+		std::cout << "ERROR::GAMESTATE::INITAUDIO::COULDNT LOAD AUDIO";
+	}
+
+	for (int i = 0; i < 15; ++i)
+	{
+		this->shootSounds.push_back(sf::Sound(this->shootBuffer));
+		
+	}
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window, supportedKeys, states)
 {
 	this->initKeybinds();
-
+	this->initAudio();
 	this->initPlayer();
 	this->initBullet();
 }
@@ -98,7 +112,19 @@ void GameState::updateInput(const float& dt)
 			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),	 		   
 				this->player->getPosition().y + (this->player->getBounds().height / 2));								 		   
 			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180 / 3.14)));	 		   
-			this->bulletTimer = 0.f;																					 		   
+			this->bulletTimer = 0.f;	
+
+
+
+
+			for (int i = 0; i < this->shootSounds.size(); ++i)
+			{
+				if (this->shootSounds[i].getStatus() != sf::SoundSource::Playing)
+				{
+					this->shootSounds[i].play();
+					break;
+				}
+			}
 		}																												 		   
 	}
 

@@ -12,11 +12,11 @@ private:
 	sf::Text text;
 	//Initializer functions
 	void initVariables();
-	void initComponents();
+	void initComponents(sf::Texture& texture_sheet);
 	void initText();
 
 public:
-	Player(const float x, const float y, sf::Texture& texture);
+	Player(const float x, const float y, sf::Texture& texture_sheet);
 	~Player();
 
 	
