@@ -1,0 +1,30 @@
+#pragma once
+#include "Entity.h"
+#include "Bullet.h"
+
+
+class Player:
+	public Entity
+{
+private:
+
+	sf::Font font;
+	sf::Text text;
+	//Initializer functions
+	void initVariables();
+	void initComponents();
+	void initText();
+
+public:
+	Player(const float x, const float y, sf::Texture& texture);
+	~Player();
+
+	
+	void updateText();
+	void updateMovement(const float& dt, sf::Vector2f dir);
+	void updateInput();
+	void update(const float& dt);
+
+	void render(sf::RenderTarget* target);
+};
+

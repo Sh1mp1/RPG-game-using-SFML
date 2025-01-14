@@ -1,0 +1,6 @@
+﻿  Animation.cpp
+  AnimationComponent.cpp
+  Entity.cpp
+  Generating Code...
+C:\Users\ashis\source\repos\RPG game\RPG game\Entity.cpp(43,1): warning C4172: returning address of local variable or temporary 
+  RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe
