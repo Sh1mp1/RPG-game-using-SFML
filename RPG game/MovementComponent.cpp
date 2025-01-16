@@ -6,7 +6,7 @@
 MovementComponent::MovementComponent(sf::Sprite& sprite, const float maxVelocity, const float minVelocity, const float acceleration, const float deceleration, const bool canAccelerate)
 	:sprite(sprite), maxVelocity(maxVelocity), minVelocity(minVelocity), acceleration(acceleration), deceleration(deceleration), canAccelerate(canAccelerate)
 {
-
+	this->state = 0;
 }
 
 MovementComponent::~MovementComponent()
@@ -17,6 +17,12 @@ const sf::Vector2f& MovementComponent::getVelocity() const
 {
 	return this->velocity;
 }
+
+const int& MovementComponent::getState() const
+{
+	return this->state;
+}
+
 
 //Functions
 void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* sprite)
@@ -58,9 +64,35 @@ void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* spri
 	}
 }
 
+void MovementComponent::updateState()
+{
+	this->state = STATE::IDLE;
+
+	if (this->velocity.y < 0.f)
+	{
+		this->state = STATE::MOVING_UP;
+	}
+	else if (this->velocity.y > 0.f)
+	{
+		this->state = STATE::MOVING_DOWN;
+	}
+
+	if (this->velocity.x < 0.f)
+	{
+		this->state = STATE::MOVING_LEFT;
+	}
+	else if (this->velocity.x > 0.f)
+	{
+		this->state = STATE::MOVING_RIGHT;
+	}
+	
+}
+
 void MovementComponent::update(const float& dt)
 {
-	
+	this->updateState();
+
+
 	//Deceleration
 	if (this->canAccelerate)
 	{

@@ -20,7 +20,7 @@ void GameState::initKeybinds()
 
 void GameState::initPlayer()
 {
-	this->playerTexture.loadFromFile("Textures/playersheet.png");
+	this->playerTexture.loadFromFile("Textures/player.png");
 
 	this->textures.emplace("player", &this->playerTexture);
 
@@ -104,13 +104,13 @@ void GameState::updateInput(const float& dt)
 	{																													 		   
 		if (this->bulletTimer >= this->bulletTimerMax)																	 		   
 		{																												 		   
-			float dx = this->mousePosView.x - this->player->getPosition().x;											 		   
-			float dy = this->mousePosView.y - this->player->getPosition().y;											 		   
+			float dx = this->mousePosView.x - (this->player->getPosition().x + (this->player->getBounds().width / 2));
+			float dy = this->mousePosView.y - (this->player->getPosition().y + (this->player->getBounds().height / 2));
 			float angle = atan2(dy, dx);																				 		   
 			float x = cos(angle);																						 		   
-			float y = sin(angle);																						 		   
+			float y = sin(angle);	
 			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),	 		   
-				this->player->getPosition().y + (this->player->getBounds().height / 2));								 		   
+											this->player->getPosition().y + (this->player->getBounds().height / 2));								 		   
 			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180 / 3.14)));	 		   
 			this->bulletTimer = 0.f;	
 

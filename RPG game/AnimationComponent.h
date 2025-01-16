@@ -18,13 +18,15 @@ private:
 		float animationTimer;
 		float timer;
 
-		Animation(sf::Sprite& sprite, sf::Texture& textureSheet, sf::Vector2i startPos, sf::Vector2i endPos, sf::Vector2i size, float animationTimer)
-			:textureSheet(textureSheet), animationTimer(animationTimer), sprite(sprite), startFrame(startPos, size), endFrame(endPos, size)
+
+		Animation(sf::Sprite& sprite, sf::Texture& textureSheet, sf::Vector2i startPos, int no_of_frames , sf::Vector2i size, float animationTimer)
+			:textureSheet(textureSheet), animationTimer(animationTimer), sprite(sprite), startFrame(startPos, size)
 		{
 			this->timer = 0.f;
 			this->startFrame = sf::IntRect(startPos, size);
 			this->currentFrame = this->startFrame;
-			this->endFrame = sf::IntRect(endPos , size);
+
+			this->endFrame = sf::IntRect((startPos.x + (size.x * (no_of_frames - 1))), startPos.y, size.x, size.y);
 
 			this->sprite.setTextureRect(this->currentFrame);
 		}
@@ -49,7 +51,6 @@ private:
 					this->currentFrame = this->startFrame;
 				}
 				this->sprite.setTextureRect(this->currentFrame);
-				
 			} 
 		}
 
@@ -62,6 +63,7 @@ private:
 
 	sf::Sprite& sprite;
 	sf::Texture& texture;
+	Animation* lastAnimation;
 	
 
 
@@ -72,7 +74,7 @@ public:
 	~AnimationComponent();
 
 	//Functions
-	void addAnimation(const std::string key, sf::Vector2i startPos, sf::Vector2i endPos, sf::Vector2i size, float animationTimer);
+	void addAnimation(const std::string key, sf::Vector2i startPos, int no_of_frames, sf::Vector2i size, float animationTimer);
 
 
 	void play(const std::string key, const float& dt);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainMenuState.h"
 
+
 void MainMenuState::initKeybinds()
 {
 	std::ifstream ifs("config/mainmenustate_keybinds.ini");
@@ -65,10 +66,6 @@ void MainMenuState::initBackground()
 	float scale_x = static_cast<float>(window->getSize().x) / this->backgroundTexture.getSize().x;
 	float scale_y = static_cast<float>(window->getSize().y) / this->backgroundTexture.getSize().y;
 
-	std::cout << window->getSize().x << " " << this->backgroundTexture.getSize().x << "\n";
-	std::cout << window->getSize().y << " " << this->backgroundTexture.getSize().y << "\n";
-
-	std::cout << scale_x << " " << scale_y << "\n";
 
 	this->background.setScale(sf::Vector2f(scale_x, scale_y));
 }
@@ -112,6 +109,11 @@ void MainMenuState::updateButtons()
 	if (this->buttons.at("EXIT")->isPressed())
 	{
 		this->quit = true;
+	}
+
+	if (this->buttons.at("EDITOR")->isPressed())
+	{
+		this->states->push(new EditorState(this->window, this->supportedKeys, this->states));
 	}
 }
 

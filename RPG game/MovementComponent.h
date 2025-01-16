@@ -1,9 +1,14 @@
 #pragma once
+
+enum STATE { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN };
+
 class MovementComponent
 {
 private:
 
 	sf::Sprite& sprite;
+
+	int state;
 
 	bool canAccelerate;
 
@@ -23,9 +28,12 @@ public:
 
 	//Accessors
 	const sf::Vector2f& getVelocity() const;
+	const int& getState() const;
 
 	//Functions
 	void move(const float& dt, sf::Vector2f dir, sf::Sprite* sprite);
+
+	void updateState();
 	void update(const float& dt);
 };
 

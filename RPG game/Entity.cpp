@@ -4,6 +4,8 @@
 void Entity::initVariables()
 {
 	this->movementSpeed = 200.f;
+	this->animationComponent = nullptr;
+	this->movementComponent = nullptr;
 
 }
 

@@ -11,8 +11,21 @@ void Player::initComponents(sf::Texture& texture_sheet)
 	this->initMovementComponent(400.f, 10.f, 20.f, 6.f, true);
 	this->initAnimationComponent(texture_sheet);
 	
-	this->animationComponent->addAnimation("IDLE_LEFT",
-		sf::Vector2i(12, 62), sf::Vector2i(1508, 62), sf::Vector2i(192,120), 15.f);
+
+	this->animationComponent->addAnimation("MOVING_DOWN",
+		sf::Vector2i(0, 64), 4, sf::Vector2i(65, 65), 10.f);
+
+	this->animationComponent->addAnimation("MOVING_UP",
+		sf::Vector2i(768, 64), 4, sf::Vector2i(65, 65), 10.f);
+
+	this->animationComponent->addAnimation("MOVING_LEFT",
+		sf::Vector2i(256, 64), 4, sf::Vector2i(65, 65), 10.f);
+
+	this->animationComponent->addAnimation("MOVING_RIGHT",
+		sf::Vector2i(512, 64), 4, sf::Vector2i(65, 65), 10.f);
+
+	this->animationComponent->addAnimation("IDLE",
+		sf::Vector2i(0, 0), 9, sf::Vector2i(64, 64), 10.f);
 }
 
 void Player::initText()
@@ -28,6 +41,19 @@ void Player::initText()
 	this->text.setCharacterSize(20.f);
 }
 
+void Player::initFramework()
+{
+	this->topLeftCircle.setRadius(2.f);
+
+	this->topRightCircle = this->bottomLeftCircle = this->bottomRightCircle = this->topLeftCircle;
+	
+
+	this->topLeftCircle.setPosition(this->sprite.getPosition());
+	this->topRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y));
+	this->bottomLeftCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
+	this->bottomRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
+}
+
 //Constructor / Destructor
 Player::Player(const float x, const float y, sf::Texture& texture_sheet)
 	:Entity(x, y , texture_sheet)
@@ -37,14 +63,23 @@ Player::Player(const float x, const float y, sf::Texture& texture_sheet)
 	this->initText();
 
 	this->initComponents(texture_sheet);
-
+	this->initFramework();
 
 }
 
 Player::~Player()
 {
+	
 }
 
+
+void Player::updateFramework()
+{
+	this->topLeftCircle.setPosition(this->sprite.getPosition());
+	this->topRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y));
+	this->bottomLeftCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
+	this->bottomRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
+}
 
 void Player::updateText()
 {
@@ -73,13 +108,40 @@ void Player::update(const float& dt)
 
 	if (this->animationComponent)
 	{
-		this->animationComponent->play("IDLE_LEFT", dt);
+		switch (this->movementComponent->getState())
+		{
+		case STATE::IDLE:
+			this->animationComponent->play("IDLE", dt);
+			break;
+
+		case STATE::MOVING_UP:
+			this->animationComponent->play("MOVING_UP", dt);
+			break;
+
+		case STATE::MOVING_DOWN:
+			this->animationComponent->play("MOVING_DOWN", dt);
+			break;
+
+		case STATE::MOVING_LEFT:
+			this->animationComponent->play("MOVING_LEFT", dt);
+			break;
+
+		case STATE::MOVING_RIGHT:
+			this->animationComponent->play("MOVING_RIGHT", dt);
+			break;
+		}
 	}
 	this->updateText();
+	this->updateFramework();
 }
 
 void Player::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
 	target->draw(this->text);
+
+	target->draw(this->topLeftCircle);
+	target->draw(this->topRightCircle);
+	target->draw(this->bottomLeftCircle);
+	target->draw(this->bottomRightCircle);
 }
