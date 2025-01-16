@@ -10,7 +10,7 @@ void Player::initComponents(sf::Texture& texture_sheet)
 {
 	this->initMovementComponent(400.f, 10.f, 20.f, 6.f, true);
 	this->initAnimationComponent(texture_sheet);
-	
+	this->initHitboxComponent(sf::Vector2f(0.f, 0.f), sf::Vector2f(64.f, 64.f));
 
 	this->animationComponent->addAnimation("MOVING_DOWN",
 		sf::Vector2i(0, 64), 4, sf::Vector2i(65, 65), 10.f);
@@ -41,18 +41,6 @@ void Player::initText()
 	this->text.setCharacterSize(20.f);
 }
 
-void Player::initFramework()
-{
-	this->topLeftCircle.setRadius(2.f);
-
-	this->topRightCircle = this->bottomLeftCircle = this->bottomRightCircle = this->topLeftCircle;
-	
-
-	this->topLeftCircle.setPosition(this->sprite.getPosition());
-	this->topRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y));
-	this->bottomLeftCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
-	this->bottomRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
-}
 
 //Constructor / Destructor
 Player::Player(const float x, const float y, sf::Texture& texture_sheet)
@@ -63,7 +51,6 @@ Player::Player(const float x, const float y, sf::Texture& texture_sheet)
 	this->initText();
 
 	this->initComponents(texture_sheet);
-	this->initFramework();
 
 }
 
@@ -73,13 +60,6 @@ Player::~Player()
 }
 
 
-void Player::updateFramework()
-{
-	this->topLeftCircle.setPosition(this->sprite.getPosition());
-	this->topRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y));
-	this->bottomLeftCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
-	this->bottomRightCircle.setPosition(sf::Vector2f(this->sprite.getPosition().x + this->sprite.getGlobalBounds().width, this->sprite.getPosition().y + this->sprite.getGlobalBounds().height));
-}
 
 void Player::updateText()
 {
@@ -132,7 +112,9 @@ void Player::update(const float& dt)
 		}
 	}
 	this->updateText();
-	this->updateFramework();
+
+	if (this->hitboxComponent)
+		this->hitboxComponent->update(dt);
 }
 
 void Player::render(sf::RenderTarget* target)
@@ -140,8 +122,12 @@ void Player::render(sf::RenderTarget* target)
 	target->draw(this->sprite);
 	target->draw(this->text);
 
-	target->draw(this->topLeftCircle);
-	target->draw(this->topRightCircle);
-	target->draw(this->bottomLeftCircle);
-	target->draw(this->bottomRightCircle);
+	if (this->hitboxComponent)
+		this->hitboxComponent->render(target);
+
+
+	//target->draw(this->topLeftCircle);
+	//target->draw(this->topRightCircle);
+	//target->draw(this->bottomLeftCircle);
+	//target->draw(this->bottomRightCircle);
 }

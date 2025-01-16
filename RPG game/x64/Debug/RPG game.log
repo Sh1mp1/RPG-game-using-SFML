@@ -1,3 +1,13 @@
-﻿  Entity.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\Entity.cpp(50,1): warning C4172: returning address of local variable or temporary 
+﻿  Game.cpp
+  GameState.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(114,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file '/GameState.cpp')
+  
+  MainMenuState.cpp
+  Player.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp(41,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  (compiling source file '/Player.cpp')
+  
+  main.cpp
+  Generating Code...
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

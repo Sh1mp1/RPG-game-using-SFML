@@ -24,6 +24,11 @@ void Entity::initAnimationComponent(sf::Texture& texture_sheet)
 	this->animationComponent = new AnimationComponent(this->sprite, texture_sheet);
 }
 
+void Entity::initHitboxComponent(sf::Vector2f offset, sf::Vector2f size)
+{
+	this->hitboxComponent = new HitboxComponent(this->sprite, offset, size);
+}
+
 Entity::Entity(const float x, const float y, sf::Texture& texture)
 {
 	this->initVariables();
@@ -38,6 +43,7 @@ Entity::~Entity()
 	
 	delete this->movementComponent;
 	delete this->animationComponent;
+	delete this->hitboxComponent;
 }
 
 const sf::Vector2f& Entity::getPosition() const
@@ -75,7 +81,7 @@ void Entity::update(const float& dt)
 	}
 
 
-
+	
 }
 
 void Entity::render(sf::RenderTarget* target)
