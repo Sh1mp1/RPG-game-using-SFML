@@ -26,6 +26,6 @@ public:
 	void updateInput();
 	void update(const float& dt);
 
-	void render(sf::RenderTarget* target);
+	void render(sf::RenderTarget& target);
 };
 

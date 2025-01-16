@@ -130,7 +130,7 @@ void EditorState::update(const float& dt)
 
 }
 
-void EditorState::renderButtons(sf::RenderTarget* target)
+void EditorState::renderButtons(sf::RenderTarget& target)
 {
 	for (auto i : this->buttons)
 	{

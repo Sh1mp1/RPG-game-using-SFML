@@ -10,7 +10,6 @@ void Player::initComponents(sf::Texture& texture_sheet)
 {
 	this->initMovementComponent(400.f, 10.f, 20.f, 6.f, true);
 	this->initAnimationComponent(texture_sheet);
-	this->initHitboxComponent(sf::Vector2f(0.f, 0.f), sf::Vector2f(64.f, 64.f));
 
 	this->animationComponent->addAnimation("MOVING_DOWN",
 		sf::Vector2i(0, 64), 4, sf::Vector2i(65, 65), 10.f);
@@ -26,6 +25,9 @@ void Player::initComponents(sf::Texture& texture_sheet)
 
 	this->animationComponent->addAnimation("IDLE",
 		sf::Vector2i(0, 0), 9, sf::Vector2i(64, 64), 10.f);
+
+
+	this->initHitboxComponent(sf::Vector2f(10.f, 0.f), sf::Vector2f(44.f, 64.f));
 }
 
 void Player::initText()
@@ -117,10 +119,10 @@ void Player::update(const float& dt)
 		this->hitboxComponent->update(dt);
 }
 
-void Player::render(sf::RenderTarget* target)
+void Player::render(sf::RenderTarget& target)
 {
-	target->draw(this->sprite);
-	target->draw(this->text);
+	target.draw(this->sprite);
+	target.draw(this->text);
 
 	if (this->hitboxComponent)
 		this->hitboxComponent->render(target);

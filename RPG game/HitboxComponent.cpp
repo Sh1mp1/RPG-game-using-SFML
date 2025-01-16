@@ -10,11 +10,16 @@ HitboxComponent::HitboxComponent(sf::Sprite& sprite, sf::Vector2f offset, sf::Ve
 
 	this->hitbox.setFillColor(sf::Color::Transparent);
 	this->hitbox.setOutlineThickness(1.f);
-	this->hitbox.setOutlineColor(sf::Color::Black);
+	this->hitbox.setOutlineColor(sf::Color::Green);
 }
 
 HitboxComponent::~HitboxComponent()
 {
+}
+
+bool HitboxComponent::checkIntersect(const sf::FloatRect& rect)
+{
+	return this->sprite.getGlobalBounds().intersects(rect);
 }
 
 void HitboxComponent::update(const float& dt)
@@ -22,7 +27,7 @@ void HitboxComponent::update(const float& dt)
 	this->hitbox.setPosition(this->sprite.getPosition() + this->offset);
 }
 
-void HitboxComponent::render(sf::RenderTarget* target)
+void HitboxComponent::render(sf::RenderTarget& target)
 {
-	target->draw(this->hitbox);
+	target.draw(this->hitbox);
 }

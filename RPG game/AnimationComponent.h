@@ -73,6 +73,9 @@ public:
 	AnimationComponent(sf::Sprite& sprite, sf::Texture& texture);
 	~AnimationComponent();
 
+	//Accessors
+	const sf::Vector2f getSize() const;
+
 	//Functions
 	void addAnimation(const std::string key, sf::Vector2i startPos, int no_of_frames, sf::Vector2i size, float animationTimer);
 

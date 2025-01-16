@@ -15,6 +15,11 @@ AnimationComponent::~AnimationComponent()
 	}
 }
 
+const sf::Vector2f AnimationComponent::getSize() const
+{
+	return sf::Vector2f(this->animations.at("IDLE")->startFrame.getSize());
+}
+
 void AnimationComponent::addAnimation(const std::string key, sf::Vector2i startPos, int no_of_frames, sf::Vector2i size, float animationTimer)
 {
 	this->animations.emplace(key, new Animation(sprite, this->texture, startPos, no_of_frames, size, animationTimer));

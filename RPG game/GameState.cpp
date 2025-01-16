@@ -177,11 +177,11 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		target = this->window;
 	}
-	this->player->render(target);
+	this->player->render(*target);
 
 	for (auto i : this->bullets)
 	{
 		if (i)
-			i->render(target);
+			i->render(*target);
 	}
 }
