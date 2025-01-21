@@ -45,3 +45,21 @@ void AnimationComponent::play(const std::string key, const float& dt)
 
 	this->animations.at(key)->play(dt);
 }
+
+void AnimationComponent::play(const std::string key, const float& dt, const float& modifier, const float& modifier_max)
+{
+	if (this->lastAnimation != this->animations.at(key))
+	{
+		if (this->lastAnimation == nullptr)
+		{
+			this->lastAnimation = this->animations.at(key);
+		}
+		else
+		{
+			this->lastAnimation->reset();
+			this->lastAnimation = this->animations.at(key);
+		}
+	}
+
+	this->animations.at(key)->play(dt, (modifier / modifier_max));	
+}

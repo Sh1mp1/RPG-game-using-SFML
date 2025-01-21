@@ -32,9 +32,10 @@ private:
 		}
 
 		//Functions
-		void play(const float& dt)
+		bool play(const float& dt)
 		{
 			this->timer += 100 * dt;
+			bool done = false;
 
 			if (this->timer >= this->animationTimer)
 			{
@@ -48,16 +49,44 @@ private:
 				else
 				{
 					//reset to starting frame
-					this->currentFrame = this->startFrame;
+					this->reset();
+					done = true;
 				}
 				this->sprite.setTextureRect(this->currentFrame);
 			} 
+			return done;
+		}
+
+		bool play(const float& dt, const float& modifier)
+		{
+			this->timer += modifier * 100 * dt;
+			bool done = false;
+
+			if (this->timer >= this->animationTimer)
+			{
+				//reset timer;
+				this->timer = 0.f;
+
+				if (this->currentFrame.left < this->endFrame.left)
+				{
+					this->currentFrame.left += this->currentFrame.width;
+				}
+				else
+				{
+					//reset to starting frame
+					this->reset();
+					done = true;
+				}
+				this->sprite.setTextureRect(this->currentFrame);
+			}
+			return done;
 		}
 
 		void reset()
 		{
 			this->currentFrame = this->startFrame;
-			this->timer = 0.f;
+			this->timer = this->animationTimer;
+			
 		}
 	};
 
@@ -81,5 +110,6 @@ public:
 
 
 	void play(const std::string key, const float& dt);
+	void play(const std::string key, const float& dt, const float& modifier, const float& modifier_max);
 };
 

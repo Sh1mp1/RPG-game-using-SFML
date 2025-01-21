@@ -101,16 +101,16 @@ void GameState::updateInput(const float& dt)
 	}																													 		   
 																														 		   
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))																	 		   
-	{																													 		   
+	{		
 		if (this->bulletTimer >= this->bulletTimerMax)																	 		   
-		{																												 		   
-			float dx = this->mousePosView.x - (this->player->getPosition().x + (this->player->getBounds().width / 2));
-			float dy = this->mousePosView.y - (this->player->getPosition().y + (this->player->getBounds().height / 2));
+		{
+			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
+				this->player->getPosition().y + (this->player->getBounds().height / 2.f));
+			float dx = this->mousePosView.x - pos.x;
+			float dy = this->mousePosView.y - pos.y;
 			float angle = atan2(dy, dx);																				 		   
 			float x = cos(angle);																						 		   
-			float y = sin(angle);	
-			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),	 		   
-											this->player->getPosition().y + (this->player->getBounds().height / 2));								 		   
+			float y = sin(angle);								 		   
 			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180 / 3.14)));	 		   
 			this->bulletTimer = 0.f;	
 
@@ -140,7 +140,7 @@ void GameState::updateBullets(const float& dt)
 	{
 		this->bullets[i]->update(dt);
 
-		//Delete bullets
+		//Delete bullets when out of screen
 		if (this->bullets[i]->getPosition().x < -200 || this->bullets[i]->getPosition().x > 2500)
 		{
 			delete this->bullets[i];
@@ -184,4 +184,5 @@ void GameState::render(sf::RenderTarget* target)
 		if (i)
 			i->render(*target);
 	}
+
 }

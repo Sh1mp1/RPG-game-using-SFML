@@ -18,6 +18,11 @@ const sf::Vector2f& MovementComponent::getVelocity() const
 	return this->velocity;
 }
 
+const float& MovementComponent::getMaxVelocity() const
+{
+	return this->maxVelocity;
+}
+
 const int& MovementComponent::getState() const
 {
 	return this->state;
@@ -27,14 +32,15 @@ const int& MovementComponent::getState() const
 //Functions
 void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* sprite)
 {
-	this->velocity.x += dir.x * this->acceleration;
-	this->velocity.y += dir.y * this->acceleration;	
+	this->velocity.x += dir.x * this->acceleration * dt;
+	this->velocity.y += dir.y * this->acceleration * dt;
 
 	if (!this->canAccelerate)
 	{
 		this->velocity.x = dir.x * this->maxVelocity;
 		this->velocity.y = dir.y * this->maxVelocity;
 	}
+
 
 	//Set to max velocity
 	if (this->canAccelerate)
@@ -96,31 +102,50 @@ void MovementComponent::update(const float& dt)
 	//Deceleration
 	if (this->canAccelerate)
 	{
-		if (this->velocity.x > 0)
+		if (this->velocity.x > 0.f )
 		{
-			this->velocity.x -= this->deceleration;
-		}
-		else
-		{
-			this->velocity.x += this->deceleration;
-		}
+			this->velocity.x -= this->deceleration  * dt;
+			if (this->velocity.x < 0.f)
+			{
+				this->velocity.x = 0.f;
+			}
 
-		if (this->velocity.y > 0)
-		{
-			this->velocity.y -= this->deceleration;
 		}
-		else
+		else if (this->velocity.x < 0.f)
 		{
-			this->velocity.y += this->deceleration;
+			this->velocity.x += this->deceleration  * dt;
+			if (this->velocity.x > 0.f)
+			{
+				this->velocity.x = 0.f;
+			}
+		}
+		
+		if (this->velocity.y > 0.f )
+		{
+			this->velocity.y -= this->deceleration  * dt;
+			if (this->velocity.y < 0.f)
+			{
+				this->velocity.y = 0.f;
+			}
+
+		}
+		else if (this->velocity.y < 0.f)
+		{
+			this->velocity.y += this->deceleration  * dt;
+			if (this->velocity.y > 0.f)
+			{
+				this->velocity.y = 0.f;
+			}
+
 		}
 	}
 
 
-	if (std::abs(this->velocity.x) <= this->minVelocity)
+	if (std::abs(this->velocity.x) < this->minVelocity )
 	{
 		this->velocity.x = 0.f;
 	}
-	if (std::abs(this->velocity.y) <= this->minVelocity)
+	if (std::abs(this->velocity.y) < this->minVelocity )
 	{
 		this->velocity.y = 0.f;
 	}

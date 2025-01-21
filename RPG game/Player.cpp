@@ -8,7 +8,8 @@ void Player::initVariables()
 
 void Player::initComponents(sf::Texture& texture_sheet)
 {
-	this->initMovementComponent(400.f, 10.f, 20.f, 6.f, true);
+	this->initMovementComponent(400.f, 0.f, 9999, 1100, true);
+	//this->initMovementComponent(400.f, 10.f, 20.f, 6.f, true);
 	this->initAnimationComponent(texture_sheet);
 
 	this->animationComponent->addAnimation("MOVING_DOWN",
@@ -66,7 +67,8 @@ Player::~Player()
 void Player::updateText()
 {
 	std::stringstream ss;
-	ss << "X : " << this->sprite.getPosition().x << " Y : " << this->sprite.getPosition().y;
+	ss << "X : " << this->sprite.getPosition().x << " Y : " << this->sprite.getPosition().y << '\n'
+		<< "Vel X " << this->movementComponent->getVelocity().x << " Vel Y " << this->movementComponent->getVelocity().y;
 	this->text.setString(ss.str());
 }
 
@@ -94,22 +96,23 @@ void Player::update(const float& dt)
 		{
 		case STATE::IDLE:
 			this->animationComponent->play("IDLE", dt);
+			
 			break;
 
 		case STATE::MOVING_UP:
-			this->animationComponent->play("MOVING_UP", dt);
+			this->animationComponent->play("MOVING_UP", dt, -this->movementComponent->getVelocity().y, this->movementComponent->getMaxVelocity());
 			break;
 
 		case STATE::MOVING_DOWN:
-			this->animationComponent->play("MOVING_DOWN", dt);
+			this->animationComponent->play("MOVING_DOWN", dt, this->movementComponent->getVelocity().y, this->movementComponent->getMaxVelocity());
 			break;
 
 		case STATE::MOVING_LEFT:
-			this->animationComponent->play("MOVING_LEFT", dt);
+			this->animationComponent->play("MOVING_LEFT", dt, -this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
 			break;
 
 		case STATE::MOVING_RIGHT:
-			this->animationComponent->play("MOVING_RIGHT", dt);
+			this->animationComponent->play("MOVING_RIGHT", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
 			break;
 		}
 	}
