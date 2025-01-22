@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Button.h"
 
-Button::Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
+Button::Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize)
 {
 
 
@@ -12,9 +12,8 @@ Button::Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idl
 	this->text.setFillColor(sf::Color::White);
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
-	this->text.setCharacterSize(40);
+	this->text.setCharacterSize(characterSize);
 	this->text.setPosition(pos);
-
 
 	this->idleColor = idleColor;
 	this->hoverColor = hoverColor;
@@ -34,6 +33,11 @@ const bool Button::isPressed() const
 	}
 	
 	return false;
+}
+
+const sf::FloatRect& Button::getBounds() const
+{
+	return this->text.getGlobalBounds();
 }
 
 void Button::update(sf::Vector2f mousePos)

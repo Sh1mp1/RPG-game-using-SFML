@@ -5,6 +5,7 @@ C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp;C:\Users\ashis\sou
 C:\Users\ashis\source\repos\RPG game\RPG game\Entity.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Entity.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\Game.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Game.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\GameState.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\Gun.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Gun.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\HitboxComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\HitboxComponent.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\main.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\main.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\MainMenuState.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\MainMenuState.obj
@@ -14,3 +15,4 @@ C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp;C:\Users\ashis\source\r
 C:\Users\ashis\source\repos\RPG game\RPG game\State.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\State.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\stdafx.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\stdafx.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\Tile.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Tile.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\WeaponComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\WeaponComponent.obj

@@ -13,7 +13,6 @@ void GameState::initKeybinds()
 		{
 			this->keybinds.emplace(key, this->supportedKeys->at(key_value));
 		}
-
 	}
 	ifs.close();
 }
@@ -52,13 +51,25 @@ void GameState::initAudio()
 	}
 }
 
+void GameState::initGun()
+{
+	if (!this->gunTexture.loadFromFile("Textures/smg.png"))
+	{
+		std::cout << "ERROR::GAMESTATE::COULDNT LOAD GUN TEXTURE" << '\n';
+	}
+
+	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
+	this->gun = new Gun(pos, this->gunTexture);
+}
+
 GameState::GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states), pauseMenu(*this->window)
+	: State(window, supportedKeys, states), pauseMenu(*this->window), isEscapePressed(false)
 {
 	this->initKeybinds();
 	this->initAudio();
 	this->initPlayer();
 	this->initBullet();
+	this->initGun();
 }
 
 GameState::~GameState()
@@ -74,7 +85,38 @@ GameState::~GameState()
 
 
 
+void GameState::updateGun(const float& dt)
+{
+
+	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
+	this->gun->update(dt, pos, this->weaponAngle * (180.f / 3.14f));
+}
+
 void GameState::updateInput(const float& dt)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("close"))))
+	{
+		if (!this->isEscapePressed)
+		{
+			this->isEscapePressed = true;
+
+			if (!this->paused)
+			{
+				this->pauseState();
+			}
+			else
+			{
+				this->unPauseState();
+			}
+		}
+	}
+	else
+	{
+		this->isEscapePressed = false;
+	}
+}
+
+void GameState::updatePlayerInput(const float& dt)
 {
 	
 	//Update player movement
@@ -95,17 +137,7 @@ void GameState::updateInput(const float& dt)
 		this->player->move(dt, sf::Vector2f(0.f, 1.f));																			   
 	}																															   
 																																   
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("close"))))										 		   
-	{																													 		   
-		if (!this->paused)
-		{
-			this->pauseState();
-		}
-		else
-		{
-			this->unPauseState();
-		}
-	}																													 		   
+																												 		   
 																														 		   
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))																	 		   
 	{		
@@ -166,21 +198,31 @@ void GameState::updateBullets(const float& dt)
 
 }
 
+void GameState::updateWeaponAngle()
+{
+	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
+	sf::Vector2f distance = this->mousePosView - pos;
+
+	this->weaponAngle= atan2(distance.y, distance.x);
+}
+
 void GameState::update(const float& dt)
 {
+	this->updateMousePositions();
+	this->updateInput(dt);
 	if (!this->paused)	//Unpaused update;
 	{
-		this->updateInput(dt);
-
-		this->updateMousePositions();
-
+		this->updateWeaponAngle();
+		this->updatePlayerInput(dt);
 		this->updateBullets(dt);
-
 		this->player->update(dt);
+		this->updateGun(dt);
 	}
 	else	//Paused update;
 	{
-		this->pauseMenu.update();
+		
+		this->pauseMenu.update(this->mousePosView, this->paused, this->quit);
+		this->bulletTimer = -0.1f;
 	}
 }
 
@@ -190,16 +232,20 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		target = this->window;
 	}
+
+	this->player->render(*target);
+	this->gun->render(*target);
+
+	for (auto i : this->bullets)
+	{
+		if (i)
+			i->render(*target);
+	}
 	if (!this->paused)
 	{
 		
-		this->player->render(*target);
-
-		for (auto i : this->bullets)
-		{
-			if (i)
-				i->render(*target);
-		}
+		
+		
 	}
 
 	else

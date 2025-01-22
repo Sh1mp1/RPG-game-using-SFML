@@ -9,14 +9,21 @@ private:
 	sf::RectangleShape background;
 	sf::RectangleShape container;
 
+	sf::Font font;
+
+
 	std::map<std::string, Button*> buttons;
+
+	//Initialization functions
+	void initBackground(sf::RenderWindow& window);
+	void initButtons();
 
 public:
 	PauseMenu(sf::RenderWindow& window);
 	~PauseMenu();
 
 	//FUnctions;
-	void update();
+	void update(sf::Vector2f& mousePos, bool& paused, bool& quit);
 	void render(sf::RenderTarget& target);
 };
 
