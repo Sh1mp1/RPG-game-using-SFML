@@ -12,6 +12,8 @@ private:
 	Entity* player;
 	sf::Texture playerTexture;
 
+	PauseMenu pauseMenu;
+
 	std::vector<sf::Sound> shootSounds;
 	sf::SoundBuffer shootBuffer;
 

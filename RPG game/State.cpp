@@ -11,7 +11,7 @@ State::State(sf::RenderWindow* window, std::map <std::string, int>* supported_Ke
 
 	this->states = states;
 
-
+	this->paused = false;
 }
 
 State::~State()
@@ -37,6 +37,16 @@ void State::updateMousePositions()
 	this->mousePosScreen = sf::Mouse::getPosition();
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 	this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
+}
+
+void State::pauseState()
+{
+	this->paused = true;
+}
+
+void State::unPauseState()
+{
+	this->paused = false;
 }
 
 

@@ -41,7 +41,7 @@ void Game::initWindow()
 
 	else
 		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, this->settings);
-	//this->window->setFramerateLimit(framerate_limit);
+	this->window->setFramerateLimit(framerate_limit);
 	this->window->setVerticalSyncEnabled(vsync_enabled);
 	
 }

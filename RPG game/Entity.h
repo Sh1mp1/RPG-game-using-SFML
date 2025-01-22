@@ -11,8 +11,7 @@ private:
 													
 	void initVariables();
 protected:			
-	sf::Sprite sprite;					
-	float movementSpeed;	
+	sf::Sprite sprite;		
 
 	MovementComponent* movementComponent;
 	AnimationComponent* animationComponent;

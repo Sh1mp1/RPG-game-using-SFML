@@ -1,10 +1,23 @@
-﻿  GameState.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(114,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+﻿  AnimationComponent.cpp
+  Bullet.cpp
+  EditorState.cpp
+  Entity.cpp
+  Game.cpp
+  GameState.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(121,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   (compiling source file '/GameState.cpp')
   
+  MainMenuState.cpp
+  PauseMenu.cpp
+  Player.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp(45,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  (compiling source file '/Player.cpp')
+  
+  State.cpp
+  main.cpp
   Generating code
-  1 of 907 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    21 functions had inline decision re-evaluated but remain unchanged
+  Compiler switch has changed, fall back to full compilation.
+C:\Users\ashis\source\repos\RPG game\RPG game\Entity.cpp(55): warning C4172: returning address of local variable or temporary
+  All 914 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Release\RPG game.exe

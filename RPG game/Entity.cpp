@@ -3,7 +3,6 @@
 
 void Entity::initVariables()
 {
-	this->movementSpeed = 200.f;
 	this->animationComponent = nullptr;
 	this->movementComponent = nullptr;
 
@@ -67,9 +66,7 @@ void Entity::move(const float& dt, sf::Vector2f dir)
 	if (this->movementComponent)
 		this->movementComponent->move(dt, dir, &this->sprite);	//Sets velocity from movement component
 
-	if (this->animationComponent)
-	{
-	}
+	
 		
 }
 

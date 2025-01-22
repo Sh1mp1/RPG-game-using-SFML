@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "PauseMenu.h"
 
 class State
 {
@@ -13,6 +14,7 @@ protected:
 	std::map <std::string, int> keybinds;
 
 	bool quit;
+	bool paused;
 
 	sf::Vector2i mousePosScreen;
 	sf::Vector2i mousePosWindow;
@@ -35,6 +37,9 @@ public:
 	//Functions
 	virtual void endState();
 	virtual void updateMousePositions();
+
+	void pauseState();
+	void unPauseState();
 
 	virtual void updateInput(const float& dt) = 0;
 	virtual void update(const float& dt) = 0;

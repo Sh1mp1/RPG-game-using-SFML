@@ -53,7 +53,7 @@ void GameState::initAudio()
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states)
+	: State(window, supportedKeys, states), pauseMenu(*this->window)
 {
 	this->initKeybinds();
 	this->initAudio();
@@ -97,7 +97,14 @@ void GameState::updateInput(const float& dt)
 																																   
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("close"))))										 		   
 	{																													 		   
-		this->quit = true;																								 		   
+		if (!this->paused)
+		{
+			this->pauseState();
+		}
+		else
+		{
+			this->unPauseState();
+		}
 	}																													 		   
 																														 		   
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))																	 		   
@@ -161,14 +168,20 @@ void GameState::updateBullets(const float& dt)
 
 void GameState::update(const float& dt)
 {
+	if (!this->paused)	//Unpaused update;
+	{
+		this->updateInput(dt);
 
-	this->updateInput(dt);
+		this->updateMousePositions();
 
-	this->updateMousePositions();
+		this->updateBullets(dt);
 
-	this->updateBullets(dt);
-
-	this->player->update(dt);
+		this->player->update(dt);
+	}
+	else	//Paused update;
+	{
+		this->pauseMenu.update();
+	}
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -177,12 +190,21 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		target = this->window;
 	}
-	this->player->render(*target);
-
-	for (auto i : this->bullets)
+	if (!this->paused)
 	{
-		if (i)
-			i->render(*target);
+		
+		this->player->render(*target);
+
+		for (auto i : this->bullets)
+		{
+			if (i)
+				i->render(*target);
+		}
+	}
+
+	else
+	{
+		this->pauseMenu.render(*target);
 	}
 
 }

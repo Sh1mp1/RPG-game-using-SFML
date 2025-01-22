@@ -9,6 +9,8 @@ C:\Users\ashis\source\repos\RPG game\RPG game\HitboxComponent.cpp;C:\Users\ashis
 C:\Users\ashis\source\repos\RPG game\RPG game\main.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\main.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\MainMenuState.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\MainMenuState.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\MovementComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\MovementComponent.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\PauseMenu.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\PauseMenu.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Player.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\State.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\State.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\stdafx.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\stdafx.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\Tile.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Debug\Tile.obj
