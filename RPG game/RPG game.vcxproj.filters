@@ -84,6 +84,9 @@
     <ClCompile Include="WeaponComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="SettingsState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="WeaponComponent.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsState.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

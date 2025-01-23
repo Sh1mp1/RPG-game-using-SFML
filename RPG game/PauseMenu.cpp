@@ -16,21 +16,27 @@ void PauseMenu::initBackground(sf::RenderWindow& window)
 
 void PauseMenu::initButtons()
 {
-	this->buttons.emplace("RESUME", new Button(sf::Vector2f(880, 500.f), &this->font, "RESUME",
+	this->buttons.emplace("RESUME", new Button(sf::Vector2f(960, 500.f), &this->font, "RESUME",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
 
-	this->buttons.emplace("EXIT", new Button(sf::Vector2f(920, 800.f), &this->font, "EXIT",
+	this->buttons.emplace("EXIT", new Button(sf::Vector2f(960, 800.f), &this->font, "EXIT",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
+}
+
+void PauseMenu::initFont()
+{
+	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
+	{
+		std::cout << "ERROR::PAUSEMENU::COULDNT LOAD FONT!" << '\n';
+	}
+
 }
 
 PauseMenu::PauseMenu(sf::RenderWindow& window)
 {
 	this->initBackground(window);
 
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-	{
-		std::cout << "ERROR::PAUSEMENU::COULDNT LOAD FONT!" << '\n';
-	}
+	this->initFont();
 
 	this->initButtons();
 }

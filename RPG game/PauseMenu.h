@@ -12,11 +12,13 @@ private:
 	sf::Font font;
 
 
+
 	std::map<std::string, Button*> buttons;
 
 	//Initialization functions
 	void initBackground(sf::RenderWindow& window);
 	void initButtons();
+	void initFont();
 
 public:
 	PauseMenu(sf::RenderWindow& window);

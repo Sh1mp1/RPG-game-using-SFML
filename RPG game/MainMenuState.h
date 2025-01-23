@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "GameState.h"
 #include "EditorState.h"
+#include "SettingsState.h"
 
 
 

@@ -63,7 +63,7 @@ void GameState::initGun()
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states), pauseMenu(*this->window), isEscapePressed(false)
+	: State(window, supportedKeys, states), pauseMenu(*this->window), isEscapePressed(false), isGunEquipped(false), isEPressed(false)
 {
 	this->initKeybinds();
 	this->initAudio();
@@ -135,13 +135,26 @@ void GameState::updatePlayerInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_down"))))											   
 	{																															   
 		this->player->move(dt, sf::Vector2f(0.f, 1.f));																			   
-	}																															   
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("equip_gun"))))
+	{
+		if (!this->isEPressed)
+		{
+			this->isGunEquipped = !this->isGunEquipped;
+			this->isEPressed = true;
+		}
+	}
+	else
+	{
+		this->isEPressed = false;
+	}
 																																   
 																												 		   
 																														 		   
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))																	 		   
 	{		
-		if (this->bulletTimer >= this->bulletTimerMax)																	 		   
+		if (this->bulletTimer >= this->bulletTimerMax && this->isGunEquipped)																	 		   
 		{
 			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
 				this->player->getPosition().y + (this->player->getBounds().height / 2.f));
@@ -234,7 +247,8 @@ void GameState::render(sf::RenderTarget* target)
 	}
 
 	this->player->render(*target);
-	this->gun->render(*target);
+	if (this->isGunEquipped)
+		this->gun->render(*target);
 
 	for (auto i : this->bullets)
 	{

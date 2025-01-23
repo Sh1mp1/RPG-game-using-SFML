@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Button.h"
 
-Button::Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize)
+Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize)
 {
 
 
@@ -13,7 +13,9 @@ Button::Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idl
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
 	this->text.setCharacterSize(characterSize);
-	this->text.setPosition(pos);
+
+
+	this->text.setPosition(sf::Vector2f(centrePos.x - (this->text.getGlobalBounds().width / 2.f), centrePos.y - (this->text.getGlobalBounds().height / 2.f)));
 
 	this->idleColor = idleColor;
 	this->hoverColor = hoverColor;

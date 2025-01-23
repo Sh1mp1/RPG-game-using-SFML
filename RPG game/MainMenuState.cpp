@@ -2,6 +2,7 @@
 #include "MainMenuState.h"
 
 
+
 void MainMenuState::initKeybinds()
 {
 	std::ifstream ifs("config/mainmenustate_keybinds.ini");
@@ -72,16 +73,16 @@ void MainMenuState::initBackground()
 
 void MainMenuState::initButtons()
 {
-	this->buttons.emplace("GAME", new Button(sf::Vector2f(380.f, 510.f), &this->font, "GAME", 
+	this->buttons.emplace("GAME", new Button(sf::Vector2f(460.f, 510.f), &this->font, "GAME", 
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("SETTINGS", new Button(sf::Vector2f(350.f, 600.f), &this->font, "SETTINGS",
+	this->buttons.emplace("SETTINGS", new Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EDITOR", new Button(sf::Vector2f(350.f, 700), &this->font, "EDITOR",
+	this->buttons.emplace("EDITOR", new Button(sf::Vector2f(460.f, 700), &this->font, "EDITOR",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EXIT", new Button(sf::Vector2f(400.f, 800.f), &this->font, "EXIT", 
+	this->buttons.emplace("EXIT", new Button(sf::Vector2f(460.f, 800.f), &this->font, "EXIT", 
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 
@@ -114,6 +115,11 @@ void MainMenuState::updateButtons()
 	if (this->buttons.at("EDITOR")->isPressed())
 	{
 		this->states->push(new EditorState(this->window, this->supportedKeys, this->states));
+	}
+
+	if (this->buttons.at("SETTINGS")->isPressed())
+	{
+		this->states->push(new SettingsState(this->window, this->supportedKeys, this->states));
 	}
 }
 

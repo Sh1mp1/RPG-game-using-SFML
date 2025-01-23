@@ -18,6 +18,8 @@ private:
 
 	Gun* gun;
 	sf::Texture gunTexture;
+	bool isGunEquipped;
+	bool isEPressed;
 
 	std::vector<sf::Sound> shootSounds;
 	sf::SoundBuffer shootBuffer;
