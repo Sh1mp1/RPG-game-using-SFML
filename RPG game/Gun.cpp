@@ -23,7 +23,7 @@ void Gun::flip()
 	{
 		this->sprite.setScale(sf::Vector2f(this->sprite.getScale().x, -1.f * this->sprite.getScale().y));
 
-		this->sprite.setOrigin(sf::Vector2f(-400.f, (this->sprite.getGlobalBounds().height / 2.f)));
+		this->sprite.setOrigin(sf::Vector2f(-400.f, (this->sprite.getGlobalBounds().height / 2.f) + 150.f));
 		this->isFlipped = true;
 	}
 }
@@ -34,7 +34,7 @@ void Gun::update(const float& dt, const sf::Vector2f& player_pos, const float& a
 
 	this->sprite.setRotation(angle);
 
-	if (this->sprite.getRotation() < 270 && this->sprite.getRotation() > 90)
+	if (!(this->sprite.getRotation() < 270 && this->sprite.getRotation() > 90))
 	{
 		this->flip();
 	}
@@ -43,7 +43,7 @@ void Gun::update(const float& dt, const sf::Vector2f& player_pos, const float& a
 		if (this->isFlipped)
 		{
 			this->sprite.setScale(sf::Vector2f(this->sprite.getScale().x, -1.f * this->sprite.getScale().y));
-			this->sprite.setOrigin(sf::Vector2f(-400.f, (this->sprite.getGlobalBounds().height / 2.f) + 200.f));
+			this->sprite.setOrigin(sf::Vector2f(-400.f, (this->sprite.getGlobalBounds().height / 2.f) - 00.f));
 		}
 		this->isFlipped = false;	
 	}

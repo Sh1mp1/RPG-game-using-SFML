@@ -1,4 +1,2 @@
-﻿  GUI.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(61,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(56,1): warning C4172: returning address of local variable or temporary 
+﻿  Gun.cpp
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

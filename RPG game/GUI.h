@@ -20,9 +20,10 @@ namespace gui
 		sf::Color hoverColor;
 		sf::Color activeColor;
 
-		void initShape(sf::Vector2f& centrePos);
+		void initShape(sf::Vector2f& centrePos, sf::Vector2f& size);
 	public:
-		Button(sf::Vector2f pos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize);
+		Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize);
+		Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize, sf::Vector2f rectangleSize);
 		~Button();
 
 		//Accessors
@@ -33,6 +34,7 @@ namespace gui
 
 		//Modifiers
 		void setText(const std::string text);
+		void centreText(const sf::Vector2f& centrePos);
 
 		//Functions
 		void update(sf::Vector2f mousePos);
@@ -46,12 +48,14 @@ namespace gui
 		sf::Font& font;
 		gui::Button* activeElement;
 
+		sf::Vector2f centrePos;
+
 		std::vector<gui::Button*> list;
 		bool showList;
 		bool isMousePressed;
 
 	public:
-		DropDownList(sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex = 0);
+		DropDownList(sf::Vector2f pos, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex = 0);
 		~DropDownList();
 
 		void update(const sf::Vector2f& mousePos);

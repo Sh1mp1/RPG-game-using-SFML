@@ -2,15 +2,6 @@
 #include "SettingsState.h"
 
 
-
-//void SettingsState::initFont()
-//{
-//	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-//	{
-//		std::cout << "ERROR::SETTINGSSTATE::COULDNT LOAD FONT " << '\n';
-//	}
-//}
-
 void SettingsState::initKeybinds()
 {
 	std::ifstream ifs("config/settingsstate_keybinds.ini");
@@ -98,7 +89,7 @@ void SettingsState::initDropDownList()
 	dropDownText.push_back("1280 X 720");
 	dropDownText.push_back("800 X 600");
 
-	this->dropDownList = new gui::DropDownList(this->font, dropDownText, 0);
+	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 500.f), this->font, dropDownText, 0);
 }
 
 
