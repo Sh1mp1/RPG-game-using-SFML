@@ -35,6 +35,7 @@ SettingsState::SettingsState(sf::RenderWindow* window, std::map<std::string, int
 	this->initButtons();
 	this->initBackground();
 	this->initFont();
+	this->initDropDownList();
 }
 
 SettingsState::~SettingsState()
@@ -43,6 +44,9 @@ SettingsState::~SettingsState()
 	{
 		delete i.second;
 	}
+
+	if(this->dropDownList)
+		delete this->dropDownList;
 }
 
 
@@ -79,22 +83,22 @@ void SettingsState::initBackground()
 
 void SettingsState::initButtons()
 {
-	this->buttons.emplace("GAME", new Button(sf::Vector2f(460.f, 510.f), &this->font, "GAME",
+	//this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
+	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(this->window->getSize().x / 2.f, 800.f), &this->font, "EXIT",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+}
 
-	this->buttons.emplace("SETTINGS", new Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+void SettingsState::initDropDownList()
+{
+	std::vector<std::string> dropDownText;
+	dropDownText.push_back("1920 X 1080");
+	dropDownText.push_back("1366 X 768");
+	dropDownText.push_back("1280 X 720");
+	dropDownText.push_back("800 X 600");
 
-	this->buttons.emplace("EDITOR", new Button(sf::Vector2f(460.f, 700), &this->font, "EDITOR",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
-
-	this->buttons.emplace("EXIT", new Button(sf::Vector2f(460.f, 800.f), &this->font, "EXIT",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
-
-
-
-	this->buttons.emplace("BUTTON", new Button(sf::Vector2f(1000.f, 500.f), &this->font, "BUTTON",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+	this->dropDownList = new gui::DropDownList(this->font, dropDownText, 0);
 }
 
 
@@ -115,20 +119,12 @@ void SettingsState::updateButtons()
 		i.second->update(this->mousePosView);
 	}
 	
-	//Push new gamestate to stack when "GAME" or a PLAY button is pressed
-	if (this->buttons.at("GAME")->isPressed())
-	{
-	}
 	
 	//Exits when "EXIT" button is pressed
 	if (this->buttons.at("EXIT")->isPressed())
 	{
 		this->quit = true;
-	}
-	
-	if (this->buttons.at("EDITOR")->isPressed())
-	{
-	}
+	}	
 }
 
 void SettingsState::updateText()
@@ -142,20 +138,33 @@ void SettingsState::updateText()
 
 }
 
+void SettingsState::updateGUI()
+{
+	this->updateButtons();
+	this->updateDropDownList();
+}
+
+void SettingsState::updateDropDownList()
+{
+	this->dropDownList->update(this->mousePosView);	
+}
+
 void SettingsState::update(const float& dt)
 {
 	this->updateInput(dt);
 	this->updateMousePositions();
 	this->updateText();
-	this->updateButtons();
+	this->updateGUI();
 }
 
-void SettingsState::renderButtons(sf::RenderTarget& target)
+void SettingsState::renderGUI(sf::RenderTarget& target)
 {
 	for (auto i : this->buttons)
 	{
 		i.second->render(target);
 	}
+
+	this->dropDownList->render(target);
 }
 
 void SettingsState::render(sf::RenderTarget* target)
@@ -165,7 +174,7 @@ void SettingsState::render(sf::RenderTarget* target)
 		target = this->window;
 	}
 	//target->draw(this->background);
-	this->renderButtons(*target);
+	this->renderGUI(*target);
 	target->draw(this->mousePosText);
 }
 

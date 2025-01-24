@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "Button.h"
+#include "GUI.h"
 
 class PauseMenu
 {
@@ -13,7 +13,7 @@ private:
 
 
 
-	std::map<std::string, Button*> buttons;
+	std::map<std::string, gui::Button*> buttons;
 
 	//Initialization functions
 	void initBackground(sf::RenderWindow& window);

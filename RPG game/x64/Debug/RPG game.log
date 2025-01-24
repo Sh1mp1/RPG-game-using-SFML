@@ -1,17 +1,4 @@
-﻿  SettingsState.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(83,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(86,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(89,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(92,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(97,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
+﻿  GUI.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(61,1): warning C4172: returning address of local variable or temporary 
+C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(56,1): warning C4172: returning address of local variable or temporary 
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

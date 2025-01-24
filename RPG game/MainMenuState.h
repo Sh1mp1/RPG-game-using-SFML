@@ -1,7 +1,7 @@
 #pragma once
 
 #include "State.h"
-#include "Button.h"
+#include "GUI.h"
 #include "GameState.h"
 #include "EditorState.h"
 #include "SettingsState.h"
@@ -20,7 +20,7 @@ private:
 	sf::Font font;
 	sf::Text mousePosText;
 
-	std::map<std::string, Button*> buttons;
+	std::map<std::string, gui::Button*> buttons;
 
 	//Functions
 	void initKeybinds();

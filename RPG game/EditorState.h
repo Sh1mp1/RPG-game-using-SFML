@@ -1,6 +1,6 @@
 #pragma once
 #include "State.h"
-#include "Button.h"
+#include "GUI.h"
 
 class EditorState :
     public State
@@ -9,7 +9,7 @@ class EditorState :
     sf::Font font;
 	sf::Text mousePosText;
 
-	std::map<std::string, Button*> buttons;
+	std::map<std::string, gui::Button*> buttons;
 
 	std::map <std::string, int> keybinds;
 
