@@ -19,6 +19,8 @@ private:
 
 	gui::DropDownList* dropDownList;
 
+	sf::Text optionsText;
+
 	//Functions
 	void initKeybinds();
 	void initFont();

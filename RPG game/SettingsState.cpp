@@ -55,6 +55,14 @@ void SettingsState::initFont()
 	this->mousePosText.setString("START");
 	this->mousePosText.setPosition(sf::Vector2f(0.f, 0.f));
 	this->mousePosText.setCharacterSize(15);
+
+	
+	this->optionsText.setFont(this->font);
+
+	this->optionsText.setPosition(sf::Vector2f(400.f, 480.f));
+	this->optionsText.setCharacterSize(35);
+	this->optionsText.setFillColor(sf::Color(255, 255, 255, 200));
+	this->optionsText.setString("RESOLUTION \n\n\n ANTIALIASING \n\n\n FULLSCREEN \n\n\n VSYNC");
 }
 
 void SettingsState::initBackground()
@@ -167,6 +175,7 @@ void SettingsState::render(sf::RenderTarget* target)
 	//target->draw(this->background);
 	this->renderGUI(*target);
 	target->draw(this->mousePosText);
+	target->draw(this->optionsText);
 }
 
 
