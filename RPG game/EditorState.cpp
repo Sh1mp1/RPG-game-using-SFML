@@ -17,19 +17,17 @@ void EditorState::initKeybinds()
 
 	}
 	ifs.close();
-
-
-
 }
 
 EditorState::EditorState(StateData* state_data)
-	:State(state_data), pauseMenu(*this->window), isEscapePressed(false)
+	:State(state_data), pauseMenu(*this->window, *state_data->font), isEscapePressed(false)
 {
 	this->initBackground();
 	this->initFont();
 	//this->initButtons();
 	this->initKeybinds();
 	this->initPauseMenu();
+	this->initTexturRect();
 	this->initTileMap();	
 	this->initGUI(); // For selectorRect
 }
@@ -45,11 +43,7 @@ EditorState::~EditorState()
 
 void EditorState::initFont()
 {
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-	{
-		std::cout << "ERROR::MAINEMENUSTATE::COULDNT LOAD FONT" << '\n';
-	}
-	this->mousePosText.setFont(this->font);
+	this->mousePosText.setFont(*this->stateData->font);
 
 
 	this->mousePosText.setOutlineColor(sf::Color::Black);
@@ -95,9 +89,30 @@ void EditorState::initPauseMenu()
 
 void EditorState::initTileMap()
 {
-	this->tileMap = new TileMap(this->stateData->gridSize, 20, 11);
+	this->tileMap = new TileMap(this->stateData->gridSize, static_cast<unsigned>(this->stateData->window->getSize().x / this->stateData->gridSize), 
+														   static_cast<unsigned>(this->stateData->window->getSize().y / this->stateData->gridSize), 
+		this->tileMapTexture);
 }
 
+void EditorState::initTexturRect()
+{
+	if (!this->tileMapTexture.loadFromFile("Textures/tilesheet.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::COULDNT LOAD TEXTURE" << '\n';
+	}
+
+	this->textureRect = sf::IntRect(0, 0, static_cast<int>(this->gridSize), static_cast<int>(this->gridSize));
+
+	this->currentTexture.setSize(sf::Vector2f(20.f, 20.f));
+	this->currentTexture.setTexture(&this->tileMapTexture);
+	this->currentTexture.setTextureRect(this->textureRect);
+}
+
+
+void EditorState::updateMouseScroll(const float& dt)
+{
+	
+}
 
 void EditorState::updateInput(const float& dt)
 {
@@ -126,11 +141,30 @@ void EditorState::updateInput(const float& dt)
 void EditorState::updateEditorInput(const float& dt)
 {
 	
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile
+	//Add tile
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile to the tileMap
 	{		
-		this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
+		this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect);
 	}
+
+	//Remove tile
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && this->getKeyTime())	//Removes a tile from the tileMap
+	{
+		this->tileMap->removeTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
+	}
+
+	//Change texture Rect
+
+	if (*this->stateData->mouseWheelDelta != 0)
+	{
+		std::cout << static_cast<int>(*stateData->mouseWheelDelta) << '\n';
+	}
+	
+}
+
+void EditorState::updateTextureRect(float mouseScroll)
+{
+	//Todo update texture rect based on mouse wheel scroll_-----------------------------------------------------------------------------------------------------------------------------
 }
 
 void EditorState::updatePauseMenu()
@@ -172,6 +206,8 @@ void EditorState::updateButtons()
 void EditorState::updateGUI()
 {
 	this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
+
+	this->currentTexture.setPosition(sf::Vector2f(this->mousePosView.x + 20.f, this->mousePosView.y));
 }
 
 void EditorState::updateText()
@@ -200,7 +236,9 @@ void EditorState::update(const float& dt)
 	else
 	{
 		this->updateGUI(); 
+		this->updateMouseScroll(dt);
 		this->updateEditorInput(dt);
+		
 	}
 
 }
@@ -216,16 +254,21 @@ void EditorState::renderButtons(sf::RenderTarget& target)
 void EditorState::renderGUI(sf::RenderTarget& target)
 {
 	target.draw(this->selectorRect);
+	target.draw(this->currentTexture);
 }
 
 void EditorState::render(sf::RenderTarget* target)
 {
+	
 	if (!target)
 	{
 		target = window;
 	}
+
 	//target->draw(this->background);
 	//this->renderButtons(target);
+	this->tileMap->render(*target);
+
 	if (this->paused)
 	{
 		this->pauseMenu.render(*target);
@@ -235,9 +278,9 @@ void EditorState::render(sf::RenderTarget* target)
 		this->renderGUI(*target);
 	}
 
-	this->tileMap->render(*target);
-
 	
+
+	//std::cout << this->mouseWheelDelta << '\n';
 
 	target->draw(this->mousePosText);
 }

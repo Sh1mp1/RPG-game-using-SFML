@@ -44,11 +44,7 @@ SettingsState::~SettingsState()
 
 void SettingsState::initFont()
 {
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-	{
-		std::cout << "ERROR::SETTINGSSTATE::COULDNT LOAD FONT" << '\n';
-	}
-	this->mousePosText.setFont(this->font);
+	this->mousePosText.setFont(*this->stateData->font);
 
 
 	this->mousePosText.setOutlineColor(sf::Color::Black);
@@ -58,7 +54,7 @@ void SettingsState::initFont()
 	this->mousePosText.setCharacterSize(15);
 
 	
-	this->optionsText.setFont(this->font);
+	this->optionsText.setFont(*this->stateData->font);
 
 	this->optionsText.setPosition(sf::Vector2f(400.f, 300.f));
 	this->optionsText.setCharacterSize(35);
@@ -90,10 +86,10 @@ void SettingsState::initButtons()
 
 	float posY = this->stateData->window->getSize().y;
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(posX, posY * 0.8f), &this->font, "EXIT",
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(posX, posY * 0.8f), this->stateData->font, "EXIT",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
 
-	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(posX, posY * 0.65f), &this->font, "APPLY", 
+	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(posX, posY * 0.65f), this->stateData->font, "APPLY",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
 }
 
@@ -106,7 +102,7 @@ void SettingsState::initDropDownList()
 	}
 
 
-	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 300.f), this->font, dropDownText, 0);
+	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 300.f), *this->stateData->font, dropDownText, 0);
 }
 
 void SettingsState::initWindow()

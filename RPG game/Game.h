@@ -9,8 +9,9 @@ class Game
 {
 private:
 
-	
-	
+	sf::Event event;
+	float mouseWheelDelta;
+
 	GraphicsSettings gfxSettings;
 
 	StateData stateData;
@@ -18,6 +19,7 @@ private:
 	sf::RenderWindow* window;
 	sf::View view;
 
+	sf::Font font;
 
 	sf::Clock dtClock;
 	float dt;
@@ -30,6 +32,7 @@ private:
 
 	//Initialize functions
 	void initVariables();
+	void initFont();
 	void initGraphicsSettings();
 	void initStateData();
 	void initWindow();	

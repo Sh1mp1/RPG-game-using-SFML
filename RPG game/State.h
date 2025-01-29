@@ -19,6 +19,8 @@ public:
 	std::map <std::string, int>* supportedKeys;
 	std::stack<State*>* states;
 	GraphicsSettings* gfxSettings;
+	sf::Font* font;
+	float* mouseWheelDelta;
 };
 
 class State

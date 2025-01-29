@@ -39,11 +39,8 @@ MainMenuState::~MainMenuState()
 
 void MainMenuState::initFont()
 {
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-	{
-		std::cout << "ERROR::MAINEMENUSTATE::COULDNT LOAD FONT" << '\n';
-	}
-	this->mousePosText.setFont(this->font);
+	
+	this->mousePosText.setFont(*this->stateData->font);
 
 
 	this->mousePosText.setOutlineColor(sf::Color::Black);
@@ -73,16 +70,16 @@ void MainMenuState::initBackground()
 
 void MainMenuState::initButtons()
 {
-	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(280.f, 510.f), &this->font, "GAME",
+	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(280.f, 510.f), this->stateData->font, "GAME",
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(280.f, 600.f), &this->font, "SETTINGS",
+	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(280.f, 600.f), this->stateData->font, "SETTINGS",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(280.f, 700), &this->font, "EDITOR",
+	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(280.f, 700), this->stateData->font, "EDITOR",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(280.f, 800.f), &this->font, "EXIT",
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(280.f, 800.f), this->stateData->font, "EXIT",
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 

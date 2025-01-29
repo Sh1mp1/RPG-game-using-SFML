@@ -4,7 +4,7 @@
 
 
 State::State(StateData* state_data)
-	:gfxSettings(*state_data->gfxSettings), keyTime(0.f), keyTimeMax(2.f)
+	:gfxSettings(*state_data->gfxSettings), keyTime(-2.f), keyTimeMax(2.f)
 {
 	this->stateData = state_data;
 

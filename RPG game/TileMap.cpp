@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TileMap.h"
 
-TileMap::TileMap(float grid_size, unsigned width, unsigned height)
+void TileMap::initTileMap(float grid_size, unsigned width, unsigned height)
 {
 	this->gridSizeF = grid_size;
 	this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
@@ -9,25 +9,30 @@ TileMap::TileMap(float grid_size, unsigned width, unsigned height)
 	this->mapSize.y = height;
 	this->layers = 1;
 
-	this->map.resize(this->mapSize.x);
-
+	this->map.resize(this->mapSize.x, std::vector<std::vector<Tile*>>());
 	for (int x = 0; x < this->mapSize.x; ++x)
 	{
-		this->map.push_back(std::vector<std::vector<Tile*>>());
-		this->map[x].resize(this->mapSize.y);
+		this->map[x].resize(this->mapSize.y, std::vector<Tile*>());
 		for (int y = 0; y < this->mapSize.y; ++y)
 		{
-			this->map[x].push_back(std::vector<Tile*>());
-			this->map[x][y].resize(this->layers);
-			for (int z = 0; z < this->layers; ++z)
-			{
-				//this->map[x][y].push_back(new Tile(sf::Vector2f(x * this->gridSizeF, y * this->gridSizeF), this->gridSizeF));
-
-				this->map[x][y].push_back(nullptr);
-			}
-
+			this->map[x][y].resize(this->layers, nullptr);
 		}
 	}
+}
+
+void TileMap::initTileTextureSheet()
+{
+	if (!this->tileSheet.loadFromFile("Textures/tilesheet.png"))
+	{
+		std::cout << "ERROR::TILEMAP::COULDNT LOAD TEXTURE" << '\n';
+	}
+}
+
+TileMap::TileMap(float grid_size, unsigned width, unsigned height, sf::Texture& texture)
+	:tileSheet(texture)
+{
+	this->initTileMap(grid_size, width, height);
+	//this->initTileTextureSheet();
 }
 
 TileMap::~TileMap()
@@ -44,10 +49,10 @@ TileMap::~TileMap()
 	} 
 }
 
-void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z)
+void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, const sf::IntRect& texture_rect)
 {
 	/*
-	Takes 2 coordinates from mouse position and adds tile to that position
+	Takes 3 coordinates from mouse position and adds tile to that position
 	*/
 
 	
@@ -57,15 +62,27 @@ void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z)
 	{
 		if (this->map[x][y][z] == nullptr)
 		{
-			this->map[x][y][z] = new Tile(sf::Vector2f(x, y) * this->gridSizeF, this->gridSizeF);
-			std::cout << "added tile" << '\n';
+			this->map[x][y][z] = new Tile(sf::Vector2f(x, y) * this->gridSizeF, this->gridSizeF, this->tileSheet, texture_rect);
 		}
 	}
 
 }
 
-void TileMap::removeTile()
+void TileMap::removeTile(const unsigned x, const unsigned y , const unsigned z)
 {
+	/*
+	Takes 3 coordinates from mouse position and removes the tile at that position
+	*/
+
+	if (x < this->mapSize.x && y < this->mapSize.y && z < this->layers &&	//checks if the coordinates are valid i.e. not out of range of the array
+		x >= 0 && y >= 0 && z >= 0)
+	{
+		if (this->map[x][y][z] != nullptr)
+		{
+			delete this->map[x][y][z];
+			this->map[x][y][z] = nullptr;
+		}
+	}
 }
 
 //Functions

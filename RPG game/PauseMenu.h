@@ -5,8 +5,8 @@ class PauseMenu
 {
 private:
 
-	sf::RectangleShape background;
-	sf::RectangleShape container;
+	sf::RectangleShape background;	//Rectangle covering the entire screen
+	sf::RectangleShape container;	//Container covers some portion of the middle of the screen with the Resume, exit and other buttons
 
 	sf::Font font;
 
@@ -17,10 +17,10 @@ private:
 	//Initialization functions
 	void initBackground(sf::RenderWindow& window);
 	void initButtons();
-	void initFont();
+	void initFont(sf::Font& font);
 
 public:
-	PauseMenu(sf::RenderWindow& window);
+	PauseMenu(sf::RenderWindow& window, sf::Font& font);
 	~PauseMenu();
 
 	//Accessors

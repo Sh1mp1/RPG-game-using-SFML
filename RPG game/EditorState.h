@@ -13,16 +13,21 @@ class EditorState :
     public State
 {
 private:
-    sf::Font font;
 	sf::Text mousePosText;
 
 	TileMap* tileMap;
 
+	sf::IntRect textureRect;
 	sf::RectangleShape selectorRect;
+	sf::RectangleShape currentTexture;
+
+	sf::Texture tileMapTexture;
 
 	std::map<std::string, gui::Button*> buttons;
 
 	std::map <std::string, int> keybinds;
+
+	//float mouseWheelDelta;
 
 	PauseMenu pauseMenu;
 	bool isEscapePressed;
@@ -35,15 +40,17 @@ private:
 	void initGUI();
 	void initPauseMenu();
 	void initTileMap();
+	void initTexturRect();
 
 public:
     EditorState(StateData* state_data);
     ~EditorState();
 
 	//Functions 
-
+	void updateMouseScroll(const float& dt);
 	void updateInput(const float& dt);
 	void updateEditorInput(const float& dt);
+	void updateTextureRect(float mouseScroll);
 	void updatePauseMenu();
 	void updateButtons();
 	void updateGUI();

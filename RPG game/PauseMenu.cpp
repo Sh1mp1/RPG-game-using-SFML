@@ -8,7 +8,7 @@ void PauseMenu::initBackground(sf::RenderWindow& window)
 	this->container.setSize(sf::Vector2f(windowSize.x / 4.f, windowSize.y));
 
 	this->background.setFillColor(sf::Color(20, 20, 20, 200));
-	this->container.setFillColor(sf::Color(20, 20, 20, 200));
+	this->container.setFillColor(sf::Color(20, 20, 20, 250));
 	this->background.setPosition(sf::Vector2f(0.f, 0.f));
 
 	this->container.setPosition(sf::Vector2f((windowSize.x / 2.f) - (this->container.getGlobalBounds().width / 2.f), 0.f));
@@ -23,21 +23,17 @@ void PauseMenu::initButtons()
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
 }
 
-void PauseMenu::initFont()
+void PauseMenu::initFont(sf::Font& font)
 {
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
-	{
-		std::cout << "ERROR::PAUSEMENU::COULDNT LOAD FONT!" << '\n';
-	}
-
+	this->font = font;
 }
 
-PauseMenu::PauseMenu(sf::RenderWindow& window)
+PauseMenu::PauseMenu(sf::RenderWindow& window, sf::Font& font)
 	:window(window)
 {
 	this->initBackground(window);
 
-	this->initFont();
+	this->initFont(font);
 
 	//this->initButtons();
 }

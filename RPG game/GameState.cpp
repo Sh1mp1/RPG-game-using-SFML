@@ -83,11 +83,11 @@ void GameState::initPauseMenu()
 
 void GameState::initTileMap()
 {
-	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10);
+	//this->tileMap = new TileMap(this->stateData->gridSize, 10, 10);
 }
 
 GameState::GameState(StateData* state_data)
-	:State(state_data), isEscapePressed(false), isGunEquipped(false), isEPressed(false), pauseMenu(*this->window)
+	:State(state_data), isEscapePressed(false), isGunEquipped(false), isEPressed(false), pauseMenu(*this->window, *state_data->font)
 {
 	/*
 	Fix later :- Change the video resolution immediately or change it only in gameState
@@ -312,6 +312,4 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		this->pauseMenu.render(*target);
 	}
-
-
 }

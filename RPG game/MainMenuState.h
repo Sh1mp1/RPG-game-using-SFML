@@ -24,7 +24,6 @@ private:
 
 	std::map <std::string, int> keybinds;
 
-	sf::Font font;
 	sf::Text mousePosText;
 
 	std::map<std::string, gui::Button*> buttons;

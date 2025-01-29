@@ -1,13 +1,23 @@
 #include "stdafx.h"
 #include "Game.h"
 
+float mouseWheelDelta;
+
 //Initialization functions
 void Game::initVariables()
 {
 	this->window = nullptr;
 	this->dt = 0.f;
 
-	this->gridSize = 100.f;
+	this->gridSize = 64.f;
+}
+
+void Game::initFont()
+{
+	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
+	{
+		std::cout << "ERROR::GAME::COULDNT LOAD FONT" << '\n';
+	}
 }
 
 void Game::initGraphicsSettings()
@@ -22,6 +32,8 @@ void Game::initStateData()
 	this->stateData.supportedKeys = &this->supportedKeys;
 	this->stateData.states = &this->states;
 	this->stateData.gridSize = this->gridSize;
+	this->stateData.font = &this->font;
+	this->stateData.mouseWheelDelta = &this->mouseWheelDelta;
 }
 
 void Game::initWindow()
@@ -67,6 +79,7 @@ void Game::initKeys()
 Game::Game()
 {
 	this->initVariables();
+	this->initFont();
 	this->initGraphicsSettings();
 	this->initWindow();
 	this->initKeys();
@@ -114,15 +127,18 @@ void Game::updateDt()
 
 void Game::pollEvents()
 {
-	sf::Event e;
-	while (this->window->pollEvent(e))
+	this->mouseWheelDelta = 0.f;
+	while (this->window->pollEvent(this->event))
 	{
-		switch (e.type)
+		switch (this->event.type)
 		{
 		case sf::Event::Closed:
 			this->window->close();
 			break;
 
+		case sf::Event::MouseWheelScrolled: 
+			this->mouseWheelDelta = this->event.mouseWheelScroll.delta;
+			break;
 		}
 	}
 }
