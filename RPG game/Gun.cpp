@@ -48,8 +48,6 @@ void Gun::update(const float& dt, const sf::Vector2f& player_pos, const float& a
 		this->isFlipped = false;	
 	}
 
-	std::cout << this->sprite.getRotation() << '\n';
-	std::cout << this->isFlipped << '\n';
 }
 
 void Gun::render(sf::RenderTarget& target)

@@ -6,51 +6,42 @@ void Game::initVariables()
 {
 	this->window = nullptr;
 	this->dt = 0.f;
+
+	this->gridSize = 100.f;
+}
+
+void Game::initGraphicsSettings()
+{
+	this->gfxSettings.loadFromFile("config/window.ini");
+}
+
+void Game::initStateData()
+{
+	this->stateData.window = this->window;
+	this->stateData.gfxSettings = &this->gfxSettings;
+	this->stateData.supportedKeys = &this->supportedKeys;
+	this->stateData.states = &this->states;
+	this->stateData.gridSize = this->gridSize;
 }
 
 void Game::initWindow()
 {
-
-	std::ifstream ifs("Config/window.ini");
-
-	std::string title = "GAME";
-
-	this->videoModes = sf::VideoMode::getFullscreenModes();
-
-	sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
-	bool fullscreen = false;
-	unsigned antialiasing = 0;
-
-	unsigned framerate_limit = 144;
-	bool vsync_enabled = false;
-
-	if (ifs.is_open())
-	{
-		std::getline(ifs, title);
-		ifs >> window_bounds.width >> window_bounds.height;
-		ifs >> framerate_limit;
-		ifs >> vsync_enabled;
-		ifs >> antialiasing;
-		ifs >> fullscreen;
-	}
-	ifs.close();
-
-	this->settings.antialiasingLevel = antialiasing;
-	if (fullscreen)
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Fullscreen, this->settings);
+	if (this->gfxSettings.fullScreen)
+		this->window = new sf::RenderWindow(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Fullscreen, this->gfxSettings.contextSettings);
 
 	else
-		this->window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, this->settings);
-	this->window->setFramerateLimit(framerate_limit);
-	this->window->setVerticalSyncEnabled(vsync_enabled);
-	
+		this->window = new sf::RenderWindow(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Titlebar | sf::Style::Close, this->gfxSettings.contextSettings);
+
+
+	this->window->setFramerateLimit(this->gfxSettings.framerateLimit);
+	this->window->setVerticalSyncEnabled(this->gfxSettings.vsync);	
 }
 
 
 
 void Game::initStates()
 {
-	this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states));
+	this->states.push(new MainMenuState(&this->stateData));
 }
 
 void Game::initKeys()
@@ -76,10 +67,11 @@ void Game::initKeys()
 Game::Game()
 {
 	this->initVariables();
+	this->initGraphicsSettings();
 	this->initWindow();
 	this->initKeys();
-	this->initStates();
-	
+	this->initStateData();
+	this->initStates();	
 }
 
 
@@ -95,12 +87,12 @@ Game::~Game()
 	}
 }
 
+
 void Game::run()
 {
 	while (this->window->isOpen())
 	{
 		this->updateDt();
-
 		this->update();
 		this->render();
 	}
@@ -118,7 +110,6 @@ void Game::updateDt()
 	//Updates dt to the time it takes to render 1 frame
 
 	this->dt = this->dtClock.restart().asSeconds();
-
 }
 
 void Game::pollEvents()
@@ -132,12 +123,6 @@ void Game::pollEvents()
 			this->window->close();
 			break;
 
-		case sf::Event::KeyPressed:
-			if (e.key.code == sf::Keyboard::Escape)
-			{
-				//this->window->close();
-			}
-			break;
 		}
 	}
 }

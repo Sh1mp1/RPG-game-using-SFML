@@ -1,6 +1,19 @@
 #include "stdafx.h"
 #include "GameState.h"
 
+void GameState::initWindow()
+{
+	if (this->gfxSettings.fullScreen)
+		this->window->create(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Fullscreen, this->gfxSettings.contextSettings);
+
+	else
+		this->window->create(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Titlebar | sf::Style::Close, this->gfxSettings.contextSettings);
+
+
+	this->window->setFramerateLimit(this->gfxSettings.framerateLimit);
+	this->window->setVerticalSyncEnabled(this->gfxSettings.vsync);
+}
+
 void GameState::initKeybinds()
 {
 	std::ifstream ifs("config/gamestate_keybinds.ini");
@@ -62,14 +75,34 @@ void GameState::initGun()
 	this->gun = new Gun(pos, this->gunTexture);
 }
 
-GameState::GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states), pauseMenu(*this->window), isEscapePressed(false), isGunEquipped(false), isEPressed(false)
+void GameState::initPauseMenu()
 {
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 500.f), "RESUME");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 800.f), "EXIT");
+}
+
+void GameState::initTileMap()
+{
+	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10);
+}
+
+GameState::GameState(StateData* state_data)
+	:State(state_data), isEscapePressed(false), isGunEquipped(false), isEPressed(false), pauseMenu(*this->window)
+{
+	/*
+	Fix later :- Change the video resolution immediately or change it only in gameState
+	*/
+	
+	//this->window->create(sf::VideoMode(this->window->getSize().x, this->window->getSize().y), "TEST", sf::Style::Titlebar | sf::Style::Close);
+	
+	//this->initWindow();
 	this->initKeybinds();
 	this->initAudio();
 	this->initPlayer();
 	this->initBullet();
 	this->initGun();
+	this->initPauseMenu();
+	this->initTileMap();
 }
 
 GameState::~GameState()
@@ -80,10 +113,25 @@ GameState::~GameState()
 	{
 		delete this->bullets[i];
 	}
+	delete this->tileMap;
 }
 
 
 
+
+void GameState::updatePauseMenu()
+{
+	if (this->paused)
+	{
+		this->quit = this->pauseMenu.isPressed("EXIT");
+
+
+		if (this->pauseMenu.isPressed("RESUME"))
+		{
+			this->unPauseState();
+		}
+	}
+}
 
 void GameState::updateGun(const float& dt)
 {
@@ -113,7 +161,7 @@ void GameState::updateInput(const float& dt)
 	else
 	{
 		this->isEscapePressed = false;
-	}
+	}	
 }
 
 void GameState::updatePlayerInput(const float& dt)
@@ -234,7 +282,8 @@ void GameState::update(const float& dt)
 	else	//Paused update;
 	{
 		
-		this->pauseMenu.update(this->mousePosView, this->paused, this->quit);
+		this->pauseMenu.update(this->mousePosView);
+		this->updatePauseMenu();
 		this->bulletTimer = -0.1f;
 	}
 }
@@ -256,15 +305,13 @@ void GameState::render(sf::RenderTarget* target)
 			i->render(*target);
 	}
 	if (!this->paused)
-	{
-		
-		
-		
+	{	
 	}
 
 	else
 	{
 		this->pauseMenu.render(*target);
 	}
+
 
 }

@@ -1,10 +1,32 @@
 #pragma once
 #include "Entity.h"
 #include "PauseMenu.h"
+#include "GraphicsSettings.h"
+
+class Entity;
+class PauseMenu;
+class GraphicsSettings;
+class State;
+
+class StateData
+{
+public:
+	StateData()	{}
+
+	//Variables
+	float gridSize;
+	sf::RenderWindow* window;
+	std::map <std::string, int>* supportedKeys;
+	std::stack<State*>* states;
+	GraphicsSettings* gfxSettings;
+};
 
 class State
 {
 protected:
+	GraphicsSettings& gfxSettings;
+
+	StateData* stateData;
 
 	sf::RenderWindow* window;
 	
@@ -16,9 +38,15 @@ protected:
 	bool quit;
 	bool paused;
 
+	float keyTime;
+	float keyTimeMax;
+
+	float gridSize;
+
 	sf::Vector2i mousePosScreen;
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;
+	sf::Vector2u mousePosGrid;
 
 	//Resources
 	std::map <std::string, sf::Texture*> textures;
@@ -27,16 +55,19 @@ protected:
 	virtual void initKeybinds() = 0;
 
 public:
-	State(sf::RenderWindow* window, std::map <std::string, int>* supported_Keys, std::stack<State*>* states);
+	State(StateData* state_data);
 	virtual ~State();
 
 
 	//Accessor
 	const bool& getQuit() const;
+	const bool& getKeyTime();
 
 	//Functions
 	virtual void endState();
 	virtual void updateMousePositions();
+	virtual void updateKeyTime(const float& dt);
+
 
 	void pauseState();
 	void unPauseState();

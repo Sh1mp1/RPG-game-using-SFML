@@ -1,4 +1,16 @@
-﻿  GUI.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(79,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(84,1): warning C4172: returning address of local variable or temporary 
+﻿  GameState.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(174,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file '/GameState.cpp')
+  
+  TileMap.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(14,20): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(18,21): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(22,22): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+  Generating Code...
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

@@ -20,15 +20,12 @@ void MainMenuState::initKeybinds()
 	ifs.close();
 }
 
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states)
+MainMenuState::MainMenuState(StateData* state_data)
+	:State(state_data)
 {
 	this->initBackground();
-
 	this->initFont();
 	this->initButtons();
-
-	
 }
 
 MainMenuState::~MainMenuState()
@@ -64,25 +61,28 @@ void MainMenuState::initBackground()
 	}
 	this->background.setTexture(this->backgroundTexture);
 
-	float scale_x = static_cast<float>(window->getSize().x) / this->backgroundTexture.getSize().x;
-	float scale_y = static_cast<float>(window->getSize().y) / this->backgroundTexture.getSize().y;
+	float scale_x = static_cast<float>(this->stateData->window->getSize().x) / this->backgroundTexture.getSize().x;
+	float scale_y = static_cast<float>(this->stateData->window->getSize().y) / this->backgroundTexture.getSize().y;
 
 
 	this->background.setScale(sf::Vector2f(scale_x, scale_y));
+
+	this->backgroundFade.setSize(sf::Vector2f(560.f, 1080.f));
+	this->backgroundFade.setFillColor(sf::Color(20, 20, 20, 150));
 }
 
 void MainMenuState::initButtons()
 {
-	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(460.f, 510.f), &this->font, "GAME",
+	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(280.f, 510.f), &this->font, "GAME",
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
+	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(280.f, 600.f), &this->font, "SETTINGS",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(460.f, 700), &this->font, "EDITOR",
+	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(280.f, 700), &this->font, "EDITOR",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(460.f, 800.f), &this->font, "EXIT",
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(280.f, 800.f), &this->font, "EXIT",
 						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 
@@ -103,7 +103,7 @@ void MainMenuState::updateButtons()
 	//Push new gamestate to stack when "GAME" or a PLAY button is pressed
 	if (this->buttons.at("GAME")->isPressed())
 	{
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+		this->states->push(new GameState(this->stateData));
 	}
 
 	//Exits when "EXIT" button is pressed
@@ -114,12 +114,12 @@ void MainMenuState::updateButtons()
 
 	if (this->buttons.at("EDITOR")->isPressed())
 	{
-		this->states->push(new EditorState(this->window, this->supportedKeys, this->states));
+		this->states->push(new EditorState(this->stateData));
 	}
 
 	if (this->buttons.at("SETTINGS")->isPressed())
 	{
-		this->states->push(new SettingsState(this->window, this->supportedKeys, this->states));
+		this->states->push(new SettingsState(this->stateData));
 	}
 }
 
@@ -159,6 +159,7 @@ void MainMenuState::render(sf::RenderTarget* target)
 		target = window;
 	}
 	target->draw(this->background);
+	target->draw(this->backgroundFade);
 	this->renderButtons(*target);
 	target->draw(this->mousePosText);
 

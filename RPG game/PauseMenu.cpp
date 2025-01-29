@@ -16,10 +16,10 @@ void PauseMenu::initBackground(sf::RenderWindow& window)
 
 void PauseMenu::initButtons()
 {
-	this->buttons.emplace("RESUME", new gui::Button(sf::Vector2f(960, 500.f), &this->font, "RESUME",
+	this->buttons.emplace("RESUME", new gui::Button(sf::Vector2f(this->window.getSize().x / 2.f, 500.f), &this->font, "RESUME",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
-
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(960, 800.f), &this->font, "EXIT",
+	
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(this->window.getSize().x / 2.f, 800.f), &this->font, "EXIT",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
 }
 
@@ -33,12 +33,13 @@ void PauseMenu::initFont()
 }
 
 PauseMenu::PauseMenu(sf::RenderWindow& window)
+	:window(window)
 {
 	this->initBackground(window);
 
 	this->initFont();
 
-	this->initButtons();
+	//this->initButtons();
 }
 
 PauseMenu::~PauseMenu()
@@ -49,18 +50,26 @@ PauseMenu::~PauseMenu()
 	}
 }
 
+const bool PauseMenu::isPressed(std::string id) const
+{
+	return this->buttons.at(id)->isPressed();
+}
+
 //Functions
 
-void PauseMenu::update(sf::Vector2f& mousePos, bool& paused, bool& quit)
+void PauseMenu::addButton(sf::Vector2f pos, std::string text)
+{
+	this->buttons.emplace(text, new gui::Button(pos, &this->font, text,
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 50));
+}
+
+void PauseMenu::update(sf::Vector2f& mousePos)
 {
 	for (auto& i : this->buttons)
 	{
 		i.second->update(mousePos);
 	}
 
-	paused = (!this->buttons.at("RESUME")->isPressed());	//If it is pressed then paused will be set to false
-
-	quit = this->buttons.at("EXIT")->isPressed();		//If it is pressed quit will be set to true
 }
 
 void PauseMenu::render(sf::RenderTarget& target)

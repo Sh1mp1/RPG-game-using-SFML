@@ -1,6 +1,11 @@
 #pragma once
 #include "State.h"
 #include "GUI.h"
+#include "GraphicsSettings.h"
+
+class State;
+class GUI;
+class GraphicsSettings;
 
 class SettingsState :
     public State
@@ -9,6 +14,7 @@ private:
 
 	sf::Sprite background;
 	sf::Texture backgroundTexture;
+
 
 	std::map <std::string, int> keybinds;
 
@@ -21,15 +27,19 @@ private:
 
 	sf::Text optionsText;
 
+	std::vector<sf::VideoMode> videoModes;
+
 	//Functions
 	void initKeybinds();
 	void initFont();
 	void initBackground();
 	void initButtons();
+	void initVariables();
 	void initDropDownList();
+	void initWindow();
 
 public:
-    SettingsState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states);
+    SettingsState(StateData* state_data);
     ~SettingsState();
 
 	//Functions 
@@ -39,6 +49,7 @@ public:
 	void updateText();
 	void updateGUI();
 	void updateDropDownList();
+	void updateButtonPos();
 	
 
 	void update(const float& dt);

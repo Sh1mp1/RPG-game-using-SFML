@@ -19,13 +19,14 @@ void SettingsState::initKeybinds()
 	ifs.close();
 }
 
-SettingsState::SettingsState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:State(window, supportedKeys, states)
+SettingsState::SettingsState(StateData* state_data)
+	:State(state_data)
 {
 	this->initKeybinds();
 	this->initButtons();
 	this->initBackground();
 	this->initFont();
+	this->initVariables();
 	this->initDropDownList();
 }
 
@@ -59,7 +60,7 @@ void SettingsState::initFont()
 	
 	this->optionsText.setFont(this->font);
 
-	this->optionsText.setPosition(sf::Vector2f(400.f, 480.f));
+	this->optionsText.setPosition(sf::Vector2f(400.f, 300.f));
 	this->optionsText.setCharacterSize(35);
 	this->optionsText.setFillColor(sf::Color(255, 255, 255, 200));
 	this->optionsText.setString("RESOLUTION \n\n\n ANTIALIASING \n\n\n FULLSCREEN \n\n\n VSYNC");
@@ -85,19 +86,45 @@ void SettingsState::initButtons()
 	//this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
 	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(this->window->getSize().x / 2.f, 800.f), &this->font, "EXIT",
+	float posX = this->stateData->window->getSize().x * 0.8f;
+
+	float posY = this->stateData->window->getSize().y;
+
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(posX, posY * 0.8f), &this->font, "EXIT",
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+
+	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(posX, posY * 0.65f), &this->font, "APPLY", 
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
 }
 
 void SettingsState::initDropDownList()
 {
 	std::vector<std::string> dropDownText;
-	dropDownText.push_back("1920 X 1080");
-	dropDownText.push_back("1366 X 768");
-	dropDownText.push_back("1280 X 720");
-	dropDownText.push_back("800 X 600");
+	for (auto& i : this->videoModes)
+	{
+		dropDownText.push_back(std::to_string(i.width) + " X " + std::to_string(i.height));
+	}
 
-	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 500.f), this->font, dropDownText, 0);
+
+	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 300.f), this->font, dropDownText, 0);
+}
+
+void SettingsState::initWindow()
+{
+	if (this->gfxSettings.fullScreen)
+		this->window->create(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Fullscreen, this->gfxSettings.contextSettings);
+
+	else
+		this->window->create(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Titlebar | sf::Style::Close, this->gfxSettings.contextSettings);
+
+
+	this->window->setFramerateLimit(this->gfxSettings.framerateLimit);
+	this->window->setVerticalSyncEnabled(this->gfxSettings.vsync);
+}
+
+void SettingsState::initVariables()
+{
+	this->videoModes = sf::VideoMode::getFullscreenModes();
 }
 
 
@@ -123,7 +150,22 @@ void SettingsState::updateButtons()
 	if (this->buttons.at("EXIT")->isPressed())
 	{
 		this->quit = true;
-	}	
+	}
+
+	if (this->buttons.at("APPLY")->isPressed())
+	{
+		short unsigned id = this->dropDownList->getActiveElementID();
+
+		this->gfxSettings.resolution = this->videoModes.at(id);
+
+		//this->gfxSettings.saveToFile("config/window.ini");
+		
+		this->initWindow();
+		
+		this->updateButtonPos();
+
+		std::cout << "X " << this->window->getSize().x << " Y " << this->window->getSize().y;
+	}
 }
 
 void SettingsState::updateText()
@@ -146,6 +188,16 @@ void SettingsState::updateGUI()
 void SettingsState::updateDropDownList()
 {
 	this->dropDownList->update(this->mousePosView);	
+}
+
+void SettingsState::updateButtonPos()
+{
+	float posX = this->stateData->window->getSize().x * 0.8f;
+
+	float posY = this->stateData->window->getSize().y;
+
+	this->buttons.at("EXIT")->centreText(sf::Vector2f(posX, posY * 0.8));
+	this->buttons.at("APPLY")->centreText(sf::Vector2f(posX, posY * 0.65));
 }
 
 void SettingsState::update(const float& dt)

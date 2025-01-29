@@ -6,6 +6,11 @@
 #include "EditorState.h"
 #include "SettingsState.h"
 
+class State;
+class GUI;
+class GameState;
+class EditorState;
+class SettingsState;
 
 
 class MainMenuState:
@@ -14,6 +19,8 @@ class MainMenuState:
 private:
 	sf::Sprite background;
 	sf::Texture backgroundTexture;
+
+	sf::RectangleShape backgroundFade;
 
 	std::map <std::string, int> keybinds;
 
@@ -30,7 +37,7 @@ private:
 
 
 public:
-	MainMenuState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states);
+	MainMenuState(StateData* state_data);
 	virtual ~MainMenuState();
 
 	//Functions 

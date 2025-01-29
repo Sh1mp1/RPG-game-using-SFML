@@ -16,6 +16,7 @@ void gui::Button::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
 	this->shape.setPosition(pos);
 }
 
+
 gui::Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize)
 {
 	this->font = font;
@@ -39,7 +40,9 @@ gui::Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf
 
 }
 
-gui::Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize, sf::Vector2f rectangleSize)
+gui::Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize,
+	sf::Vector2f rectangleSize, short unsigned id)
+	:id(id)
 {
 	this->font = font;
 
@@ -79,7 +82,7 @@ const sf::FloatRect& gui::Button::getBounds() const
 	return this->text.getGlobalBounds();
 }
 
-const sf::FloatRect& gui::Button::getRectangleBound() const
+const sf::FloatRect& gui::Button::getRectangleBounds() const
 {
 	return this->shape.getGlobalBounds();
 }
@@ -87,6 +90,11 @@ const sf::FloatRect& gui::Button::getRectangleBound() const
 const std::string gui::Button::getString() const
 {
 	return this->text.getString();
+}
+
+const short unsigned gui::Button::getID() const
+{
+	return this->id;
 }
 
 void gui::Button::setText(const std::string text)
@@ -161,35 +169,33 @@ DROP DOWN LIST -----------------------------------------------------------------
 
 
 
-gui::DropDownList::DropDownList(sf::Vector2f pos,sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex)
-	:font(font), showList(false), isMousePressed(false), centrePos(pos)
+void gui::DropDownList::initList(sf::Vector2f pos, std::vector<std::string> list, unsigned int defaultIndex)
 {
-	this->font = font;
 
 	sf::Text active_element_text(list.at(defaultIndex), this->font, 40);
-
 	sf::Vector2f sizeOffset(10.f, 30.f);
 
 	this->activeElement = new gui::Button(pos, &this->font, list.at(defaultIndex),
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, active_element_text.getGlobalBounds().getSize() + sizeOffset);	
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, active_element_text.getGlobalBounds().getSize() + sizeOffset);
 
-	sf::FloatRect bounds = this->activeElement->getRectangleBound();
-
-	float height = bounds.height + 0.f;
-	
-	
+	sf::FloatRect bounds = this->activeElement->getRectangleBounds();
 
 	sf::Vector2f size(active_element_text.getGlobalBounds().width + sizeOffset.x, active_element_text.getGlobalBounds().height + sizeOffset.y);
 
 
 	for (int i = 0; i < list.size(); ++i)
 	{
-		
-		this->list.push_back(new Button(sf::Vector2f(bounds.left + (bounds.width / 2.f), bounds.top + (height * i) + (height + 25.f)), &this->font, list[i],
-			sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, size));	
-	}	
+		this->list.push_back(new Button(sf::Vector2f(bounds.left + (bounds.width / 2.f), bounds.top + (bounds.height * i) + (bounds.height + 25.f)), &this->font, list[i],
+			sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, size, i));
+	}
 
 	this->list.push_back(this->activeElement);
+}
+
+gui::DropDownList::DropDownList(sf::Vector2f pos,sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex)
+	:font(font), showList(false), isMousePressed(false), centrePos(pos)
+{
+	this->initList(pos, list, defaultIndex);	//Initializes the drop down list and the active element
 }
 
 gui::DropDownList::~DropDownList()
@@ -198,6 +204,18 @@ gui::DropDownList::~DropDownList()
 	{
 		delete i;
 	}	
+}
+
+const short unsigned gui::DropDownList::getActiveElementID() const
+{
+	for (int i = 0; i < this->list.size(); ++i)
+	{
+		if (this->activeElement->getString() == this->list[i]->getString())
+		{
+			return i;
+		}
+	}
+	return 1;
 }
 
 void gui::DropDownList::update(const sf::Vector2f& mousePos)
@@ -225,7 +243,7 @@ void gui::DropDownList::update(const sf::Vector2f& mousePos)
 			if (i->isPressed() && i != this->activeElement)
 			{
 				this->activeElement->setText(i->getString());
-				this->activeElement->centreText(this->centrePos);
+				this->activeElement->centreText(this->centrePos);	//Replaces the active element to the one that is pressed and centres the text
 				this->showList = false;
 			}
 		}

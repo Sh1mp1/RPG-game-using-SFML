@@ -1,23 +1,28 @@
 #pragma once
-#include "stdafx.h"
 
 #include "State.h"
 #include "GameState.h"
 #include "MainMenuState.h"
+#include "GraphicsSettings.h"
 
 class Game
 {
 private:
+
 	
+	
+	GraphicsSettings gfxSettings;
+
+	StateData stateData;
+
 	sf::RenderWindow* window;
 	sf::View view;
-	sf::ContextSettings settings;
 
-	std::vector<sf::VideoMode> videoModes;
 
 	sf::Clock dtClock;
 	float dt;
 
+	float gridSize;
 
 	std::stack<State*> states;
 
@@ -25,6 +30,8 @@ private:
 
 	//Initialize functions
 	void initVariables();
+	void initGraphicsSettings();
+	void initStateData();
 	void initWindow();	
 	void initStates();
 	void initKeys();

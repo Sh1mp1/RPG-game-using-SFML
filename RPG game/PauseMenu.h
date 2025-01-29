@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "GUI.h"
 
 class PauseMenu
@@ -11,7 +10,7 @@ private:
 
 	sf::Font font;
 
-
+	sf::RenderWindow& window;
 
 	std::map<std::string, gui::Button*> buttons;
 
@@ -24,8 +23,12 @@ public:
 	PauseMenu(sf::RenderWindow& window);
 	~PauseMenu();
 
+	//Accessors
+	const bool isPressed(std::string id) const;
+
 	//FUnctions;
-	void update(sf::Vector2f& mousePos, bool& paused, bool& quit);
+	void addButton(sf::Vector2f pos, std::string text);
+	void update(sf::Vector2f& mousePos);
 	void render(sf::RenderTarget& target);
 };
 

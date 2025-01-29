@@ -4,6 +4,13 @@
 #include "Player.h"
 #include "Entity.h"
 #include "Gun.h"
+#include "TileMap.h"
+
+class State;
+class Player;
+class Entity;
+class Gun;
+class TileMap;
 
 class GameState:
 	public State
@@ -31,22 +38,28 @@ private:
 
 	std::map <std::string, int> keybinds;
 
+	TileMap* tileMap;
+
 	float weaponAngle;
 
 	
 	//Initialization functions
+	void initWindow();
 	void initKeybinds();
 	void initPlayer();
 	void initBullet();
 	void initAudio();
 	void initGun();
+	void initPauseMenu();
+	void initTileMap();
 
 public:
-	GameState(sf::RenderWindow* window, std::map <std::string, int>* supportedKeys, std::stack<State*>* states);
+	GameState(StateData* state_data);
 	virtual ~GameState();
 
 	//Functions 
 	
+	void updatePauseMenu();
 	void updateGun(const float& dt);
 	void updateInput(const float& dt);
 	void updatePlayerInput(const float& dt);

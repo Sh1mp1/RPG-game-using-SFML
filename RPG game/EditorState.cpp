@@ -22,16 +22,16 @@ void EditorState::initKeybinds()
 
 }
 
-EditorState::EditorState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states)
+EditorState::EditorState(StateData* state_data)
+	:State(state_data), pauseMenu(*this->window), isEscapePressed(false)
 {
 	this->initBackground();
-
 	this->initFont();
-	this->initButtons();
+	//this->initButtons();
 	this->initKeybinds();
-	
-
+	this->initPauseMenu();
+	this->initTileMap();	
+	this->initGUI(); // For selectorRect
 }
 
 EditorState::~EditorState()
@@ -65,17 +65,37 @@ void EditorState::initBackground()
 
 void EditorState::initButtons()
 {
-	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(380.f, 510.f), &this->font, "GAME",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	//this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(380.f, 510.f), &this->font, "GAME",
+	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	//
+	//this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(350.f, 600.f), &this->font, "SETTINGS",
+	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	//
+	//this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(350.f, 700), &this->font, "EDITOR",
+	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	//
+	//this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(400.f, 800.f), &this->font, "EXIT",
+	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+}
 
-	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(350.f, 600.f), &this->font, "SETTINGS",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+void EditorState::initGUI()
+{
+	this->selectorRect.setFillColor(sf::Color::Transparent);
+	this->selectorRect.setSize(sf::Vector2f(this->stateData->gridSize, this->stateData->gridSize));
+	this->selectorRect.setOutlineThickness(1.f);
+	this->selectorRect.setOutlineColor(sf::Color::Red);
 
-	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(350.f, 700), &this->font, "EDITOR",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+}
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(400.f, 800.f), &this->font, "EXIT",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+void EditorState::initPauseMenu()
+{
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 500.f), "RESUME");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 800.f), "EXIT");
+}
+
+void EditorState::initTileMap()
+{
+	this->tileMap = new TileMap(this->stateData->gridSize, 20, 11);
 }
 
 
@@ -83,7 +103,47 @@ void EditorState::updateInput(const float& dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("close"))))
 	{
-		this->quit = true;
+		if (!this->isEscapePressed)
+		{
+			this->isEscapePressed = true;
+
+			if (!this->paused)
+			{
+				this->pauseState();
+			}
+			else
+			{
+				this->unPauseState();
+			}
+		}
+	}
+	else
+	{
+		this->isEscapePressed = false;
+	}
+}
+
+void EditorState::updateEditorInput(const float& dt)
+{
+	
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile
+	{		
+		this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
+	}
+}
+
+void EditorState::updatePauseMenu()
+{
+	if (this->paused)
+	{
+		this->quit = this->pauseMenu.isPressed("EXIT");
+
+
+		if (this->pauseMenu.isPressed("RESUME"))
+		{
+			this->unPauseState();
+		}
 	}
 }
 
@@ -105,8 +165,13 @@ void EditorState::updateButtons()
 	//Exits when "EXIT" button is pressed
 	if (this->buttons.at("EXIT")->isPressed())
 	{
-		this->quit = true;
+		//this->quit = true;
 	}
+}
+
+void EditorState::updateGUI()
+{
+	this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
 }
 
 void EditorState::updateText()
@@ -125,8 +190,18 @@ void EditorState::update(const float& dt)
 	this->updateInput(dt);
 	this->updateMousePositions();
 	this->updateText();
+	this->updateKeyTime(dt);
 	//this->updateButtons();
-
+	if (paused)
+	{
+		this->pauseMenu.update(this->mousePosView);
+		this->updatePauseMenu();
+	}
+	else
+	{
+		this->updateGUI(); 
+		this->updateEditorInput(dt);
+	}
 
 }
 
@@ -138,6 +213,11 @@ void EditorState::renderButtons(sf::RenderTarget& target)
 	}
 }
 
+void EditorState::renderGUI(sf::RenderTarget& target)
+{
+	target.draw(this->selectorRect);
+}
+
 void EditorState::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -146,6 +226,18 @@ void EditorState::render(sf::RenderTarget* target)
 	}
 	//target->draw(this->background);
 	//this->renderButtons(target);
-	target->draw(this->mousePosText);
+	if (this->paused)
+	{
+		this->pauseMenu.render(*target);
+	}
+	else
+	{
+		this->renderGUI(*target);
+	}
 
+	this->tileMap->render(*target);
+
+	
+
+	target->draw(this->mousePosText);
 }
