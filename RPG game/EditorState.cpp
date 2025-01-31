@@ -79,9 +79,9 @@ void EditorState::initGUI()
 	this->selectorRect.setFillColor(sf::Color::Transparent);
 	this->selectorRect.setSize(sf::Vector2f(this->stateData->gridSize, this->stateData->gridSize));
 	this->selectorRect.setOutlineThickness(1.f);
-	this->selectorRect.setOutlineColor(sf::Color::Red);
+	this->selectorRect.setOutlineColor(sf::Color::Green);
 
-	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 640.f, &this->tileMapTexture, this->stateData->gridSize);
+	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 576.f, &this->tileMapTexture, this->stateData->gridSize, *this->stateData->font, this->mousePosView);
 }
 
 void EditorState::initPauseMenu()
@@ -111,6 +111,15 @@ void EditorState::initTexturRect()
 	this->currentTextureGUI.setTextureRect(this->textureRect);
 }
 
+
+const bool EditorState::isValidPos(const sf::Vector2u mousePosGrid) const
+{
+	if ((mousePosGrid.x >= 3 && mousePosGrid.y >= 5) || (mousePosGrid.y == 4 && mousePosGrid.x >= 6))
+	{
+		return false;
+	}
+	return true;
+}
 
 void EditorState::updateMouseScroll(const float& dt)
 {
@@ -146,8 +155,15 @@ void EditorState::updateEditorInput(const float& dt)
 	
 	//Add tile
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile to the tileMap
-	{		
-		this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect);
+	{
+		if (!this->textureSelector->getIsActive())
+		{
+			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect);
+		}
+		else if (this->isValidPos(this->textureSelector->getGridPos()))
+		{
+			this->textureRect = this->textureSelector->getTextureRect();
+		}
 	}
 
 	//Remove tile
@@ -156,14 +172,14 @@ void EditorState::updateEditorInput(const float& dt)
 		this->tileMap->removeTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
 	}
 
-	//Change texture Rect
-
-	if (*this->stateData->mouseWheelDelta != 0)
-	{
-		//this->updateTextureRect();
-		std::cout << this->textureRect.getPosition().x << " " << this->textureRect.getPosition().y << '\n';
-	}
-	
+	////Change texture Rect
+	//
+	//if (*this->stateData->mouseWheelDelta != 0)
+	//{
+	//	//this->updateTextureRect();
+	//	std::cout << this->textureRect.getPosition().x << " " << this->textureRect.getPosition().y << '\n';
+	//}
+	//
 }
 
 void EditorState::updateTextureRect()
@@ -175,72 +191,72 @@ void EditorState::updateTextureRect()
 	mouseWheelDelta = 1 when mouse scrolls down
 	*/
 
-	if (*this->stateData->mouseWheelDelta < 0)
-	{
-		this->textureRect.top += this->textureRect.height;
+	//if (*this->stateData->mouseWheelDelta < 0)
+	//{
+	//	this->textureRect.top += this->textureRect.height;
 
-		//Check if the textureRect has reached the very bottom of the tile sheet
-		if (this->textureRect.top > 512)
-		{
-			//Reset the textureRect to the top(1st row) and go to the next column
-			this->textureRect.top = 0.f;
-			this->textureRect.left += this->textureRect.width;
-		}
+	//	//Check if the textureRect has reached the very bottom of the tile sheet
+	//	if (this->textureRect.top > 512)
+	//	{
+	//		//Reset the textureRect to the top(1st row) and go to the next column
+	//		this->textureRect.top = 0.f;
+	//		this->textureRect.left += this->textureRect.width;
+	//	}
 
-		else if (this->textureRect.top > 256 && this->textureRect.left >= 192)
-		{
-			//Reset the textureRect to the top(1st row) and go to the next column
-			this->textureRect.top = 0.f;
-			this->textureRect.left += this->textureRect.width;
-		}
-		
-		else if (this->textureRect.top > 192 && this->textureRect.left >= 384)
-		{
-			//Reset the textureRect to the top(1st row) and go to the next column
-			this->textureRect.top = 0.f;
-			this->textureRect.left += this->textureRect.width;
-		}
+	//	else if (this->textureRect.top > 256 && this->textureRect.left >= 192)
+	//	{
+	//		//Reset the textureRect to the top(1st row) and go to the next column
+	//		this->textureRect.top = 0.f;
+	//		this->textureRect.left += this->textureRect.width;
+	//	}
+	//	
+	//	else if (this->textureRect.top > 192 && this->textureRect.left >= 384)
+	//	{
+	//		//Reset the textureRect to the top(1st row) and go to the next column
+	//		this->textureRect.top = 0.f;
+	//		this->textureRect.left += this->textureRect.width;
+	//	}
 
-		//Check if the textureRect has reached the very last column
-		if (this->textureRect.left >= 576)
-		{
-			//Reset the textureRect to the first column and first row
-			this->textureRect.left = 0.f;
-			this->textureRect.top = 0.f;
-		}
-	}
+	//	//Check if the textureRect has reached the very last column
+	//	if (this->textureRect.left >= 576)
+	//	{
+	//		//Reset the textureRect to the first column and first row
+	//		this->textureRect.left = 0.f;
+	//		this->textureRect.top = 0.f;
+	//	}
+	//}
 
-	else if (*this->stateData->mouseWheelDelta > 0)
-	{
-		this->textureRect.top -= this->textureRect.height;
+	//else if (*this->stateData->mouseWheelDelta > 0)
+	//{
+	//	this->textureRect.top -= this->textureRect.height;
 
-		if (this->textureRect.top < 0.f)
-		{
-			if (this->textureRect.left >= 384)
-			{
-				this->textureRect.left -= this->textureRect.width;
-				this->textureRect.top = 192;
-			}
+	//	if (this->textureRect.top < 0.f)
+	//	{
+	//		if (this->textureRect.left >= 384)
+	//		{
+	//			this->textureRect.left -= this->textureRect.width;
+	//			this->textureRect.top = 192;
+	//		}
 
-			else if (this->textureRect.left >= 192)
-			{
-				this->textureRect.left -= this->textureRect.width;
-				this->textureRect.top = 256;
-			}
+	//		else if (this->textureRect.left >= 192)
+	//		{
+	//			this->textureRect.left -= this->textureRect.width;
+	//			this->textureRect.top = 256;
+	//		}
 
-			else if (this->textureRect.left >= 0.f)
-			{
-				this->textureRect.left -= this->textureRect.width;
-				this->textureRect.top = 512.f;
-			}
+	//		else if (this->textureRect.left >= 0.f)
+	//		{
+	//			this->textureRect.left -= this->textureRect.width;
+	//			this->textureRect.top = 512.f;
+	//		}
 
-			if (this->textureRect.left < 0.f)
-			{
-				this->textureRect.left = 576.f;
-				this->textureRect.top = 192.f;
-			}
-		}
-	}
+	//		if (this->textureRect.left < 0.f)
+	//		{
+	//			this->textureRect.left = 576.f;
+	//			this->textureRect.top = 192.f;
+	//		}
+	//	}
+	//}
 }
 
 void EditorState::updatePauseMenu()
@@ -281,7 +297,10 @@ void EditorState::updateButtons()
 
 void EditorState::updateGUI()
 {
-	this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);	
+	if (!this->textureSelector->getIsActive())
+	{
+		this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
+	}
 
 	this->textureSelector->update(this->mousePosWindow);
 }
@@ -343,7 +362,7 @@ void EditorState::renderGUI(sf::RenderTarget& target)
 	
 	this->textureSelector->render(target);
 
-	//target.draw(this->currentTextureGUI);
+	target.draw(this->currentTextureGUI);
 }
 
 void EditorState::render(sf::RenderTarget* target)

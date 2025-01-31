@@ -45,11 +45,12 @@ private:
 	void initPauseMenu();
 	void initTileMap();
 	void initTexturRect();
-
 public:
     EditorState(StateData* state_data);
     ~EditorState();
 
+
+	const bool isValidPos(const sf::Vector2u mousePosGrid) const;	//Returns true if the position/intRect of the texture is valid and isn't blank
 	//Functions 
 	void updateMouseScroll(const float& dt);
 	void updateInput(const float& dt);

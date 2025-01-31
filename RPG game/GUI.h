@@ -37,6 +37,7 @@ namespace gui
 
 		//Accessors
 		const bool isPressed() const;
+		//const bool isHovered() const;					TODO ADD FUNCTION TO CHECK IF BUTTON IS CURRENTLY BEING HOVERED OVER MY MOUSE
 		const sf::FloatRect& getBounds() const;
 		const sf::FloatRect& getRectangleBounds() const;
 		const std::string getString() const;
@@ -89,6 +90,10 @@ namespace gui
 		float gridSize;
 		bool isActive;
 
+		gui::Button* hideButton;
+		bool isHidden;
+		bool isButtonPressed;
+
 		sf::RectangleShape bounds;	//The big rectangle containing the entire tile sheet
 
 		sf::Sprite sheet;
@@ -97,21 +102,29 @@ namespace gui
 
 		sf::Vector2u mousePosGrid;
 
-		sf::IntRect textureRect;
+		sf::IntRect textureRect;	
 
-		
+		sf::Font& font;
+
+		sf::Vector2f& mousePosView;
 
 		//Initialization functions
 		void initRect(float x, float y, float width, float height);
 		void initSprite(float x, float y, sf::Texture* texture_sheet);
+		void initSheet();
+		void initSelectorRect(float x, float y);
+		void initButton();
 	public:
-		TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size);
+		TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size, sf::Font& font, sf::Vector2f& mouse_pos_view);
 		~TextureSelector();
 
 		//Accessors
 		const bool& getIsActive() const;
+		const sf::Vector2u& getGridPos() const;
+		const sf::IntRect& getTextureRect() const;
 
 		//Functions
+		void updateButton();
 		void update(const sf::Vector2i& mousePosWindow);
 		void render(sf::RenderTarget& target);
 	};
