@@ -5,6 +5,11 @@ enum buttonState { BTN_IDLE = 0 , BTN_HOVER, BTN_ACTIVE };
 
 namespace gui
 {
+	class Button;
+	class DropDownList;
+	class TextureSelector;
+
+
 	class Button
 	{
 	private:
@@ -75,6 +80,39 @@ namespace gui
 		
 
 		void update(const sf::Vector2f& mousePos);
+		void render(sf::RenderTarget& target);
+	};
+
+	class TextureSelector
+	{
+	private:
+		float gridSize;
+		bool isActive;
+
+		sf::RectangleShape bounds;	//The big rectangle containing the entire tile sheet
+
+		sf::Sprite sheet;
+
+		sf::RectangleShape selectorRect;	//The outline that shows the current active tile
+
+		sf::Vector2u mousePosGrid;
+
+		sf::IntRect textureRect;
+
+		
+
+		//Initialization functions
+		void initRect(float x, float y, float width, float height);
+		void initSprite(float x, float y, sf::Texture* texture_sheet);
+	public:
+		TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size);
+		~TextureSelector();
+
+		//Accessors
+		const bool& getIsActive() const;
+
+		//Functions
+		void update(const sf::Vector2i& mousePosWindow);
 		void render(sf::RenderTarget& target);
 	};
 }

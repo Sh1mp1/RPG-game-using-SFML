@@ -17,11 +17,15 @@ private:
 
 	TileMap* tileMap;
 
-	sf::IntRect textureRect;
-	sf::RectangleShape selectorRect;
-	sf::RectangleShape currentTexture;
+	sf::IntRect textureRect;	//Stores which texturerect will be used by tileMap;
 
-	sf::Texture tileMapTexture;
+	sf::RectangleShape selectorRect;	//Shows which grid the mouse is currently pointing to
+
+	sf::RectangleShape currentTextureGUI;	//Shows which texturerect is currently selected next to mousePosText
+
+	gui::TextureSelector* textureSelector;
+
+	sf::Texture tileMapTexture;	//Stores the texture sheet/ tilesheet
 
 	std::map<std::string, gui::Button*> buttons;
 
@@ -50,10 +54,11 @@ public:
 	void updateMouseScroll(const float& dt);
 	void updateInput(const float& dt);
 	void updateEditorInput(const float& dt);
-	void updateTextureRect(float mouseScroll);
+	void updateTextureRect();
 	void updatePauseMenu();
 	void updateButtons();
 	void updateGUI();
+	void updateCurrentTextureGUI();
 	void updateText();
 
 	void update(const float& dt);

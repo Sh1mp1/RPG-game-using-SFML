@@ -39,6 +39,8 @@ EditorState::~EditorState()
 	{
 		delete i.second;
 	}
+
+	delete this->textureSelector;
 }
 
 void EditorState::initFont()
@@ -79,6 +81,7 @@ void EditorState::initGUI()
 	this->selectorRect.setOutlineThickness(1.f);
 	this->selectorRect.setOutlineColor(sf::Color::Red);
 
+	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 640.f, &this->tileMapTexture, this->stateData->gridSize);
 }
 
 void EditorState::initPauseMenu()
@@ -103,9 +106,9 @@ void EditorState::initTexturRect()
 
 	this->textureRect = sf::IntRect(0, 0, static_cast<int>(this->gridSize), static_cast<int>(this->gridSize));
 
-	this->currentTexture.setSize(sf::Vector2f(20.f, 20.f));
-	this->currentTexture.setTexture(&this->tileMapTexture);
-	this->currentTexture.setTextureRect(this->textureRect);
+	this->currentTextureGUI.setSize(sf::Vector2f(35.f, 35.f));
+	this->currentTextureGUI.setTexture(&this->tileMapTexture);
+	this->currentTextureGUI.setTextureRect(this->textureRect);
 }
 
 
@@ -157,14 +160,87 @@ void EditorState::updateEditorInput(const float& dt)
 
 	if (*this->stateData->mouseWheelDelta != 0)
 	{
-		std::cout << static_cast<int>(*stateData->mouseWheelDelta) << '\n';
+		//this->updateTextureRect();
+		std::cout << this->textureRect.getPosition().x << " " << this->textureRect.getPosition().y << '\n';
 	}
 	
 }
 
-void EditorState::updateTextureRect(float mouseScroll)
+void EditorState::updateTextureRect()
 {
-	//Todo update texture rect based on mouse wheel scroll_-----------------------------------------------------------------------------------------------------------------------------
+	/*
+	Updates the textureRect according to mouse wheel scroll
+	
+	mouseWheelDelta = -1 when mouse scrolls up
+	mouseWheelDelta = 1 when mouse scrolls down
+	*/
+
+	if (*this->stateData->mouseWheelDelta < 0)
+	{
+		this->textureRect.top += this->textureRect.height;
+
+		//Check if the textureRect has reached the very bottom of the tile sheet
+		if (this->textureRect.top > 512)
+		{
+			//Reset the textureRect to the top(1st row) and go to the next column
+			this->textureRect.top = 0.f;
+			this->textureRect.left += this->textureRect.width;
+		}
+
+		else if (this->textureRect.top > 256 && this->textureRect.left >= 192)
+		{
+			//Reset the textureRect to the top(1st row) and go to the next column
+			this->textureRect.top = 0.f;
+			this->textureRect.left += this->textureRect.width;
+		}
+		
+		else if (this->textureRect.top > 192 && this->textureRect.left >= 384)
+		{
+			//Reset the textureRect to the top(1st row) and go to the next column
+			this->textureRect.top = 0.f;
+			this->textureRect.left += this->textureRect.width;
+		}
+
+		//Check if the textureRect has reached the very last column
+		if (this->textureRect.left >= 576)
+		{
+			//Reset the textureRect to the first column and first row
+			this->textureRect.left = 0.f;
+			this->textureRect.top = 0.f;
+		}
+	}
+
+	else if (*this->stateData->mouseWheelDelta > 0)
+	{
+		this->textureRect.top -= this->textureRect.height;
+
+		if (this->textureRect.top < 0.f)
+		{
+			if (this->textureRect.left >= 384)
+			{
+				this->textureRect.left -= this->textureRect.width;
+				this->textureRect.top = 192;
+			}
+
+			else if (this->textureRect.left >= 192)
+			{
+				this->textureRect.left -= this->textureRect.width;
+				this->textureRect.top = 256;
+			}
+
+			else if (this->textureRect.left >= 0.f)
+			{
+				this->textureRect.left -= this->textureRect.width;
+				this->textureRect.top = 512.f;
+			}
+
+			if (this->textureRect.left < 0.f)
+			{
+				this->textureRect.left = 576.f;
+				this->textureRect.top = 192.f;
+			}
+		}
+	}
 }
 
 void EditorState::updatePauseMenu()
@@ -205,9 +281,16 @@ void EditorState::updateButtons()
 
 void EditorState::updateGUI()
 {
-	this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
+	this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);	
 
-	this->currentTexture.setPosition(sf::Vector2f(this->mousePosView.x + 20.f, this->mousePosView.y));
+	this->textureSelector->update(this->mousePosWindow);
+}
+
+void EditorState::updateCurrentTextureGUI()
+{
+	this->currentTextureGUI.setPosition(sf::Vector2f(this->mousePosView.x + 25.f, this->mousePosView.y - 25.f));
+	this->currentTextureGUI.setTexture(&this->tileMapTexture);
+	this->currentTextureGUI.setTextureRect(this->textureRect);	
 }
 
 void EditorState::updateText()
@@ -237,8 +320,8 @@ void EditorState::update(const float& dt)
 	{
 		this->updateGUI(); 
 		this->updateMouseScroll(dt);
-		this->updateEditorInput(dt);
-		
+		this->updateEditorInput(dt);	
+		this->updateCurrentTextureGUI();
 	}
 
 }
@@ -253,8 +336,14 @@ void EditorState::renderButtons(sf::RenderTarget& target)
 
 void EditorState::renderGUI(sf::RenderTarget& target)
 {
-	target.draw(this->selectorRect);
-	target.draw(this->currentTexture);
+	if (!this->textureSelector->getIsActive())	//Draw the selector rect only when the mouse is outside the tileMap showing all the textures
+	{
+		target.draw(this->selectorRect);
+	}
+	
+	this->textureSelector->render(target);
+
+	//target.draw(this->currentTextureGUI);
 }
 
 void EditorState::render(sf::RenderTarget* target)

@@ -1,9 +1,62 @@
 ﻿  EditorState.cpp
-  Game.cpp
-  MainMenuState.cpp
-  main.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(186,28): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(186,28): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(186,28): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(186,28): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(186,28): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(193,28): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(193,28): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(193,28): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(193,28): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(193,28): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(200,28): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(200,28): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(200,28): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(200,28): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(200,28): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(208,29): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(208,29): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(208,29): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(208,29): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(208,29): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(209,28): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(209,28): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(209,28): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(209,28): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(209,28): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(234,29): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(234,29): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(234,29): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(234,29): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(234,29): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(239,30): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(239,30): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(239,30): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(239,30): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(239,30): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(240,29): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(240,29): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(240,29): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(240,29): warning C4244:             T=int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(240,29): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
+  
   Generating code
-  0 of 1343 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  3 of 1354 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
