@@ -83,7 +83,20 @@ void GameState::initPauseMenu()
 
 void GameState::initTileMap()
 {
-	//this->tileMap = new TileMap(this->stateData->gridSize, 10, 10);
+	this->tileMapTexturePath = "Textures/tilesheet.png";
+	
+	if (!this->tileMapTexture.loadFromFile(this->tileMapTexturePath))
+	{
+		std::cout << "ERROR::GAMESTATE::COULDNT LOAD TEXTURE FROM PATH: " << this->tileMapTexturePath << '\n';
+	}
+
+	this->tileMap = new TileMap(this->stateData->gridSize, static_cast<unsigned>(this->stateData->window->getSize().x / this->stateData->gridSize),
+		static_cast<unsigned>(this->stateData->window->getSize().y / this->stateData->gridSize),
+		this->tileMapTexture, this->tileMapTexturePath);
+
+
+	this->tileMap->loadFromFile("testtilemap");
+
 }
 
 GameState::GameState(StateData* state_data)
@@ -295,6 +308,7 @@ void GameState::render(sf::RenderTarget* target)
 		target = this->window;
 	}
 
+	this->tileMap->render(*target);
 	this->player->render(*target);
 	if (this->isGunEquipped)
 		this->gun->render(*target);

@@ -1,6 +1,24 @@
 #include "stdafx.h"
 #include "TileMap.h"
 
+void TileMap::clearMap()
+{
+	for (int x = 0; x < this->map.size(); ++x)
+	{
+		for (int y = 0; y < this->map[x].size(); ++y)
+		{
+			for (int z = 0; z < this->layers; ++z)
+			{
+				delete this->map[x][y][z];
+				this->map[x][y][z] = nullptr;
+			}
+			this->map[x][y].clear();
+		}
+		this->map[x].clear();
+	}
+	this->map.clear();
+}
+
 void TileMap::initTileMap(float grid_size, unsigned width, unsigned height)
 {
 	this->gridSizeF = grid_size;
@@ -28,25 +46,142 @@ void TileMap::initTileTextureSheet()
 	}
 }
 
-TileMap::TileMap(float grid_size, unsigned width, unsigned height, sf::Texture& texture)
-	:tileSheet(texture)
+
+TileMap::TileMap(float grid_size, unsigned width, unsigned height, sf::Texture& texture, const std::string texture_path)
+	:tileSheet(texture), texturePath(texture_path)
 {
 	this->initTileMap(grid_size, width, height);
-	//this->initTileTextureSheet();
 }
 
 TileMap::~TileMap()
 {
-	for (int x = 0; x < this->map.size(); ++x)
+	this->clearMap();
+}
+
+//Functions
+
+void TileMap::savetoFile(const std::string path)
+{
+	/*
+	Saves the entire map to a text file
+	Format:-
+	Size: x, y
+	gridSize
+	layers
+	texture (file path)
+
+	(ALL TILES)
+	gridPos x, y (all tiles) , textureRect left, top , collision , type
+	*/
+
+	std::ofstream out_file;
+
+	out_file.open(path);
+
+	if (out_file.is_open())
 	{
-		for (int y = 0; y < this->map[x].size(); ++y)
+		out_file << this->mapSize.x << " " << this->mapSize.y << '\n'
+			<< this->gridSizeF << '\n'
+			<< this->layers << '\n'
+			<< this->texturePath << '\n';
+
+		for (int x = 0; x < this->map.size(); ++x)
 		{
-			for (int z = 0 ; z < this->layers; ++z)
+			for (int y = 0; y < this->map[x].size(); ++y)
 			{
-				delete this->map[x][y][z];
+				for (int z = 0; z < this->layers; ++z)
+				{
+					//out_file << 0 << 0 << 0 << 0 << " ";
+
+					if (this->map[x][y][z])
+					{
+						out_file << x << " " << y << " " << z << " " << this->map[x][y][z]->getString() << "\n";
+					}
+				}
 			}
 		}
-	} 
+
+	}
+	else
+	{
+		std::cout << "ERROR::TILEMAP::COULDNT SAVE TILEMAP TO PATH : '" << path << "'" << '\n';
+	}
+
+	out_file.close();
+}
+
+void TileMap::loadFromFile(const std::string path)
+{/*
+	Loads the entire map from a text file
+	Format:-
+	Size: x, y
+	gridSize
+	layers
+	texture (file path)
+
+	(ALL TILES)
+	gridPos x, y (all tiles) , textureRect left, top , collision , type
+	*/
+
+	std::ifstream in_file;
+
+	in_file.open(path);
+
+	if (in_file.is_open())
+	{
+		sf::Vector2u size;
+		float grid_size = 0;
+		unsigned layers = 0;
+		std::string texture_path;
+		unsigned x = 0;
+		unsigned y = 0;
+		unsigned z = 0;
+		unsigned texture_rect_left = 0;
+		unsigned texture_rect_top = 0;
+		bool collision = false;;
+		short type = 0;
+
+		//Basics
+		in_file >> size.x >> size.y >> grid_size >> layers >> texture_path;
+
+		this->mapSize = size;
+		this->gridSizeF = grid_size;
+		this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
+		this->layers = layers;
+		this->texturePath = texture_path;
+
+
+
+
+		//Initializing tiles
+		this->map.resize(this->mapSize.x, std::vector<std::vector<Tile*>>());
+		for (int x = 0; x < this->mapSize.x; ++x)
+		{
+			this->map[x].resize(this->mapSize.y, std::vector<Tile*>());
+			for (int y = 0; y < this->mapSize.y; ++y)
+			{
+				this->map[x][y].resize(this->layers, nullptr);
+			}
+		}
+
+		if (!this->tileSheet.loadFromFile(this->texturePath))
+		{
+			std::cout << "ERROR::TILEMAP::COULDNT LOAD TEXTURE FROM PATH : " << this->texturePath << '\n';
+		}
+
+		//Load all tiles
+		while (in_file >> x >> y >> z >> texture_rect_left >> texture_rect_top >> collision >> type)
+		{
+			this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, sf::IntRect(texture_rect_left, texture_rect_top,
+				this->gridSizeU, this->gridSizeU),type, collision);
+		}
+
+	}
+	else
+	{
+		std::cout << "ERROR::TILEMAP::COULDNT LOAD TILEMAP FROM PATH : '" << path << "'" << '\n';
+	}
+	in_file.close();
 }
 
 void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, const sf::IntRect& texture_rect)
@@ -62,7 +197,7 @@ void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, cons
 	{
 		if (this->map[x][y][z] == nullptr)
 		{
-			this->map[x][y][z] = new Tile(sf::Vector2f(x, y) * this->gridSizeF, this->gridSizeF, this->tileSheet, texture_rect);
+			this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect, TileTypes::DEFAULT, false);
 		}
 	}
 

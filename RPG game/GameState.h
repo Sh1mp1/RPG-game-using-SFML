@@ -39,6 +39,8 @@ private:
 	std::map <std::string, int> keybinds;
 
 	TileMap* tileMap;
+	sf::Texture tileMapTexture;	//Stores the texture sheet/ tilesheet
+	std::string tileMapTexturePath;	//Stores the path to the texture file
 
 	float weaponAngle;
 

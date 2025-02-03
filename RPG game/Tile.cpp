@@ -2,33 +2,57 @@
 #include "Tile.h"
 
 
-void Tile::initShape(sf::Vector2f pos, float gridSize)
+void Tile::initShape(sf::Vector2u grid_pos, float gridSize)
 {
 	this->shape.setSize(sf::Vector2f(gridSize, gridSize));
 	this->shape.setFillColor(sf::Color(255, 255, 255, 255));
-	this->shape.setPosition(sf::Vector2f(0.f, 0.f));
 
-	this->shape.setPosition(pos);
+	this->shape.setPosition(static_cast<sf::Vector2f>(grid_pos) * gridSize);
 }
 
 void Tile::initTexture(const sf::Texture& texture, const sf::IntRect& texture_rect)
 {
+	this->textureRect = texture_rect;
+
 	this->shape.setTexture(&texture);
 	this->shape.setTextureRect(texture_rect);
 }
 
 Tile::Tile()
 {
+	this->collision = false;
+	this->type = 0;
 }
 
-Tile::Tile(sf::Vector2f pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect)
+Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, short type = 0, bool collision = false)
+	:type(type), collision(collision)
 {
-	this->initShape(pos, gridSize);
+	this->initShape(grid_pos, gridSize);
 	this->initTexture(texture, texture_rect);
+
 }
 
 Tile::~Tile()
 {
+}
+
+const std::string Tile::getString() const
+{
+	std::stringstream ss;
+	ss << this->textureRect.left << " " << this->textureRect.top << " " <<
+		this->collision << " " << this->type;
+
+	return ss.str();
+}
+
+const sf::Vector2f& Tile::getPosition() const
+{
+	return this->shape.getPosition();
+}
+
+const sf::Vector2f& Tile::getTextureRectPosition() const
+{
+	return sf::Vector2f(this->textureRect.left, this->textureRect.top);
 }
 
 //Functions

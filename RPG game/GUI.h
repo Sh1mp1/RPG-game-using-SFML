@@ -88,7 +88,7 @@ namespace gui
 	{
 	private:
 		float gridSize;
-		bool isActive;
+		bool isActive;	//Stores true of the mouse is on the texture selector
 
 		gui::Button* hideButton;
 		bool isHidden;
@@ -122,6 +122,7 @@ namespace gui
 		const bool& getIsActive() const;
 		const sf::Vector2u& getGridPos() const;
 		const sf::IntRect& getTextureRect() const;
+		const bool& isHideButtonPressed() const;
 
 		//Functions
 		void updateButton();

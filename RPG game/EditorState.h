@@ -25,13 +25,17 @@ private:
 
 	gui::TextureSelector* textureSelector;
 
+	sf::RectangleShape sidebar;
+
 	sf::Texture tileMapTexture;	//Stores the texture sheet/ tilesheet
+	std::string tileMapTexturePath;
 
 	std::map<std::string, gui::Button*> buttons;
 
 	std::map <std::string, int> keybinds;
 
-	//float mouseWheelDelta;
+	float addTileCooldown;	//An extra cooldown so user doesnt add a tile whenever hitting the hide tilemap button
+	float addTileCooldownMax;
 
 	PauseMenu pauseMenu;
 	bool isEscapePressed;
@@ -44,14 +48,17 @@ private:
 	void initGUI();
 	void initPauseMenu();
 	void initTileMap();
-	void initTexturRect();
+	void initTextureRect();
 public:
     EditorState(StateData* state_data);
     ~EditorState();
 
 
 	const bool isValidPos(const sf::Vector2u mousePosGrid) const;	//Returns true if the position/intRect of the texture is valid and isn't blank
+
+	const bool canAddTile();
 	//Functions 
+	void updateAddTileCooldown(const float& dt);
 	void updateMouseScroll(const float& dt);
 	void updateInput(const float& dt);
 	void updateEditorInput(const float& dt);

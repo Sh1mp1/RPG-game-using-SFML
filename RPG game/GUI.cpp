@@ -345,6 +345,11 @@ const sf::IntRect& gui::TextureSelector::getTextureRect() const
 	return this->textureRect;
 }
 
+const bool& gui::TextureSelector::isHideButtonPressed() const
+{
+	return this->hideButton->isPressed();
+}
+
 //Functions
 
 void gui::TextureSelector::updateButton()
@@ -389,12 +394,12 @@ void gui::TextureSelector::update(const sf::Vector2i& mousePosWindow)
 		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)) || this->hideButton->getBounds().contains(this->mousePosView))
 		{
 			this->isActive = true;
-			std::cout << "TRUE" << '\n';
+			//std::cout << "TRUE" << '\n';
 		}
 		else
 		{
 			this->isActive = false;
-			std::cout << "FALSE" << '\n';
+			//std::cout << "FALSE" << '\n';
 		}
 
 		if (this->isActive)
@@ -437,7 +442,7 @@ void gui::TextureSelector::render(sf::RenderTarget& target)
 	}
 
 	this->hideButton->render(target, true);
-	std::cout << this->hideButton->getBounds().left << this->hideButton->getBounds().top << '\n';
+	//std::cout << this->hideButton->getBounds().left << this->hideButton->getBounds().top << '\n';
 
 	//std::cout << this->mousePosGrid.x << " " << this->mousePosGrid.y << '\n';
 }
