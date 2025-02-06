@@ -28,7 +28,7 @@ public:
 
 	//FUnctions;
 	void addButton(sf::Vector2f pos, std::string text);
-	void update(sf::Vector2f& mousePos);
+	void update(sf::Vector2i& mousePosWindow);
 	void render(sf::RenderTarget& target);
 };
 

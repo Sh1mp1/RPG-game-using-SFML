@@ -55,6 +55,11 @@ const sf::FloatRect& Entity::getBounds() const
 	return this->sprite.getGlobalBounds();
 }
 
+const sf::RectangleShape& Entity::getHitbox() const
+{
+	return this->hitboxComponent->getHitbox();
+}
+
 
 //Component functions
 
@@ -64,10 +69,12 @@ const sf::FloatRect& Entity::getBounds() const
 void Entity::move(const float& dt, sf::Vector2f dir)
 {
 	if (this->movementComponent)
-		this->movementComponent->move(dt, dir, &this->sprite);	//Sets velocity from movement component
+		this->movementComponent->move(dt, dir, &this->sprite);	//Sets velocity from movement component	
+}
 
-	
-		
+void Entity::setPosition(sf::Vector2f pos)
+{
+	this->sprite.setPosition(pos);
 }
 
 void Entity::update(const float& dt)

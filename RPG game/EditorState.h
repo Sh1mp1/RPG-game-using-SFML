@@ -13,9 +13,12 @@ class EditorState :
     public State
 {
 private:
-	sf::Text mousePosText;
+	sf::View view;
+	float cameraSpeed;	//The speed at which user can move the camera
 
-	TileMap* tileMap;
+	sf::Text mouseText;	//Shows position of mouse, this->collision and this->type
+
+	TileMap* tileMap;	//contains the tile sheet
 
 	sf::IntRect textureRect;	//Stores which texturerect will be used by tileMap;
 
@@ -23,12 +26,12 @@ private:
 
 	sf::RectangleShape currentTextureGUI;	//Shows which texturerect is currently selected next to mousePosText
 
-	gui::TextureSelector* textureSelector;
+	gui::TextureSelector* textureSelector;	//GUI to select specific tile from tile sheet
 
 	sf::RectangleShape sidebar;
 
 	sf::Texture tileMapTexture;	//Stores the texture sheet/ tilesheet
-	std::string tileMapTexturePath;
+	std::string tileMapTexturePath;	//The path of the tile sheet file
 
 	std::map<std::string, gui::Button*> buttons;
 
@@ -40,7 +43,12 @@ private:
 	PauseMenu pauseMenu;
 	bool isEscapePressed;
 
+	bool collision;	//Stores if the tile to be added will have collision
+	short type;	//Stores the type of the tile to be added
+
 	//Initializer functions
+	void initVariables();
+	void initView();
 	void initKeybinds();
 	void initFont();
 	void initBackground();
@@ -62,7 +70,7 @@ public:
 	void updateMouseScroll(const float& dt);
 	void updateInput(const float& dt);
 	void updateEditorInput(const float& dt);
-	void updateTextureRect();
+	void updateViewSize();
 	void updatePauseMenu();
 	void updateButtons();
 	void updateGUI();

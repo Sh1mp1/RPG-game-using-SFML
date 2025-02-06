@@ -32,10 +32,11 @@ public:
 	const sf::FloatRect& getBounds() const;
 				
 	//Component functions
-
+	const sf::RectangleShape& getHitbox() const;
 
 	//Functions
 	void move(const float& dt, sf::Vector2f dir);	
+	void setPosition(sf::Vector2f pos);
 													
 	virtual void update(const float& dt) = 0;
 	virtual void render(sf::RenderTarget& target);	

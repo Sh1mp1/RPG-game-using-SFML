@@ -128,7 +128,7 @@ void SettingsState::updateInput(const float& dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("close"))))
 	{
-		this->quit = true;
+		this->endState();
 	}
 }
 
@@ -138,14 +138,14 @@ void SettingsState::updateButtons()
 	//Updates all button states and changes their color with mouse interaction
 	for (auto& i : this->buttons)
 	{
-		i.second->update(this->mousePosView);
+		i.second->update(this->mousePosWindow);
 	}
 	
 	
 	//Exits when "EXIT" button is pressed
 	if (this->buttons.at("EXIT")->isPressed())
 	{
-		this->quit = true;
+		this->endState();
 	}
 
 	if (this->buttons.at("APPLY")->isPressed())
@@ -183,7 +183,7 @@ void SettingsState::updateGUI()
 
 void SettingsState::updateDropDownList()
 {
-	this->dropDownList->update(this->mousePosView);	
+	this->dropDownList->update(this->mousePosWindow);
 }
 
 void SettingsState::updateButtonPos()

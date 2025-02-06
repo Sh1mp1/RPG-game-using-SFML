@@ -24,7 +24,7 @@ Tile::Tile()
 	this->type = 0;
 }
 
-Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, short type = 0, bool collision = false)
+Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, const short type, const bool collision)
 	:type(type), collision(collision)
 {
 	this->initShape(grid_pos, gridSize);
@@ -34,6 +34,11 @@ Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, co
 
 Tile::~Tile()
 {
+}
+
+const bool Tile::hasCollision() const
+{
+	return this->collision;
 }
 
 const std::string Tile::getString() const

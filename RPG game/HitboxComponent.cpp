@@ -17,6 +17,11 @@ HitboxComponent::~HitboxComponent()
 {
 }
 
+const sf::RectangleShape& HitboxComponent::getHitbox() const
+{
+	return this->hitbox;
+}
+
 bool HitboxComponent::checkIntersect(const sf::FloatRect& rect)
 {
 	return this->sprite.getGlobalBounds().intersects(rect);

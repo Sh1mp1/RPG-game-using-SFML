@@ -12,6 +12,9 @@ public:
 	HitboxComponent(sf::Sprite& sprite, sf::Vector2f offset, sf::Vector2f size);
 	~HitboxComponent();
 	
+	//Accessors
+	const sf::RectangleShape& getHitbox() const;
+
 	//Functions
 	bool checkIntersect(const sf::FloatRect& rect);
 

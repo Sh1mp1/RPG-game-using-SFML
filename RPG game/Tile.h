@@ -1,7 +1,7 @@
 #pragma once
 
 
-enum TileTypes {DEFAULT = 0, DAMAGING};
+enum TileTypes {DEFAULT = 0, DAMAGING, NO_OF_TYPES};
 
 class Tile
 {
@@ -20,10 +20,11 @@ protected:
 	void initTexture(const sf::Texture& texture, const sf::IntRect& texture_rect);
 public:
 	Tile();
-	Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, short type, bool collision);
+	Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, short type = 0, bool collision = 0);
 	~Tile();
 
 	//Accessors
+	const bool hasCollision() const;
 	const std::string getString() const;
 	const sf::Vector2f& getPosition() const;
 	const sf::Vector2f& getTextureRectPosition() const;

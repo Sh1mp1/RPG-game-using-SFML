@@ -111,11 +111,11 @@ void gui::Button::centreText(const sf::Vector2f& centrePos)
 }
 
 
-void gui::Button::update(sf::Vector2f mousePos)
+void gui::Button::update(sf::Vector2i mousePosWindow)
 {
 	this->buttonState = BTN_IDLE;
 
-	if (this->text.getGlobalBounds().contains(mousePos))
+	if (this->text.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)))
 	{
 		this->buttonState = BTN_HOVER;
 
@@ -165,7 +165,7 @@ void gui::Button::render(sf::RenderTarget& target, const bool& drawShape)
 
 
 /*
-DROP DOWN LIST -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DROP DOWN LIST===================================================================================================================================================================
 */
 
 
@@ -219,9 +219,9 @@ const short unsigned gui::DropDownList::getActiveElementID() const
 	return 1;
 }
 
-void gui::DropDownList::update(const sf::Vector2f& mousePos)
+void gui::DropDownList::update(const sf::Vector2i& mousePosWindow)
 {
-	this->activeElement->update(mousePos);
+	this->activeElement->update(mousePosWindow);
 
 	if (this->activeElement->isPressed())
 	{
@@ -240,7 +240,7 @@ void gui::DropDownList::update(const sf::Vector2f& mousePos)
 	{
 		for (auto& i : this->list)
 		{
-			i->update(mousePos);
+			i->update(mousePosWindow);
 			if (i->isPressed() && i != this->activeElement)
 			{
 				this->activeElement->setText(i->getString());
@@ -303,6 +303,8 @@ void gui::TextureSelector::initSelectorRect(float x, float y)
 	this->selectorRect.setOutlineColor(sf::Color::Red);
 }
 
+//Constructor & Destructor
+
 void gui::TextureSelector::initButton()
 {
 	sf::Vector2f pos(this->bounds.getSize().x - 50.f, this->bounds.getSize().y - 50.f);
@@ -310,8 +312,8 @@ void gui::TextureSelector::initButton()
 										sf::Vector2f(70.f, 30.f));
 }
 
-gui::TextureSelector::TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size, sf::Font& font, sf::Vector2f& mouse_pos_view)
-	:isActive(false), gridSize(grid_size), isHidden(false), font(font), mousePosView(mouse_pos_view), isButtonPressed(false)
+gui::TextureSelector::TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size, sf::Font& font, sf::Vector2i& mouse_pos_window)
+	:isActive(false), gridSize(grid_size), isHidden(false), font(font), mousePosWindow(mouse_pos_window), isButtonPressed(false)
 {
 	this->initRect(x, y, width, height);
 
@@ -330,6 +332,7 @@ gui::TextureSelector::~TextureSelector()
 {
 }
 
+//Functions
 const bool& gui::TextureSelector::getIsActive() const
 {
 	return this->isActive;
@@ -354,7 +357,7 @@ const bool& gui::TextureSelector::isHideButtonPressed() const
 
 void gui::TextureSelector::updateButton()
 {
-	this->hideButton->update(this->mousePosView);
+	this->hideButton->update(this->mousePosWindow);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -391,7 +394,7 @@ void gui::TextureSelector::update(const sf::Vector2i& mousePosWindow)
 	this->updateButton();
 	if (!this->isHidden)
 	{
-		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)) || this->hideButton->getBounds().contains(this->mousePosView))
+		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)) || this->hideButton->getBounds().contains(static_cast<sf::Vector2f>(this->mousePosWindow)))
 		{
 			this->isActive = true;
 			//std::cout << "TRUE" << '\n';
@@ -417,7 +420,7 @@ void gui::TextureSelector::update(const sf::Vector2i& mousePosWindow)
 	}
 	else
 	{
-		if (this->hideButton->getBounds().contains(this->mousePosView))
+		if (this->hideButton->getBounds().contains(static_cast<sf::Vector2f>(this->mousePosWindow)))
 		{
 			this->isActive = true;
 		}

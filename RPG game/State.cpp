@@ -4,7 +4,7 @@
 
 
 State::State(StateData* state_data)
-	:gfxSettings(*state_data->gfxSettings), keyTime(-2.f), keyTimeMax(2.f)
+	:gfxSettings(*state_data->gfxSettings), keyTime(-2.f), keyTimeMax(4.f)
 {
 	this->stateData = state_data;
 
@@ -50,14 +50,25 @@ void State::endState()
 	this->quit = true;
 }
 
-void State::updateMousePositions()
+void State::updateMousePositions(const sf::View* view)
 {
 	this->mousePosScreen = sf::Mouse::getPosition();
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+
+	if (view)
+	{
+		this->window->setView(*view);
+	}
+	
+
 	this->mousePosView = this->stateData->window->mapPixelToCoords(this->mousePosWindow);
 	this->mousePosGrid = sf::Vector2u(static_cast<unsigned>(this->mousePosView.x / this->gridSize), 
 									  static_cast<unsigned>(this->mousePosView.y / this->gridSize));
+	this->mousePosGridWindow = sf::Vector2u(
+		static_cast<unsigned>(this->mousePosWindow.x / this->gridSize),
+		static_cast<unsigned>(this->mousePosWindow.y / this->gridSize));
 
+	this->window->setView(this->window->getDefaultView());
 }
 
 void State::updateKeyTime(const float& dt)

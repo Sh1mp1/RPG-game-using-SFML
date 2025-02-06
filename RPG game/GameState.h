@@ -16,7 +16,10 @@ class GameState:
 	public State
 {
 private:
-	//Entity player;
+	sf::View view;
+	sf::RenderTexture renderTexture;
+	sf::Sprite renderSprite;
+
 	Entity* player;
 	sf::Texture playerTexture;
 
@@ -46,6 +49,8 @@ private:
 
 	
 	//Initialization functions
+	void initDefferedRender();
+	void initView();
 	void initWindow();
 	void initKeybinds();
 	void initPlayer();
@@ -60,7 +65,7 @@ public:
 	virtual ~GameState();
 
 	//Functions 
-	
+	void updateView();	//Sets the center of the camera to the player
 	void updatePauseMenu();
 	void updateGun(const float& dt);
 	void updateInput(const float& dt);

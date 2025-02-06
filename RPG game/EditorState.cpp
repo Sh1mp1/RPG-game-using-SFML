@@ -2,6 +2,21 @@
 #include "EditorState.h"
 
 
+void EditorState::initVariables()
+{
+	this->collision = false;
+	this->type = TileTypes::DEFAULT;
+	this->cameraSpeed = 400.f;
+}
+
+void EditorState::initView()
+{
+	unsigned width = this->stateData->gfxSettings->resolution.width;
+	unsigned height = this->stateData->gfxSettings->resolution.height;
+	this->view.setSize(sf::Vector2f(width , height));
+	this->view.setCenter(sf::Vector2f(width / 2.f, height / 2.f));
+}
+
 void EditorState::initKeybinds()
 {
 	std::ifstream ifs("config/editorstate_keybinds.ini");
@@ -22,6 +37,8 @@ void EditorState::initKeybinds()
 EditorState::EditorState(StateData* state_data)
 	:State(state_data), pauseMenu(*this->window, *state_data->font), isEscapePressed(false), addTileCooldown(0.f), addTileCooldownMax(0.1f)
 {
+	this->initView();
+	this->initVariables();
 	this->initBackground();
 	this->initFont();
 	//this->initButtons();
@@ -45,14 +62,14 @@ EditorState::~EditorState()
 
 void EditorState::initFont()
 {
-	this->mousePosText.setFont(*this->stateData->font);
+	this->mouseText.setFont(*this->stateData->font);
 
 
-	this->mousePosText.setOutlineColor(sf::Color::Black);
-	this->mousePosText.setOutlineThickness(1.f);
-	this->mousePosText.setString("START");
-	this->mousePosText.setPosition(sf::Vector2f(0.f, 0.f));
-	this->mousePosText.setCharacterSize(15);
+	this->mouseText.setOutlineColor(sf::Color::Black);
+	this->mouseText.setOutlineThickness(1.f);
+	this->mouseText.setString("START");
+	this->mouseText.setPosition(sf::Vector2f(0.f, 0.f));
+	this->mouseText.setCharacterSize(15);
 }
 
 void EditorState::initBackground()
@@ -81,7 +98,7 @@ void EditorState::initGUI()
 	this->selectorRect.setOutlineThickness(1.f);
 	this->selectorRect.setOutlineColor(sf::Color::Green);
 
-	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 576.f, &this->tileMapTexture, this->stateData->gridSize, *this->stateData->font, this->mousePosView);
+	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 576.f, &this->tileMapTexture, this->stateData->gridSize, *this->stateData->font, this->mousePosWindow);
 
 
 	this->sidebar.setSize(sf::Vector2f(50.f, this->stateData->window->getSize().y));
@@ -194,7 +211,7 @@ void EditorState::updateEditorInput(const float& dt)
 
 		if (!this->textureSelector->getIsActive() && this->canAddTile())
 		{
-			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect);
+			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect, this->type, this->collision);
 		}
 		else if (this->isValidPos(this->textureSelector->getGridPos()) && this->textureSelector->getIsActive())
 		{
@@ -209,6 +226,51 @@ void EditorState::updateEditorInput(const float& dt)
 		this->tileMap->removeTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
 	}
 
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("toggle_collision"))) && this->getKeyTime())
+	{
+		this->collision = !this->collision;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("increase_type"))) && this->getKeyTime())
+	{
+		++this->type;
+
+		if (this->type >= TileTypes::NO_OF_TYPES)
+		{
+			this->type = TileTypes::DEFAULT;	//Reset type to first/default tile type
+		}
+	}
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("decrease_type"))) && this->getKeyTime())
+	{
+		--this->type;
+
+		if (this->type <= TileTypes::DEFAULT)
+		{
+			this->type = (TileTypes::NO_OF_TYPES) - 1;	//Reset type to last tile type
+		}
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_camera_up"))))
+	{
+		this->view.move(sf::Vector2f(0.f, -this->cameraSpeed * dt));
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_camera_down"))))
+	{
+		this->view.move(sf::Vector2f(0.f, this->cameraSpeed * dt));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_camera_left"))))
+	{
+		this->view.move(sf::Vector2f(-this->cameraSpeed * dt, 0.f));
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_camera_right"))))
+	{
+		this->view.move(sf::Vector2f(this->cameraSpeed * dt, 0.f));
+	}
+
+
+
 	////Change texture Rect
 	//
 	//if (*this->stateData->mouseWheelDelta != 0)
@@ -219,8 +281,33 @@ void EditorState::updateEditorInput(const float& dt)
 	//
 }
 
-void EditorState::updateTextureRect()
+void EditorState::updateViewSize()
 {
+	/*
+	mouseWheelDelta = -1 when mouse scrolls up
+	mouseWheelDelta = 1 when mouse scrolls down
+	*/
+
+	if (*this->stateData->mouseWheelDelta < 0)
+	{
+		//decrease size
+		this->view.setSize(sf::Vector2f(this->view.getSize().x * 1.01f, this->view.getSize().y * 1.01f));
+	}
+
+	else if (*this->stateData->mouseWheelDelta > 0)
+	{
+		this->view.setSize(sf::Vector2f(this->view.getSize().x / 1.01f, this->view.getSize().y / 1.01f));
+	}
+
+
+
+
+
+
+
+
+
+
 	/*
 	Updates the textureRect according to mouse wheel scroll
 	
@@ -302,8 +389,10 @@ void EditorState::updatePauseMenu()
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			this->quit = this->pauseMenu.isPressed("EXIT");
-
+			if (this->pauseMenu.isPressed("EXIT"))
+			{
+				this->endState();
+			}
 
 			if (this->pauseMenu.isPressed("RESUME"))
 			{
@@ -331,7 +420,7 @@ void EditorState::updateButtons()
 	//Updates all button states and changes their color with mouse interaction
 	for (auto i : this->buttons)
 	{
-		i.second->update(this->mousePosView);
+		i.second->update(this->mousePosWindow);
 	}
 
 	//Push new gamestate to stack when "GAME" or a PLAY button is pressed
@@ -348,7 +437,8 @@ void EditorState::updateButtons()
 }
 
 void EditorState::updateGUI()
-{
+{	
+	//TODO UPDATE THE POSITION OF THE SELECTOR RECT WITH THE WINDOW =================================================================================
 	if (!this->textureSelector->getIsActive())
 	{
 		this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
@@ -366,11 +456,13 @@ void EditorState::updateCurrentTextureGUI()
 
 void EditorState::updateText()
 {
-	this->mousePosText.setPosition(sf::Vector2f(this->mousePosView.x + 10.f, this->mousePosView.y + 10.f));
+	this->mouseText.setPosition(sf::Vector2f(this->mousePosView.x + 10.f, this->mousePosView.y + 10.f));
 
 	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	this->mousePosText.setString(ss.str());
+	ss <<  "POS " << this->mousePosView.x << " " << this->mousePosView.y << '\n'
+		<< "COLLISION " << this->collision << '\n'
+		<< "TYPE " << this->type << '\n';
+	this->mouseText.setString(ss.str());
 
 
 }
@@ -378,18 +470,19 @@ void EditorState::updateText()
 void EditorState::update(const float& dt)
 {
 	this->updateInput(dt);
-	this->updateMousePositions();
+	this->updateMousePositions(&this->view);
 	this->updateText();
 	this->updateKeyTime(dt);
 	this->updateAddTileCooldown(dt);
 	//this->updateButtons();
 	if (paused)
 	{
-		this->pauseMenu.update(this->mousePosView);
+		this->pauseMenu.update(this->mousePosWindow);
 		this->updatePauseMenu();
 	}
 	else
 	{
+		this->updateViewSize();
 		this->updateGUI(); 
 		this->updateMouseScroll(dt);
 		this->updateEditorInput(dt);	
@@ -413,11 +506,15 @@ void EditorState::renderGUI(sf::RenderTarget& target)
 		target.draw(this->selectorRect);
 	}
 	
+	target.setView(this->window->getDefaultView());
 	this->textureSelector->render(target);
+	target.setView(this->view);
 
 	target.draw(this->currentTextureGUI);
 
+	target.setView(this->window->getDefaultView());
 	target.draw(this->sidebar);
+	target.setView(this->view);
 }
 
 void EditorState::render(sf::RenderTarget* target)
@@ -428,9 +525,13 @@ void EditorState::render(sf::RenderTarget* target)
 		target = window;
 	}
 
+	target->setView(this->view);
+
 	//target->draw(this->background);
 	//this->renderButtons(target);
 	this->tileMap->render(*target);
+
+	target->setView(this->window->getDefaultView());
 
 	if (this->paused)
 	{
@@ -438,9 +539,12 @@ void EditorState::render(sf::RenderTarget* target)
 	}
 	else
 	{
+		target->setView(this->view);
 		this->renderGUI(*target);
+		target->draw(this->mouseText);
+		target->setView(this->window->getDefaultView());
 	}
 
 
-	target->draw(this->mousePosText);
+	
 }

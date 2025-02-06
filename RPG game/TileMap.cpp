@@ -23,15 +23,20 @@ void TileMap::initTileMap(float grid_size, unsigned width, unsigned height)
 {
 	this->gridSizeF = grid_size;
 	this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
-	this->mapSize.x = width;
-	this->mapSize.y = height;
+
+	this->maxSizeGrid.x = width;
+	this->maxSizeGrid.y = height;
+
+	this->maxSizeWorld.x = width * grid_size;
+	this->maxSizeWorld.y = height * grid_size;
+
 	this->layers = 1;
 
-	this->map.resize(this->mapSize.x, std::vector<std::vector<Tile*>>());
-	for (int x = 0; x < this->mapSize.x; ++x)
+	this->map.resize(this->maxSizeGrid.x, std::vector<std::vector<Tile*>>());
+	for (int x = 0; x < this->maxSizeGrid.x; ++x)
 	{
-		this->map[x].resize(this->mapSize.y, std::vector<Tile*>());
-		for (int y = 0; y < this->mapSize.y; ++y)
+		this->map[x].resize(this->maxSizeGrid.y, std::vector<Tile*>());
+		for (int y = 0; y < this->maxSizeGrid.y; ++y)
 		{
 			this->map[x][y].resize(this->layers, nullptr);
 		}
@@ -46,11 +51,21 @@ void TileMap::initTileTextureSheet()
 	}
 }
 
+void TileMap::initGUI()
+{
+	this->collisionBox.setSize(sf::Vector2f(this->gridSizeF, this->gridSizeF));
+	this->collisionBox.setFillColor(sf::Color(100, 0, 0, 75));
+
+	this->collisionBox.setOutlineThickness(1.f);
+	this->collisionBox.setOutlineColor(sf::Color(150, 0, 0, 150));
+}
+
 
 TileMap::TileMap(float grid_size, unsigned width, unsigned height, sf::Texture& texture, const std::string texture_path)
 	:tileSheet(texture), texturePath(texture_path)
 {
 	this->initTileMap(grid_size, width, height);
+	this->initGUI();
 }
 
 TileMap::~TileMap()
@@ -80,7 +95,7 @@ void TileMap::savetoFile(const std::string path)
 
 	if (out_file.is_open())
 	{
-		out_file << this->mapSize.x << " " << this->mapSize.y << '\n'
+		out_file << this->maxSizeGrid.x << " " << this->maxSizeGrid.y << '\n'
 			<< this->gridSizeF << '\n'
 			<< this->layers << '\n'
 			<< this->texturePath << '\n';
@@ -144,7 +159,7 @@ void TileMap::loadFromFile(const std::string path)
 		//Basics
 		in_file >> size.x >> size.y >> grid_size >> layers >> texture_path;
 
-		this->mapSize = size;
+		this->maxSizeGrid = size;
 		this->gridSizeF = grid_size;
 		this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
 		this->layers = layers;
@@ -154,11 +169,11 @@ void TileMap::loadFromFile(const std::string path)
 
 
 		//Initializing tiles
-		this->map.resize(this->mapSize.x, std::vector<std::vector<Tile*>>());
-		for (int x = 0; x < this->mapSize.x; ++x)
+		this->map.resize(this->maxSizeGrid.x, std::vector<std::vector<Tile*>>());
+		for (int x = 0; x < this->maxSizeGrid.x; ++x)
 		{
-			this->map[x].resize(this->mapSize.y, std::vector<Tile*>());
-			for (int y = 0; y < this->mapSize.y; ++y)
+			this->map[x].resize(this->maxSizeGrid.y, std::vector<Tile*>());
+			for (int y = 0; y < this->maxSizeGrid.y; ++y)
 			{
 				this->map[x][y].resize(this->layers, nullptr);
 			}
@@ -184,7 +199,7 @@ void TileMap::loadFromFile(const std::string path)
 	in_file.close();
 }
 
-void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, const sf::IntRect& texture_rect)
+void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, const sf::IntRect& texture_rect, const short type, const bool collision)
 {
 	/*
 	Takes 3 coordinates from mouse position and adds tile to that position
@@ -192,12 +207,12 @@ void TileMap::addTile(const unsigned x, const unsigned y, const unsigned z, cons
 
 	
 
-	if (x < this->mapSize.x && y < this->mapSize.y && z < this->layers &&
+	if (x < this->maxSizeGrid.x && y < this->maxSizeGrid.y && z < this->layers &&
 		x >= 0 && y >= 0 && z >= 0)
 	{
 		if (this->map[x][y][z] == nullptr)
 		{
-			this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect, TileTypes::DEFAULT, false);
+			this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect, type, collision);
 		}
 	}
 
@@ -209,7 +224,7 @@ void TileMap::removeTile(const unsigned x, const unsigned y , const unsigned z)
 	Takes 3 coordinates from mouse position and removes the tile at that position
 	*/
 
-	if (x < this->mapSize.x && y < this->mapSize.y && z < this->layers &&	//checks if the coordinates are valid i.e. not out of range of the array
+	if (x < this->maxSizeGrid.x && y < this->maxSizeGrid.y && z < this->layers &&	//checks if the coordinates are valid i.e. not out of range of the array
 		x >= 0 && y >= 0 && z >= 0)
 	{
 		if (this->map[x][y][z] != nullptr)
@@ -220,10 +235,43 @@ void TileMap::removeTile(const unsigned x, const unsigned y , const unsigned z)
 	}
 }
 
+void TileMap::updateCollision(Entity* entity, const float& dt)
+{
+	if (entity)
+	{
+		sf::RectangleShape hitbox = entity->getHitbox();
+		sf::FloatRect bounds = hitbox.getGlobalBounds();
+
+		if (bounds.left < 0.f)
+		{
+			float overlap = -bounds.left;
+			entity->move(dt, sf::Vector2f(overlap, 0.f));
+		}
+		else if (bounds.left + bounds.width > this->maxSizeWorld.x)
+		{
+			float overlap = (bounds.left + bounds.width) - this->maxSizeWorld.x;
+			entity->move(dt, sf::Vector2f(-overlap, 0.f));
+		}
+
+		if (bounds.top < 0.f)
+		{
+			float overlap = -bounds.top;
+			entity->move(dt, sf::Vector2f(0.f, overlap));
+		}
+		else if (bounds.top + bounds.height > this->maxSizeWorld.y)
+		{
+			float overlap = (bounds.top + bounds.height) - this->maxSizeWorld.y;
+			entity->move(dt, sf::Vector2f(0.f, -overlap));
+		}
+
+	}
+}
+
 //Functions
 
-void TileMap::update()
+void TileMap::update(Entity* entity, const float& dt)
 {
+	this->updateCollision(entity, dt);
 }
 
 void TileMap::render(sf::RenderTarget& target)
@@ -234,8 +282,16 @@ void TileMap::render(sf::RenderTarget& target)
 		{
 			for (auto* z : y)
 			{
-				if(z)
+				if (z)
+				{
 					z->render(target);
+					if (z->hasCollision())
+					{
+						this->collisionBox.setPosition(z->getPosition());
+						target.draw(this->collisionBox);
+					}
+				}
+					
 			}
 		}
 	}

@@ -49,6 +49,7 @@ protected:
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosView;
 	sf::Vector2u mousePosGrid;
+	sf::Vector2u mousePosGridWindow;
 
 	//Resources
 	std::map <std::string, sf::Texture*> textures;
@@ -67,7 +68,7 @@ public:
 
 	//Functions
 	virtual void endState();
-	virtual void updateMousePositions();
+	virtual void updateMousePositions(const sf::View* view = nullptr);
 	virtual void updateKeyTime(const float& dt);
 
 

@@ -1,108 +1,73 @@
 ﻿  EditorState.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:             T=unsigned int
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         ]
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         and
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(87,77): warning C4244:         ]
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,42): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,42): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,42): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,42): warning C4244:             T=float
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,42): warning C4244:         ]
   (compiling source file '/EditorState.cpp')
   
-  GUI.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         ]
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         and
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:             T=int
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,115): warning C4244:         ]
-  (compiling source file '/GUI.cpp')
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,34): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,34): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,34): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,34): warning C4244:             T=float
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(16,34): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
   
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         ]
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         and
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:             T=int
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(288,78): warning C4244:         ]
-  (compiling source file '/GUI.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         ]
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         and
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:             T=int
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,115): warning C4244:         ]
-  (compiling source file '/GUI.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         ]
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         and
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:             T=int
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(293,77): warning C4244:         ]
-  (compiling source file '/GUI.cpp')
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:             T=unsigned int
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         ]
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         and
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:             T=float
+C:\Users\ashis\source\repos\RPG game\RPG game\EditorState.cpp(104,77): warning C4244:         ]
+  (compiling source file '/EditorState.cpp')
   
   Game.cpp
   GameState.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(227,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,122): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,122): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,122): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,122): warning C4244:             T=float
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,122): warning C4244:         ]
   (compiling source file '/GameState.cpp')
   
-  MainMenuState.cpp
-  PauseMenu.cpp
-  SettingsState.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(87,13): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(87,13): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(87,13): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(87,13): warning C4244:             T=unsigned int
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(87,13): warning C4244:         ]
-  (compiling source file '/SettingsState.cpp')
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,74): warning C4244: 'argument': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,74): warning C4244:         with
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,74): warning C4244:         [
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,74): warning C4244:             T=float
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(17,74): warning C4244:         ]
+  (compiling source file '/GameState.cpp')
   
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(90,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
+C:\Users\ashis\source\repos\RPG game\RPG game\GameState.cpp(263,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file '/GameState.cpp')
   
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(93,78): warning C4244: 'argument': conversion from 'float' to 'const unsigned int', possible loss of data
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(193,13): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(193,13): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(193,13): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(193,13): warning C4244:             T=unsigned int
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(193,13): warning C4244:         ]
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(195,63): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(195,63): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(195,63): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(195,63): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(195,63): warning C4244:         ]
-  (compiling source file '/SettingsState.cpp')
-  
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(196,64): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(196,64): warning C4244:         with
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(196,64): warning C4244:         [
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(196,64): warning C4244:             T=float
-C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp(196,64): warning C4244:         ]
-  (compiling source file '/SettingsState.cpp')
-  
-  State.cpp
+  HitboxComponent.cpp
   main.cpp
+  MainMenuState.cpp
+  Player.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp(45,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  (compiling source file '/Player.cpp')
+  
+  TileMap.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(10,22): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(36,20): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(39,21): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(107,23): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(173,21): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(176,22): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/TileMap.cpp')
+  
   Generating Code...
-C:\Users\ashis\source\repos\RPG game\RPG game\State.cpp(41,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\State.cpp(43,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(82,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(87,1): warning C4172: returning address of local variable or temporary 
-C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(350,1): warning C4172: returning address of local variable or temporary 
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

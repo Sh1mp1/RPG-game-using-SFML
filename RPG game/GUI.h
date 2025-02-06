@@ -48,7 +48,7 @@ namespace gui
 		void centreText(const sf::Vector2f& centrePos);
 
 		//Functions
-		void update(sf::Vector2f mousePos);
+		void update(sf::Vector2i mousePosWindow);
 		void render(sf::RenderTarget& target);
 		void render(sf::RenderTarget& target, const bool& drawShape);
 	};
@@ -80,7 +80,7 @@ namespace gui
 		const short unsigned getActiveElementID() const;
 		
 
-		void update(const sf::Vector2f& mousePos);
+		void update(const sf::Vector2i& mousePosWindow);
 		void render(sf::RenderTarget& target);
 	};
 
@@ -106,7 +106,7 @@ namespace gui
 
 		sf::Font& font;
 
-		sf::Vector2f& mousePosView;
+		sf::Vector2i& mousePosWindow;
 
 		//Initialization functions
 		void initRect(float x, float y, float width, float height);
@@ -115,7 +115,7 @@ namespace gui
 		void initSelectorRect(float x, float y);
 		void initButton();
 	public:
-		TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size, sf::Font& font, sf::Vector2f& mouse_pos_view);
+		TextureSelector(float x, float y, float width, float height, sf::Texture* texture_sheet, float grid_size, sf::Font& font, sf::Vector2i& mouse_pos_window);
 		~TextureSelector();
 
 		//Accessors

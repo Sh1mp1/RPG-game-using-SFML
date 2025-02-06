@@ -94,7 +94,7 @@ void MainMenuState::updateButtons()
 	//Updates all button states and changes their color with mouse interaction
 	for (auto i : this->buttons)
 	{
-		i.second->update(this->mousePosView);
+		i.second->update(this->mousePosWindow);
 	}
 
 	//Push new gamestate to stack when "GAME" or a PLAY button is pressed
@@ -106,7 +106,7 @@ void MainMenuState::updateButtons()
 	//Exits when "EXIT" button is pressed
 	if (this->buttons.at("EXIT")->isPressed())
 	{
-		this->quit = true;
+		this->endState();;
 	}
 
 	if (this->buttons.at("EDITOR")->isPressed())

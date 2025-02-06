@@ -1,6 +1,29 @@
 #include "stdafx.h"
 #include "GameState.h"
 
+void GameState::initDefferedRender()
+{
+	this->renderTexture.create(this->stateData->gfxSettings->resolution.width, this->stateData->gfxSettings->resolution.height);
+
+	this->renderSprite.setTexture(this->renderTexture.getTexture());
+	this->renderSprite.setTextureRect(sf::IntRect(0, 0, this->stateData->gfxSettings->resolution.width, this->stateData->gfxSettings->resolution.height));
+
+
+	
+}
+
+void GameState::initView()
+{
+	this->view.setSize(sf::Vector2f(this->stateData->gfxSettings->resolution.width, this->stateData->gfxSettings->resolution.height));
+
+
+	sf::FloatRect bounds = this->player->getBounds();
+	float posX = bounds.left + (bounds.width / 2.f);
+	float posY = bounds.top + (bounds.height / 2.f);
+
+	this->view.setCenter(sf::Vector2f(posX, posY));
+}
+
 void GameState::initWindow()
 {
 	if (this->gfxSettings.fullScreen)
@@ -109,9 +132,11 @@ GameState::GameState(StateData* state_data)
 	//this->window->create(sf::VideoMode(this->window->getSize().x, this->window->getSize().y), "TEST", sf::Style::Titlebar | sf::Style::Close);
 	
 	//this->initWindow();
+	this->initDefferedRender();
 	this->initKeybinds();
 	this->initAudio();
 	this->initPlayer();
+	this->initView();
 	this->initBullet();
 	this->initGun();
 	this->initPauseMenu();
@@ -131,12 +156,23 @@ GameState::~GameState()
 
 
 
+void GameState::updateView()
+{
+	sf::FloatRect bounds = this->player->getBounds();
+	float posX = bounds.left + (bounds.width / 2.f);
+	float posY = bounds.top + (bounds.height / 2.f);
+
+	this->view.setCenter(sf::Vector2f(posX, posY));
+}
 
 void GameState::updatePauseMenu()
 {
 	if (this->paused)
 	{
-		this->quit = this->pauseMenu.isPressed("EXIT");
+		if (this->pauseMenu.isPressed("EXIT"))
+		{
+			this->endState();
+		}
 
 
 		if (this->pauseMenu.isPressed("RESUME"))
@@ -192,10 +228,10 @@ void GameState::updatePlayerInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_up"))))
 	{
 		this->player->move(dt, sf::Vector2f(0.f, -1.f));
-	}																															   
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_down"))))											   
-	{																															   
-		this->player->move(dt, sf::Vector2f(0.f, 1.f));																			   
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_down"))))
+	{
+		this->player->move(dt, sf::Vector2f(0.f, 1.f));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("equip_gun"))))
@@ -223,11 +259,9 @@ void GameState::updatePlayerInput(const float& dt)
 			float dy = this->mousePosView.y - pos.y;
 			float angle = atan2(dy, dx);																				 		   
 			float x = cos(angle);																						 		   
-			float y = sin(angle);								 		   
+			float y = sin(angle);				
 			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180 / 3.14)));	 		   
 			this->bulletTimer = 0.f;	
-
-
 
 
 			for (int i = 0; i < this->shootSounds.size(); ++i)
@@ -291,11 +325,13 @@ void GameState::update(const float& dt)
 		this->updateBullets(dt);
 		this->player->update(dt);
 		this->updateGun(dt);
+		this->updateView();
+		this->tileMap->update(this->player, dt);
 	}
 	else	//Paused update;
 	{
 		
-		this->pauseMenu.update(this->mousePosView);
+		this->pauseMenu.update(this->mousePosWindow);
 		this->updatePauseMenu();
 		this->bulletTimer = -0.1f;
 	}
@@ -307,23 +343,61 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		target = this->window;
 	}
-
+	target->setView(this->view);
+	
 	this->tileMap->render(*target);
 	this->player->render(*target);
 	if (this->isGunEquipped)
 		this->gun->render(*target);
-
+	
 	for (auto i : this->bullets)
 	{
 		if (i)
 			i->render(*target);
 	}
 	if (!this->paused)
-	{	
+	{
 	}
-
+	
 	else
 	{
+		target->setView(this->window->getDefaultView());
 		this->pauseMenu.render(*target);
 	}
+
+
+	//if (!target)
+	//{
+	//	target = this->window;
+	//}
+	//
+	//this->renderTexture.clear();
+	//this->renderTexture.setView(this->view);
+	//
+	//this->tileMap->render(this->renderTexture);
+	//this->player->render(this->renderTexture);
+	//if (this->isGunEquipped)
+	//	this->gun->render(this->renderTexture);
+	//
+	//for (auto i : this->bullets)
+	//{
+	//	this->renderTexture.setView(this->window->getDefaultView());
+	//	if (i)
+	//		i->render(this->renderTexture);
+	//}
+	//if (!this->paused)
+	//{
+	//}
+	//
+	//else
+	//{
+	//	target->setView(this->window->getDefaultView());
+	//	this->pauseMenu.render(this->renderTexture);
+	//}
+	//
+	//
+	////FINAL RENDER
+	//this->renderTexture.display();
+	//this->renderSprite.setTexture(this->renderTexture.getTexture());
+	//target->draw(this->renderSprite);
 }
