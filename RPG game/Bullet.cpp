@@ -38,9 +38,9 @@ void Bullet::update(const float& dt)
 	}
 }
 
-void Bullet::render(sf::RenderTarget* target)
+void Bullet::render(sf::RenderTarget& target)
 {
-	target->draw(this->sprite);
+	target.draw(this->sprite);
 }
 
 

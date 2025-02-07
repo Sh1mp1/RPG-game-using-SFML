@@ -122,10 +122,26 @@ void AnimationComponent::play(const std::string key, const float& dt, const floa
 				this->lastAnimation = this->animations.at(key);
 			}
 		}
-		if (this->animations.at(key)->play(dt, (modifier / modifier_max)))
+		
+		float speed_modifier = modifier / modifier_max;
+
+
+		if (speed_modifier < 0.3f)
 		{
-			this->priorityAnimation = nullptr;
+			if (this->animations.at(key)->play(dt, 0.3f))
+			{
+				this->priorityAnimation = nullptr;
+			}
 		}
+		else
+		{
+			if (this->animations.at(key)->play(dt, speed_modifier))
+			{
+				this->priorityAnimation = nullptr;
+			}
+		}
+
+		
 	}
 
 	

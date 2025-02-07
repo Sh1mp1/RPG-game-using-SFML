@@ -28,17 +28,24 @@ public:
 	~Entity();		
 
 	//Accessors
-	const sf::Vector2f& getPosition() const;
-	const sf::FloatRect& getBounds() const;
+	virtual const sf::Vector2f& getPosition() const;
+	virtual const sf::Vector2u getGridPosition(const unsigned grid_size) const;
+	virtual const sf::FloatRect& getBounds() const;
+
+	//Modifiers
+	virtual void setPosition(const sf::Vector2f& position);
+	virtual void resetVelocityX();
+	virtual void resetVelocityY();
 				
 	//Component functions
-	const sf::RectangleShape& getHitbox() const;
+	virtual const sf::RectangleShape& getHitbox() const;
 
 	//Functions
 	void move(const float& dt, sf::Vector2f dir);	
-	void setPosition(sf::Vector2f pos);
-													
+	void moveConstant(sf::Vector2f dir);
+											
+	virtual void updateHitboxComponent();
 	virtual void update(const float& dt) = 0;
-	virtual void render(sf::RenderTarget& target);	
+	virtual void render(sf::RenderTarget& target) = 0;	
 };													
 

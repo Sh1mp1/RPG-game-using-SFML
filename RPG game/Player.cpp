@@ -15,7 +15,6 @@ void Player::initComponents(sf::Texture& texture_sheet)
 	this->animationComponent->addAnimation("MOVING_DOWN",
 		sf::Vector2i(0, 64), 4, sf::Vector2i(64, 64), 10.f);
 
-
 	this->animationComponent->addAnimation("MOVING_UP",
 		sf::Vector2i(768, 64), 4, sf::Vector2i(64, 64), 10.f);
 
@@ -121,13 +120,10 @@ void Player::update(const float& dt)
 	this->movementComponent->update(dt);
 
 	this->updateAnimation(dt);
-																	
+
 	this->updateText();																			
-																								
-																								
-	this->hitboxComponent->update(dt);
-																								
-																								
+											
+	this->hitboxComponent->update();
 }																								
 																								
 void Player::render(sf::RenderTarget& target)													
@@ -135,12 +131,5 @@ void Player::render(sf::RenderTarget& target)
 	target.draw(this->sprite);																	
 	target.draw(this->text);																	
 																								
-	if (this->hitboxComponent)																	
-		this->hitboxComponent->render(target);													
-																								
-
-	//target->draw(this->topLeftCircle);
-	//target->draw(this->topRightCircle);
-	//target->draw(this->bottomLeftCircle);
-	//target->draw(this->bottomRightCircle);
+	this->hitboxComponent->render(target);				
 }

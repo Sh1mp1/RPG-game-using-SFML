@@ -28,6 +28,21 @@ const int& MovementComponent::getState() const
 	return this->state;
 }
 
+void MovementComponent::setVelocity(sf::Vector2f velocity)
+{
+	this->velocity = velocity;
+}
+
+void MovementComponent::resetVelocityX()
+{
+	this->velocity.x = 0.f;
+}
+
+void MovementComponent::resetVelocityY()
+{
+	this->velocity.y = 0.f;
+}
+
 
 //Functions
 void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* sprite)
@@ -42,7 +57,7 @@ void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* spri
 	}
 
 
-	//Set to max velocity
+	//Set to max velocity 
 	if (this->canAccelerate)
 	{
 		if (std::abs(this->velocity.y) > this->maxVelocity)
@@ -70,6 +85,11 @@ void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* spri
 	}
 }
 
+void MovementComponent::moveConstant(sf::Vector2f dir, sf::Sprite& sprite)
+{
+	sprite.move(dir);
+}
+
 void MovementComponent::updateState()
 {
 	this->state = STATE::IDLE;
@@ -92,6 +112,7 @@ void MovementComponent::updateState()
 		this->state = STATE::MOVING_RIGHT;
 	}
 	
+
 }
 
 void MovementComponent::update(const float& dt)
@@ -140,15 +161,18 @@ void MovementComponent::update(const float& dt)
 		}
 	}
 
-
-	if (std::abs(this->velocity.x) < this->minVelocity )
+	if (std::abs(this->velocity.x) < this->minVelocity)
 	{
 		this->velocity.x = 0.f;
 	}
-	if (std::abs(this->velocity.y) < this->minVelocity )
+	if (std::abs(this->velocity.y) < this->minVelocity)
 	{
 		this->velocity.y = 0.f;
 	}
 
-	this->sprite.move(this->velocity * dt);
+	this->sprite.move(this->velocity* dt);
+
+
+	
+
 }

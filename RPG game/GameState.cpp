@@ -325,8 +325,8 @@ void GameState::update(const float& dt)
 		this->updateBullets(dt);
 		this->player->update(dt);
 		this->updateGun(dt);
-		this->updateView();
 		this->tileMap->update(this->player, dt);
+		this->updateView();
 	}
 	else	//Paused update;
 	{

@@ -31,8 +31,14 @@ public:
 	const float& getMaxVelocity() const;
 	const int& getState() const;
 
+	//Modifiers
+	void setVelocity(sf::Vector2f velocity);
+	void resetVelocityX();
+	void resetVelocityY();
+
 	//Functions
 	void move(const float& dt, sf::Vector2f dir, sf::Sprite* sprite);
+	void moveConstant(sf::Vector2f, sf::Sprite& sprite);
 
 	void updateState();
 	void update(const float& dt);

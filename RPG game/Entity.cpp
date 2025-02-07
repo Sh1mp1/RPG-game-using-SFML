@@ -45,9 +45,26 @@ Entity::~Entity()
 	delete this->hitboxComponent;
 }
 
+//Accessors
 const sf::Vector2f& Entity::getPosition() const
 {
 	return this->sprite.getPosition();
+}
+
+const sf::Vector2u Entity::getGridPosition(const unsigned grid_size) const
+{
+	if (this->hitboxComponent)
+	{
+		return sf::Vector2u(
+			static_cast<unsigned>(this->hitboxComponent->getPosition().x) / grid_size,
+			static_cast<unsigned>(this->hitboxComponent->getPosition().y) / grid_size
+		);
+	}
+
+	return sf::Vector2u(
+		static_cast<unsigned>(this->sprite.getPosition().x) / grid_size,
+		static_cast<unsigned>(this->sprite.getPosition().y) / grid_size
+	);
 }
 
 const sf::FloatRect& Entity::getBounds() const
@@ -59,6 +76,37 @@ const sf::RectangleShape& Entity::getHitbox() const
 {
 	return this->hitboxComponent->getHitbox();
 }
+
+//Modifiers
+void Entity::setPosition(const sf::Vector2f& position)
+{
+	if (this->hitboxComponent != nullptr)
+	{
+		this->hitboxComponent->setPosition(position);
+	}
+	else
+	{
+		this->sprite.setPosition(position);
+	}
+}
+
+void Entity::resetVelocityX()
+{
+	if (this->movementComponent)
+	{
+		this->movementComponent->resetVelocityX();
+	}
+}
+
+void Entity::resetVelocityY()
+{
+	if (this->movementComponent)
+	{
+		this->movementComponent->resetVelocityY();
+	}
+}
+
+
 
 
 //Component functions
@@ -72,9 +120,18 @@ void Entity::move(const float& dt, sf::Vector2f dir)
 		this->movementComponent->move(dt, dir, &this->sprite);	//Sets velocity from movement component	
 }
 
-void Entity::setPosition(sf::Vector2f pos)
+void Entity::moveConstant(sf::Vector2f dir)
 {
-	this->sprite.setPosition(pos);
+	this->movementComponent->moveConstant(dir, this->sprite);
+}
+
+
+void Entity::updateHitboxComponent()
+{
+	if (this->hitboxComponent)
+	{
+		this->hitboxComponent->update();
+	}
 }
 
 void Entity::update(const float& dt)
@@ -82,10 +139,7 @@ void Entity::update(const float& dt)
 	if (this->movementComponent != nullptr)
 	{
 		this->movementComponent->update(dt);
-	}
-
-
-	
+	}	
 }
 
 void Entity::render(sf::RenderTarget& target)
