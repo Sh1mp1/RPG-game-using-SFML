@@ -45,8 +45,8 @@ public:
 	void savetoFile(const std::string path);
 	void loadFromFile(const std::string path);
 
-	void addTile(const unsigned x, const unsigned y, const unsigned z, const sf::IntRect& texture_rect, const short type = 0, const bool collision = false);
-	void removeTile(const unsigned x, const unsigned y, const unsigned z);
+	void addTile(const unsigned x, const unsigned y, const sf::IntRect& texture_rect, const short type = 0, const bool collision = false);
+	void removeTile(const unsigned x, const unsigned y);
 
 	void updateCollision(Entity* entity, const float& dt);
 

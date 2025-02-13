@@ -209,9 +209,10 @@ void EditorState::updateEditorInput(const float& dt)
 			this->addTileCooldown = 0.f;
 		}
 
-		if (!this->textureSelector->getIsActive() && this->canAddTile())
+		if (!this->textureSelector->getIsActive() && this->canAddTile())	//Checks first if mouse is not on the texture selector and then checks if the add tile cooldown is finished
 		{
-			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, 0, this->textureRect, this->type, this->collision);
+
+			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->type, this->collision);
 		}
 		else if (this->isValidPos(this->textureSelector->getGridPos()) && this->textureSelector->getIsActive())
 		{
@@ -223,7 +224,7 @@ void EditorState::updateEditorInput(const float& dt)
 	//Remove tile
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && this->getKeyTime())	//Removes a tile from the tileMap
 	{
-		this->tileMap->removeTile(this->mousePosGrid.x, this->mousePosGrid.y, 0);
+		this->tileMap->removeTile(this->mousePosGrid.x, this->mousePosGrid.y);
 	}
 
 

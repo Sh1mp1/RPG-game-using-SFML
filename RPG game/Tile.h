@@ -29,6 +29,7 @@ public:
 	const sf::Vector2f getPosition() const;
 	const sf::Vector2f getTextureRectPosition() const;
 	const sf::FloatRect getBounds() const;
+	const sf::IntRect& getTextureRect() const;
 
 	//Functions
 	const bool intersects(const sf::FloatRect& bounds) const;	//Returns true if the tile is intersecting with the given bounds

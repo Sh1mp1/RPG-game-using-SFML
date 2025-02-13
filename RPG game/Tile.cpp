@@ -65,6 +65,11 @@ const sf::FloatRect Tile::getBounds() const
 	return this->shape.getGlobalBounds();
 }
 
+const sf::IntRect& Tile::getTextureRect() const
+{
+	return this->textureRect;
+}
+
 //Functions
 
 const bool Tile::intersects(const sf::FloatRect& bounds) const
