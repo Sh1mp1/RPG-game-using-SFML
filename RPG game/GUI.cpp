@@ -18,6 +18,7 @@ void gui::Button::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
 
 
 gui::Button::Button(sf::Vector2f centrePos, sf::Font* font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, const unsigned int characterSize)
+	:buttonState(0), id(0)
 {
 	this->font = font;
 
@@ -77,12 +78,12 @@ const bool gui::Button::isPressed() const
 	return false;
 }
 
-const sf::FloatRect& gui::Button::getBounds() const
+const sf::FloatRect gui::Button::getBounds() const
 {
 	return this->text.getGlobalBounds();
 }
 
-const sf::FloatRect& gui::Button::getRectangleBounds() const
+const sf::FloatRect gui::Button::getRectangleBounds() const
 {
 	return this->shape.getGlobalBounds();
 }
@@ -285,12 +286,12 @@ void gui::TextureSelector::initSheet()
 {
 	if (this->sheet.getGlobalBounds().width > this->bounds.getGlobalBounds().width)
 	{
-		this->sheet.setTextureRect(sf::IntRect(0, 0, this->bounds.getGlobalBounds().width, this->sheet.getGlobalBounds().height));
+		this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->bounds.getGlobalBounds().width), static_cast<int>(this->sheet.getGlobalBounds().height)));
 	}
 
 	if (this->sheet.getGlobalBounds().height > this->bounds.getGlobalBounds().height)
 	{
-		this->sheet.setTextureRect(sf::IntRect(0, 0, this->sheet.getGlobalBounds().width, this->bounds.getGlobalBounds().height));
+		this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->sheet.getGlobalBounds().width), static_cast<int>(this->bounds.getGlobalBounds().height)));
 	}
 }
 
@@ -348,7 +349,7 @@ const sf::IntRect& gui::TextureSelector::getTextureRect() const
 	return this->textureRect;
 }
 
-const bool& gui::TextureSelector::isHideButtonPressed() const
+const bool gui::TextureSelector::isHideButtonPressed() const
 {
 	return this->hideButton->isPressed();
 }

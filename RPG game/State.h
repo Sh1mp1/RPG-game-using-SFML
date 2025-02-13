@@ -11,7 +11,10 @@ class State;
 class StateData
 {
 public:
-	StateData()	{}
+	StateData()	
+	{
+		
+	}
 
 	//Variables
 	float gridSize;
@@ -63,8 +66,8 @@ public:
 
 
 	//Accessor
-	const bool& getQuit() const;
-	const bool& getKeyTime();
+	const bool getQuit() const;
+	const bool getKeyTime();
 
 	//Functions
 	virtual void endState();

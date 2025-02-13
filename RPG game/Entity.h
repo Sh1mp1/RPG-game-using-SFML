@@ -3,7 +3,9 @@
 #include "AnimationComponent.h"
 #include "HitboxComponent.h"
 
-
+class MmovementComponent;
+class AnimationComponent;
+class HitboxComponent;
 
 class Entity
 {
@@ -28,9 +30,12 @@ public:
 	~Entity();		
 
 	//Accessors
-	virtual const sf::Vector2f& getPosition() const;
+	virtual const sf::Vector2f getPosition() const;
 	virtual const sf::Vector2u getGridPosition(const unsigned grid_size) const;
-	virtual const sf::FloatRect& getBounds() const;
+	virtual const sf::FloatRect getBounds() const;
+	virtual const sf::FloatRect getNextBounds() const;
+	virtual const sf::FloatRect getNextBoundsX() const;
+	virtual const sf::FloatRect getNextBoundsY() const;
 
 	//Modifiers
 	virtual void setPosition(const sf::Vector2f& position);

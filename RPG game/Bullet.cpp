@@ -4,7 +4,7 @@
 
 
 Bullet::Bullet(sf::Vector2f dir, sf::Vector2f pos, sf::Texture& texture, float angle)
-	:Entity(pos.x , pos.y, texture)
+	:Entity(pos.x , pos.y, texture), movementSpeed(3000.f)
 {
 	this->velocity = dir;
 
@@ -23,7 +23,7 @@ Bullet::~Bullet()
 {
 }
 
-const sf::Vector2f& Bullet::getPosition() const
+const sf::Vector2f Bullet::getPosition() const
 {
 	return this->sprite.getPosition();
 }

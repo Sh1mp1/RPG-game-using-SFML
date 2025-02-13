@@ -7,6 +7,7 @@
 #include <stack>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 
 
 #include <stdlib.h>

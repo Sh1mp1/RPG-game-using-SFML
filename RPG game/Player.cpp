@@ -41,7 +41,7 @@ void Player::initText()
 	this->text.setPosition(sf::Vector2f(1000.f, 10.f));
 	this->text.setOutlineColor(sf::Color::Black);
 	this->text.setOutlineThickness(1.f);
-	this->text.setCharacterSize(20.f);
+	this->text.setCharacterSize(20);
 }
 
 

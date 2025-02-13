@@ -2,7 +2,6 @@ c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\rpg game.pch
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\vc143.pdb
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\vc143.idb
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\stdafx.obj
-c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\main.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\weaponcomponent.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\tilemap.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\tile.obj
@@ -12,14 +11,15 @@ c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\player.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\pausemenu.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\movementcomponent.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\mainmenustate.obj
+c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\main.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\hitboxcomponent.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\gun.obj
-c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\graphicssettings.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\gamestate.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\game.obj
-c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\gui.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\entity.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\editorstate.obj
+c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\gui.obj
+c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\graphicssettings.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\bullet.obj
 c:\users\ashis\source\repos\rpg game\rpg game\x64\debug\animationcomponent.obj
 c:\users\ashis\source\repos\rpg game\x64\debug\rpg game.exe

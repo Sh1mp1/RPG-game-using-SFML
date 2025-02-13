@@ -38,8 +38,8 @@ namespace gui
 		//Accessors
 		const bool isPressed() const;
 		//const bool isHovered() const;					TODO ADD FUNCTION TO CHECK IF BUTTON IS CURRENTLY BEING HOVERED OVER MY MOUSE
-		const sf::FloatRect& getBounds() const;
-		const sf::FloatRect& getRectangleBounds() const;
+		const sf::FloatRect getBounds() const;
+		const sf::FloatRect getRectangleBounds() const;
 		const std::string getString() const;
 		const short unsigned getID() const;
 
@@ -122,7 +122,7 @@ namespace gui
 		const bool& getIsActive() const;
 		const sf::Vector2u& getGridPos() const;
 		const sf::IntRect& getTextureRect() const;
-		const bool& isHideButtonPressed() const;
+		const bool isHideButtonPressed() const;
 
 		//Functions
 		void updateButton();

@@ -38,15 +38,14 @@ Entity::Entity(const float x, const float y, sf::Texture& texture)
 }
 
 Entity::~Entity()
-{
-	
+{	
 	delete this->movementComponent;
 	delete this->animationComponent;
 	delete this->hitboxComponent;
 }
 
 //Accessors
-const sf::Vector2f& Entity::getPosition() const
+const sf::Vector2f Entity::getPosition() const
 {
 	return this->sprite.getPosition();
 }
@@ -67,9 +66,28 @@ const sf::Vector2u Entity::getGridPosition(const unsigned grid_size) const
 	);
 }
 
-const sf::FloatRect& Entity::getBounds() const
+const sf::FloatRect Entity::getBounds() const
 {
 	return this->sprite.getGlobalBounds();
+}
+
+const sf::FloatRect Entity::getNextBounds() const
+{
+	if (this->movementComponent && this->hitboxComponent)
+	{
+		return this->hitboxComponent->getNextPosition(this->movementComponent->getVelocity());
+	}
+	return sf::FloatRect();
+}
+
+const sf::FloatRect Entity::getNextBoundsX() const
+{
+	return this->hitboxComponent->getNextPositionX(this->movementComponent->getVelocity().x);
+}
+
+const sf::FloatRect Entity::getNextBoundsY() const
+{
+	return this->hitboxComponent->getNextPositionY(this->movementComponent->getVelocity().y);
 }
 
 const sf::RectangleShape& Entity::getHitbox() const

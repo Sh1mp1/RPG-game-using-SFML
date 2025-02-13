@@ -17,7 +17,7 @@ public:
 	~Bullet();
 
 	//Accessor
-	const sf::Vector2f& getPosition() const;
+	const sf::Vector2f getPosition() const;
 
 	void update(const float& dt);
 	void render(sf::RenderTarget& target);

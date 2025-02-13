@@ -105,7 +105,9 @@ void Game::run()
 {
 	while (this->window->isOpen())
 	{
-		this->updateDt();
+		if (this->window->hasFocus())
+			this->updateDt();
+
 		this->update();
 		this->render();
 	}
@@ -147,15 +149,18 @@ void Game::update()
 {
 	this->pollEvents();
 
-	if (!this->states.empty() && this->window->hasFocus())
+	if (!this->states.empty())
 	{
-		this->states.top()->update(this->dt);
-
-		if (this->states.top()->getQuit())
+		if (this->window->hasFocus())
 		{
-			//this->states.top()->endState();
-			delete this->states.top();
-			this->states.pop();
+			this->states.top()->update(this->dt);
+
+			if (this->states.top()->getQuit())
+			{
+				//this->states.top()->endState();
+				delete this->states.top();
+				this->states.pop();
+			}
 		}
 	}
 	//Application end

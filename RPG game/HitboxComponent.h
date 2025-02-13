@@ -6,6 +6,8 @@ private:
 	sf::Sprite& sprite;
 
 	sf::FloatRect nextPosition;
+	sf::FloatRect nextPositionX;
+	sf::FloatRect nextPositionY;
 
 	sf::Vector2f offset;
 
@@ -18,6 +20,8 @@ public:
 	const sf::RectangleShape& getHitbox() const;
 	const sf::Vector2f& getPosition() const;
 	const sf::FloatRect& getNextPosition(const sf::Vector2f& velocity);
+	const sf::FloatRect& getNextPositionX(const float velocity);
+	const sf::FloatRect& getNextPositionY(const float velocity);
 
 	//Modifiers
 	void setPosition(const sf::Vector2f& position);

@@ -27,12 +27,12 @@ State::~State()
 	delete this->supportedKeys;
 }
 
-const bool& State::getQuit() const
+const bool State::getQuit() const
 {
 	return this->quit;
 }
 
-const bool& State::getKeyTime()
+const bool State::getKeyTime()
 {
 	if (this->keyTime >= this->keyTimeMax)	//Returns true if keytime is greater than keytimemax;
 	{

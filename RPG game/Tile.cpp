@@ -50,17 +50,27 @@ const std::string Tile::getString() const
 	return ss.str();
 }
 
-const sf::Vector2f& Tile::getPosition() const
+const sf::Vector2f Tile::getPosition() const
 {
 	return this->shape.getPosition();
 }
 
-const sf::Vector2f& Tile::getTextureRectPosition() const
+const sf::Vector2f Tile::getTextureRectPosition() const
 {
-	return sf::Vector2f(this->textureRect.left, this->textureRect.top);
+	return sf::Vector2f(static_cast<float>(this->textureRect.left), static_cast<float>(this->textureRect.top));
+}
+
+const sf::FloatRect Tile::getBounds() const
+{
+	return this->shape.getGlobalBounds();
 }
 
 //Functions
+
+const bool Tile::intersects(const sf::FloatRect& bounds) const
+{
+	return this->shape.getGlobalBounds().intersects(bounds);
+}
 
 void Tile::update()
 {

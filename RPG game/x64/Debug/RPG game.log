@@ -1,5 +1,5 @@
-﻿  Player.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp(44,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-  (compiling source file '/Player.cpp')
-  
+﻿  Game.cpp
+  MovementComponent.cpp
+  SettingsState.cpp
+  Generating Code...
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

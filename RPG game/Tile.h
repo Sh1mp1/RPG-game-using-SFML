@@ -26,10 +26,13 @@ public:
 	//Accessors
 	const bool hasCollision() const;
 	const std::string getString() const;
-	const sf::Vector2f& getPosition() const;
-	const sf::Vector2f& getTextureRectPosition() const;
+	const sf::Vector2f getPosition() const;
+	const sf::Vector2f getTextureRectPosition() const;
+	const sf::FloatRect getBounds() const;
 
 	//Functions
+	const bool intersects(const sf::FloatRect& bounds) const;	//Returns true if the tile is intersecting with the given bounds
+
 	void update();
 	void render(sf::RenderTarget& target);
 };

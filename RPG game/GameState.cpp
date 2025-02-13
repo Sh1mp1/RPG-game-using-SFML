@@ -14,7 +14,9 @@ void GameState::initDefferedRender()
 
 void GameState::initView()
 {
-	this->view.setSize(sf::Vector2f(this->stateData->gfxSettings->resolution.width, this->stateData->gfxSettings->resolution.height));
+	this->view.setSize(sf::Vector2f(
+		static_cast<float>(this->stateData->gfxSettings->resolution.width),
+		static_cast<float>(this->stateData->gfxSettings->resolution.height)));
 
 
 	sf::FloatRect bounds = this->player->getBounds();
@@ -260,7 +262,7 @@ void GameState::updatePlayerInput(const float& dt)
 			float angle = atan2(dy, dx);																				 		   
 			float x = cos(angle);																						 		   
 			float y = sin(angle);				
-			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180 / 3.14)));	 		   
+			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180.f / 3.14f)));	 		   
 			this->bulletTimer = 0.f;	
 
 
@@ -323,10 +325,11 @@ void GameState::update(const float& dt)
 		this->updateWeaponAngle();
 		this->updatePlayerInput(dt);
 		this->updateBullets(dt);
-		this->player->update(dt);
 		this->updateGun(dt);
+		this->player->update(dt);
 		this->tileMap->update(this->player, dt);
 		this->updateView();
+		
 	}
 	else	//Paused update;
 	{
@@ -345,7 +348,7 @@ void GameState::render(sf::RenderTarget* target)
 	}
 	target->setView(this->view);
 	
-	this->tileMap->render(*target);
+	this->tileMap->render(*target, this->player);
 	this->player->render(*target);
 	if (this->isGunEquipped)
 		this->gun->render(*target);

@@ -57,7 +57,7 @@ void MovementComponent::move(const float& dt, sf::Vector2f dir, sf::Sprite* spri
 	}
 
 
-	//Set to max velocity 
+	//Set to max velocity if it exceeds it
 	if (this->canAccelerate)
 	{
 		if (std::abs(this->velocity.y) > this->maxVelocity)
@@ -112,6 +112,17 @@ void MovementComponent::updateState()
 		this->state = STATE::MOVING_RIGHT;
 	}
 	
+	if (std::abs(this->velocity.y) > std::abs(this->velocity.x))
+	{
+		if (this->velocity.y < 0.f)
+		{
+			this->state = STATE::MOVING_UP;
+		}
+		else if (this->velocity.y > 0.f)
+		{
+			this->state = STATE::MOVING_DOWN;
+		}
+	}
 
 }
 

@@ -13,7 +13,7 @@ void EditorState::initView()
 {
 	unsigned width = this->stateData->gfxSettings->resolution.width;
 	unsigned height = this->stateData->gfxSettings->resolution.height;
-	this->view.setSize(sf::Vector2f(width , height));
+	this->view.setSize(sf::Vector2f(static_cast<float>(width), static_cast<float>(height)));
 	this->view.setCenter(sf::Vector2f(width / 2.f, height / 2.f));
 }
 
@@ -101,7 +101,7 @@ void EditorState::initGUI()
 	this->textureSelector = new gui::TextureSelector(20.f, 20.f, 640.f, 576.f, &this->tileMapTexture, this->stateData->gridSize, *this->stateData->font, this->mousePosWindow);
 
 
-	this->sidebar.setSize(sf::Vector2f(50.f, this->stateData->window->getSize().y));
+	this->sidebar.setSize(sf::Vector2f(50.f, static_cast<float>(this->stateData->window->getSize().y)));
 	this->sidebar.setPosition(this->window->getSize().x - this->sidebar.getSize().x, 0.f);
 	this->sidebar.setFillColor(sf::Color(150, 150, 150, 200));
 	this->sidebar.setOutlineThickness(1.f);
@@ -529,7 +529,7 @@ void EditorState::render(sf::RenderTarget* target)
 
 	//target->draw(this->background);
 	//this->renderButtons(target);
-	this->tileMap->render(*target);
+	this->tileMap->render(*target, nullptr);
 
 	target->setView(this->window->getDefaultView());
 

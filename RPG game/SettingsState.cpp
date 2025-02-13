@@ -82,15 +82,15 @@ void SettingsState::initButtons()
 	//this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(460.f, 600.f), &this->font, "SETTINGS",
 	//	sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
 
-	float posX = this->stateData->window->getSize().x * 0.8f;
+	float posX = static_cast<float>(this->stateData->window->getSize().x) * 0.8f;
 
-	float posY = this->stateData->window->getSize().y;
+	float posY = static_cast<float>(this->stateData->window->getSize().y);
 
 	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(posX, posY * 0.8f), this->stateData->font, "EXIT",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
 	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(posX, posY * 0.65f), this->stateData->font, "APPLY",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40.f));
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 
 void SettingsState::initDropDownList()
@@ -154,13 +154,13 @@ void SettingsState::updateButtons()
 
 		this->gfxSettings.resolution = this->videoModes.at(id);
 
-		//this->gfxSettings.saveToFile("config/window.ini");
+		this->gfxSettings.saveToFile("config/window.ini");
 		
 		this->initWindow();
 		
 		this->updateButtonPos();
 
-		std::cout << "X " << this->window->getSize().x << " Y " << this->window->getSize().y;
+		//std::cout << "X " << this->window->getSize().x << " Y " << this->window->getSize().y;
 	}
 }
 
@@ -188,12 +188,12 @@ void SettingsState::updateDropDownList()
 
 void SettingsState::updateButtonPos()
 {
-	float posX = this->stateData->window->getSize().x * 0.8f;
+	float posX = static_cast<float>(this->stateData->window->getSize().x) * 0.8f;
 
-	float posY = this->stateData->window->getSize().y;
+	float posY = static_cast<float>(this->stateData->window->getSize().y);
 
-	this->buttons.at("EXIT")->centreText(sf::Vector2f(posX, posY * 0.8));
-	this->buttons.at("APPLY")->centreText(sf::Vector2f(posX, posY * 0.65));
+	this->buttons.at("EXIT")->centreText(sf::Vector2f(posX, posY * 0.8f));
+	this->buttons.at("APPLY")->centreText(sf::Vector2f(posX, posY * 0.65f));
 }
 
 void SettingsState::update(const float& dt)
