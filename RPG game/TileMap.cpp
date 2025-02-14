@@ -3,11 +3,11 @@
 
 void TileMap::clearMap()
 {
-	for (unsigned x = 0; x < this->map.size(); ++x)
+	for (int x = 0; x < this->map.size(); ++x)
 	{
-		for (unsigned y = 0; y < this->map[x].size(); ++y)
+		for (int y = 0; y < this->map[x].size(); ++y)
 		{
-			for (unsigned z = 0; z < this->layers; ++z)
+			for (int z = 0; z < this->layers; ++z)
 			{
 				delete this->map[x][y][z];
 				this->map[x][y][z] = nullptr;
@@ -33,10 +33,10 @@ void TileMap::initTileMap(float grid_size, unsigned width, unsigned height)
 	this->layers = 3;
 
 	this->map.resize(this->maxSizeGrid.x, std::vector<std::vector<Tile*>>());
-	for (unsigned x = 0; x < this->maxSizeGrid.x; ++x)
+	for (int x = 0; x < this->maxSizeGrid.x; ++x)
 	{
 		this->map[x].resize(this->maxSizeGrid.y, std::vector<Tile*>());
-		for (unsigned y = 0; y < this->maxSizeGrid.y; ++y)
+		for (int y = 0; y < this->maxSizeGrid.y; ++y)
 		{
 			this->map[x][y].resize(this->layers, nullptr);
 		}
@@ -81,6 +81,26 @@ TileMap::~TileMap()
 	this->clearMap();
 }
 
+int TileMap::getTopLayer(sf::Vector2i mousePosGrid)
+{
+	if (mousePosGrid.x < this->maxSizeGrid.x && mousePosGrid.y < this->maxSizeGrid.y && mousePosGrid.x >= 0 && mousePosGrid.y >= 0)
+	{
+		for (int i = 0; i < this->layers; ++i)
+		{
+			if (this->map[mousePosGrid.x][mousePosGrid.y][i] == nullptr)
+			{
+				return i;
+			}
+		}
+		return this->layers;
+	}
+	else
+	{
+		return 0;
+	}
+	
+}
+
 //Functions
 
 void TileMap::savetoFile(const std::string path)
@@ -108,11 +128,11 @@ void TileMap::savetoFile(const std::string path)
 			<< this->layers << '\n'
 			<< this->texturePath << '\n';
 
-		for (unsigned x = 0; x < this->map.size(); ++x)
+		for (int x = 0; x < this->map.size(); ++x)
 		{
-			for (unsigned y = 0; y < this->map[x].size(); ++y)
+			for (int y = 0; y < this->map[x].size(); ++y)
 			{
-				for (unsigned z = 0; z < this->layers; ++z)
+				for (int z = 0; z < this->layers; ++z)
 				{
 					//out_file << 0 << 0 << 0 << 0 << " ";
 
@@ -167,13 +187,13 @@ void TileMap::loadFromFile(const std::string path)
 		//Basics
 		in_file >> size.x >> size.y >> grid_size >> layers >> texture_path;
 
-		this->maxSizeGrid = static_cast<sf::Vector2u>(size);
+		this->maxSizeGrid = static_cast<sf::Vector2i>(size);
 		this->gridSizeF = grid_size;
 		this->gridSizeI = static_cast<int>(this->gridSizeF);
 		this->layers = layers;
 		this->texturePath = texture_path;
 
-		this->maxSizeWorldGrid = sf::Vector2u(
+		this->maxSizeWorldGrid = sf::Vector2i(
 			static_cast<unsigned>(this->maxSizeWorld.x) / static_cast<unsigned>(this->gridSizeI),
 			static_cast<unsigned>(this->maxSizeWorld.y) / static_cast<unsigned>(this->gridSizeI)
 		);
@@ -181,10 +201,10 @@ void TileMap::loadFromFile(const std::string path)
 
 		//Initializing tiles
 		this->map.resize(this->maxSizeGrid.x, std::vector<std::vector<Tile*>>());
-		for (unsigned x = 0; x < this->maxSizeGrid.x; ++x)
+		for (int x = 0; x < this->maxSizeGrid.x; ++x)
 		{
 			this->map[x].resize(this->maxSizeGrid.y, std::vector<Tile*>());
-			for (unsigned y = 0; y < this->maxSizeGrid.y; ++y)
+			for (int y = 0; y < this->maxSizeGrid.y; ++y)
 			{
 				this->map[x][y].resize(this->layers, nullptr);
 			}
@@ -210,7 +230,7 @@ void TileMap::loadFromFile(const std::string path)
 	in_file.close();
 }
 
-void TileMap::addTile(const unsigned x, const unsigned y, const sf::IntRect& texture_rect, const short type, const bool collision)
+void TileMap::addTile(const int x, const int y, const sf::IntRect& texture_rect, const short type, const bool collision)
 {
 	/*
 	Takes 3 coordinates from mouse position and adds tile to that position
@@ -221,7 +241,7 @@ void TileMap::addTile(const unsigned x, const unsigned y, const sf::IntRect& tex
 		x >= 0 && y >= 0)
 	{
 		sf::IntRect previous_texture_rect(0, 0, 0, 0);
-		for (unsigned z = 0; z < this->layers; ++z)
+		for (int z = 0; z < this->layers; ++z)
 		{
 
 			if (this->map[x][y][z])
@@ -240,7 +260,7 @@ void TileMap::addTile(const unsigned x, const unsigned y, const sf::IntRect& tex
 
 }
 
-void TileMap::removeTile(const unsigned x, const unsigned y)
+void TileMap::removeTile(const int x, const int y)
 {
 	/*
 	Takes 3 coordinates from mouse position and removes the tile at that position
@@ -249,7 +269,7 @@ void TileMap::removeTile(const unsigned x, const unsigned y)
 	if (x < this->maxSizeGrid.x && y < this->maxSizeGrid.y &&	//checks if the coordinates are valid i.e. not out of range of the array
 		x >= 0 && y >= 0)
 	{
-		for (int z = this->map[x][y].size() - 1; z >= 0; --z)
+		for (int z = this->layers - 1; z >= 0; --z)
 		{
 			if (this->map[x][y][z] != nullptr)
 			{
@@ -371,9 +391,9 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 
 
 
-		for (unsigned x = this->fromX; x < this->toX; ++x)
+		for (int x = this->fromX; x < this->toX; ++x)
 		{
-			for (unsigned y = this->fromY; y < toY; y++)
+			for (int y = this->fromY; y < toY; y++)
 			{
 				if (this->map[x][y][this->layer])
 				{
@@ -524,28 +544,83 @@ void TileMap::update(Entity* entity, const float& dt)
 	this->updateCollision(entity, dt);																	 
 }																										 
 																										 
-void TileMap::render(sf::RenderTarget& target, Entity* entity)
+void TileMap::render(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_collision_box)
 {
 
-	for (int x = 0; x < this->map.size(); ++x)
+	sf::Vector2i window_size = static_cast<sf::Vector2i>(target.getSize());
+	sf::Vector2i number_of_tiles = window_size / this->gridSizeI;
+
+	this->fromX = grid_pos.x - ((number_of_tiles.x / 2) + 1);
+	if (this->fromX < 0)
 	{
-		for (int y = 0; y < this->map[x].size(); ++y)
+		this->fromX = 0;
+	}
+
+	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 2);
+	if (this->toX > this->maxSizeGrid.x)
+	{
+		this->toX = this->maxSizeGrid.x;
+	}
+
+	this->fromY = grid_pos.y - ((number_of_tiles.y / 2) + 1);
+	if (this->fromY < 0)
+	{
+		this->fromY = 0;
+	}
+
+	this->toY = grid_pos.y + ((number_of_tiles.y / 2) + 2);
+	if (this->toY > this->maxSizeGrid.y)
+	{
+		this->toY = this->maxSizeGrid.y;
+	}
+
+	for (int x = this->fromX; x < this->toX; ++x)
+	{
+		for (int y = this->fromY; y < this->toY; ++y)
 		{
-			for (unsigned z = 0; z < this->layers; ++z)
+			for (int z = 0; z < this->layers; ++z)
 			{
 				if (this->map[x][y][z])
 				{
 					this->map[x][y][z]->render(target);
-					if (this->map[x][y][z]->hasCollision())
+					if (this->map[x][y][z]->hasCollision() && draw_collision_box)
 					{
 						this->collisionBox.setPosition(this->map[x][y][z]->getPosition());
 						target.draw(this->collisionBox);
 					}
 				}
-
 			}
 		}
 	}
+
+	/*if (entity)
+	{
+		
+	}
+	else
+	{
+		for (int x = 0; x < this->map.size(); ++x)
+		{
+			for (int y = 0; y < this->map[x].size(); ++y)
+			{
+				for (int z = 0; z < this->layers; ++z)
+				{
+					if (this->map[x][y][z])
+					{
+						this->map[x][y][z]->render(target);
+						if (this->map[x][y][z]->hasCollision() && draw_collision_box)
+						{
+							this->collisionBox.setPosition(this->map[x][y][z]->getPosition());
+							target.draw(this->collisionBox);
+						}
+					}
+
+				}
+			}
+		}
+	}*/
+
+	
 
 
 
@@ -553,21 +628,7 @@ void TileMap::render(sf::RenderTarget& target, Entity* entity)
 
 	/*if (entity)
 	{
-		for (int x = this->fromX; x < this->toX; ++x)
-		{
-			for (int y = this->fromY; y < toY; y++)
-			{
-				if (this->map[x][y][this->layer])
-				{
-					this->map[x][y][this->layer]->render(target);
-					if (this->map[x][y][this->layer]->hasCollision())
-					{
-						this->collisionBox.setPosition(this->map[x][y][this->layer]->getPosition());
-						target.draw(this->collisionBox);
-					}
-				}
-			}
-		}
+		
 	}
 
 	

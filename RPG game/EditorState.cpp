@@ -122,9 +122,7 @@ void EditorState::initPauseMenu()
 
 void EditorState::initTileMap()
 {
-	this->tileMap = new TileMap(this->stateData->gridSize, static_cast<unsigned>(this->stateData->window->getSize().x / this->stateData->gridSize), 
-														   static_cast<unsigned>(this->stateData->window->getSize().y / this->stateData->gridSize), 
-		this->tileMapTexture, this->tileMapTexturePath);
+	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, this->tileMapTexture, this->tileMapTexturePath);
 }
 
 void EditorState::initTextureRect()
@@ -211,7 +209,6 @@ void EditorState::updateEditorInput(const float& dt)
 
 		if (!this->textureSelector->getIsActive() && this->canAddTile())	//Checks first if mouse is not on the texture selector and then checks if the add tile cooldown is finished
 		{
-
 			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->type, this->collision);
 		}
 		else if (this->isValidPos(this->textureSelector->getGridPos()) && this->textureSelector->getIsActive())
@@ -442,7 +439,8 @@ void EditorState::updateGUI()
 	//TODO UPDATE THE POSITION OF THE SELECTOR RECT WITH THE WINDOW =================================================================================
 	if (!this->textureSelector->getIsActive())
 	{
-		this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
+		if (this->mousePosGrid.x >= 0.f  && this->mousePosGrid.y >= 0.f)
+			this->selectorRect.setPosition(this->mousePosGrid.x * this->stateData->gridSize, this->mousePosGrid.y * this->stateData->gridSize);
 	}
 
 	this->textureSelector->update(this->mousePosWindow);
@@ -458,9 +456,10 @@ void EditorState::updateCurrentTextureGUI()
 void EditorState::updateText()
 {
 	this->mouseText.setPosition(sf::Vector2f(this->mousePosView.x + 10.f, this->mousePosView.y + 10.f));
-
+	int layer = this->tileMap->getTopLayer(this->mousePosGrid);
 	std::stringstream ss;
 	ss <<  "POS " << this->mousePosView.x << " " << this->mousePosView.y << '\n'
+		<< "GRID POS " << this->mousePosGrid.x << " " << this->mousePosGrid.y << " " << layer << '\n'
 		<< "COLLISION " << this->collision << '\n'
 		<< "TYPE " << this->type << '\n';
 	this->mouseText.setString(ss.str());
@@ -530,7 +529,7 @@ void EditorState::render(sf::RenderTarget* target)
 
 	//target->draw(this->background);
 	//this->renderButtons(target);
-	this->tileMap->render(*target, nullptr);
+	this->tileMap->render(*target, this->mousePosGrid, true);
 
 	target->setView(this->window->getDefaultView());
 

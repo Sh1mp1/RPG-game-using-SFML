@@ -1,12 +1,2 @@
-﻿  EditorState.cpp
-  Game.cpp
-  GameState.cpp
-  MainMenuState.cpp
-  Tile.cpp
-  TileMap.cpp
-C:\Users\ashis\source\repos\RPG game\RPG game\TileMap.cpp(252,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/TileMap.cpp')
-  
-  main.cpp
-  Generating Code...
+﻿  SettingsState.cpp
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

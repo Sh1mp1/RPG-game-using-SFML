@@ -450,3 +450,64 @@ void gui::TextureSelector::render(sf::RenderTarget& target)
 
 	//std::cout << this->mousePosGrid.x << " " << this->mousePosGrid.y << '\n';
 }
+
+
+//ToggleButton=================================================================================================================================================
+
+void gui::ToggleButton::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
+{
+	this->outerRectangle.setSize(size);
+
+	this->outerRectangle.setPosition(sf::Vector2f(centrePos.x - (this->outerRectangle.getSize().x / 2.f), centrePos.y - (this->outerRectangle.getSize().y / 2.f)));
+
+	this->innerRectangle.setSize(sf::Vector2f(size.x - 15.f, size.y - 15.f));
+
+	this->innerRectangle.setPosition(sf::Vector2f(centrePos.x - (this->innerRectangle.getSize().x / 2.f), centrePos.y - (this->innerRectangle.getSize().y / 2.f)));
+
+
+	this->outerRectangle.setFillColor(sf::Color::White);
+	this->innerRectangle.setFillColor(sf::Color::Black);
+
+}
+
+gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, sf::Vector2f size)
+	:isMousePressed(false)
+{
+	this->initShape(centrePos, size);
+}
+
+const bool& gui::ToggleButton::isEnabled() const
+{
+	return this->enabled;
+}
+
+void gui::ToggleButton::update(sf::Vector2f mousePos)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		if (!this->isMousePressed)
+		{
+			this->isMousePressed = true;
+
+			if (this->outerRectangle.getGlobalBounds().contains(mousePos))
+			{
+				this->enabled = !this->enabled;
+			}
+		}
+	}
+	else
+	{
+		this->isMousePressed = false;
+	}
+}
+
+void gui::ToggleButton::render(sf::RenderTarget& target)
+{
+	target.draw(this->outerRectangle);
+
+	if (this->enabled)
+	{
+		target.draw(this->innerRectangle);
+	}
+}
+

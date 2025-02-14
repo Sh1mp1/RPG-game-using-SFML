@@ -347,8 +347,10 @@ void GameState::render(sf::RenderTarget* target)
 		target = this->window;
 	}
 	target->setView(this->view);
+
 	
-	this->tileMap->render(*target, this->player);
+	
+	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(this->gridSize)), true);
 	this->player->render(*target);
 	if (this->isGunEquipped)
 		this->gun->render(*target);

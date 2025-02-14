@@ -22,6 +22,8 @@ private:
 
 	std::map<std::string, gui::Button*> buttons;
 
+	std::map<std::string, gui::ToggleButton*> toggleButtons;
+
 	gui::DropDownList* dropDownList;
 
 	sf::Text optionsText;
@@ -33,6 +35,7 @@ private:
 	void initFont();
 	void initBackground();
 	void initButtons();
+	void initToggleButtons();
 	void initVariables();
 	void initDropDownList();
 	void initWindow();
@@ -49,6 +52,7 @@ public:
 	void updateGUI();
 	void updateDropDownList();
 	void updateButtonPos();
+	void updateToggleButtons();
 	
 
 	void update(const float& dt);

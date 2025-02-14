@@ -129,5 +129,34 @@ namespace gui
 		void update(const sf::Vector2i& mousePosWindow);
 		void render(sf::RenderTarget& target);
 	};
+
+
+	class ToggleButton
+	{
+	private:
+		bool enabled;
+
+		sf::RectangleShape outerRectangle;
+		sf::RectangleShape innerRectangle;	//The box inside the button which only renders when the button is set to on/enabled
+
+		sf::Font* font;
+		sf::Text text;
+
+		bool isMousePressed;
+
+		short unsigned id;
+
+		void initShape(sf::Vector2f& centrePos, sf::Vector2f& size);
+	public:
+		ToggleButton(sf::Vector2f centrePos, sf::Vector2f size);
+
+		//Accessors
+		const bool& isEnabled() const;
+
+		//Functions
+		void update(sf::Vector2f mousePos);
+		void render(sf::RenderTarget& target);
+
+	};
 }
 

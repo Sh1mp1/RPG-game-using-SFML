@@ -24,6 +24,7 @@ SettingsState::SettingsState(StateData* state_data)
 {
 	this->initKeybinds();
 	this->initButtons();
+	this->initToggleButtons();
 	this->initBackground();
 	this->initFont();
 	this->initVariables();
@@ -93,6 +94,13 @@ void SettingsState::initButtons()
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 
+void SettingsState::initToggleButtons()
+{
+	this->toggleButtons.emplace("FULLSCREEN", new gui::ToggleButton(sf::Vector2f(1000.f, 570.f), sf::Vector2f(40.f, 40.f)));
+
+	this->toggleButtons.emplace("VSYNC", new gui::ToggleButton(sf::Vector2f(1000.f, 684.f), sf::Vector2f(40.f, 40.f)));
+}
+
 void SettingsState::initDropDownList()
 {
 	std::vector<std::string> dropDownText;
@@ -154,6 +162,10 @@ void SettingsState::updateButtons()
 
 		this->gfxSettings.resolution = this->videoModes.at(id);
 
+		this->gfxSettings.fullScreen = this->toggleButtons.at("FULLSCREEN")->isEnabled();
+
+		this->gfxSettings.vsync = this->toggleButtons.at("VSYNC")->isEnabled();
+
 		this->gfxSettings.saveToFile("config/window.ini");
 		
 		this->initWindow();
@@ -179,6 +191,7 @@ void SettingsState::updateGUI()
 {
 	this->updateButtons();
 	this->updateDropDownList();
+	this->updateToggleButtons();
 }
 
 void SettingsState::updateDropDownList()
@@ -196,6 +209,14 @@ void SettingsState::updateButtonPos()
 	this->buttons.at("APPLY")->centreText(sf::Vector2f(posX, posY * 0.65f));
 }
 
+void SettingsState::updateToggleButtons()
+{
+	for (auto& i : this->toggleButtons)
+	{
+		i.second->update(this->mousePosView);
+	}
+}
+
 void SettingsState::update(const float& dt)
 {
 	this->updateInput(dt);
@@ -207,6 +228,11 @@ void SettingsState::update(const float& dt)
 void SettingsState::renderGUI(sf::RenderTarget& target)
 {
 	for (auto i : this->buttons)
+	{
+		i.second->render(target);
+	}
+
+	for (auto i : this->toggleButtons)
 	{
 		i.second->render(target);
 	}
