@@ -19,7 +19,10 @@ private:
 																											  
 public:																										  
 	Player(const float x, const float y, sf::Texture& texture_sheet);										  
-	~Player();																								  
+	~Player();	
+
+	//Accessor
+	AttributeComponent* getAttributeComponent() const;
 																											  
 	void updateText();																						  
 	void updateMovement(const float& dt, sf::Vector2f dir);													  

@@ -2,10 +2,12 @@
 #include "MovementComponent.h"
 #include "AnimationComponent.h"
 #include "HitboxComponent.h"
+#include "AttributeComponent.h"
 
 class MmovementComponent;
 class AnimationComponent;
 class HitboxComponent;
+class AttributeComponent;
 
 class Entity
 {
@@ -18,12 +20,14 @@ protected:
 	MovementComponent* movementComponent;
 	AnimationComponent* animationComponent;
 	HitboxComponent* hitboxComponent;
+	AttributeComponent* attributeComponent;
 
 	//Initialization functions
 	void initSprite(sf::Texture& texture);
 	void initMovementComponent(const float maxVelocity, const float minVelocity, const float acceleration, const float deceleration, const bool canAccelerate);
 	void initAnimationComponent(sf::Texture& texture_sheet);
 	void initHitboxComponent(sf::Vector2f offset, sf::Vector2f size);
+	void initAttributeComponent(const unsigned level);
 													
 public:												
 	Entity(const float x , const float y , sf::Texture& texture);										

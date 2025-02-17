@@ -2,11 +2,17 @@
 #include "Game.h"
 
 
+
+
 int main()
 {
-	Game game;
+    srand(static_cast<unsigned>(time(0)));
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	game.run();
+    Game game;
+    game.run();
+    //_CrtSetBreakAlloc(171);
+    //_CrtDumpMemoryLeaks(); // Check again
 
-	return 0;
+    return 0;
 }

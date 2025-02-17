@@ -1,4 +1,5 @@
 C:\Users\ashis\source\repos\RPG game\RPG game\AnimationComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\AnimationComponent.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\AttributeComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\AttributeComponent.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\Bullet.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\Bullet.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\GraphicsSettings.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\GraphicsSettings.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\GUI.obj
@@ -13,6 +14,7 @@ C:\Users\ashis\source\repos\RPG game\RPG game\MainMenuState.cpp;C:\Users\ashis\s
 C:\Users\ashis\source\repos\RPG game\RPG game\MovementComponent.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\MovementComponent.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\PauseMenu.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\PauseMenu.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\Player.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\Player.obj
+C:\Users\ashis\source\repos\RPG game\RPG game\PlayerGUI.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\PlayerGUI.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\SettingsState.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\SettingsState.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\State.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\State.obj
 C:\Users\ashis\source\repos\RPG game\RPG game\stdafx.cpp;C:\Users\ashis\source\repos\RPG game\RPG game\x64\Release\stdafx.obj

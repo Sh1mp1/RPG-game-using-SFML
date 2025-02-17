@@ -28,6 +28,11 @@ void Entity::initHitboxComponent(sf::Vector2f offset, sf::Vector2f size)
 	this->hitboxComponent = new HitboxComponent(this->sprite, offset, size);
 }
 
+void Entity::initAttributeComponent(const unsigned level)
+{
+	this->attributeComponent = new AttributeComponent(level);
+}
+
 Entity::Entity(const float x, const float y, sf::Texture& texture)
 {
 	this->initVariables();

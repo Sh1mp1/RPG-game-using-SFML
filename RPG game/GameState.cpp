@@ -59,10 +59,15 @@ void GameState::initPlayer()
 {
 	this->playerTexture.loadFromFile("Textures/player.png");
 
-	this->textures.emplace("player", &this->playerTexture);
+	this->textures.emplace("player", this->playerTexture);
 
 
-	this->player = new Player(10.f, 10.f, *this->textures.at("player"));
+	this->player = new Player(10.f, 10.f, this->textures.at("player"));
+}
+
+void GameState::initPlayerGUI()
+{
+	this->playerGUI = new PlayerGUI(this->player);
 }
 
 void GameState::initBullet()
@@ -138,6 +143,7 @@ GameState::GameState(StateData* state_data)
 	this->initKeybinds();
 	this->initAudio();
 	this->initPlayer();
+	this->initPlayerGUI();
 	this->initView();
 	this->initBullet();
 	this->initGun();
@@ -154,6 +160,8 @@ GameState::~GameState()
 		delete this->bullets[i];
 	}
 	delete this->tileMap;
+
+	delete this->gun;	
 }
 
 
@@ -257,12 +265,12 @@ void GameState::updatePlayerInput(const float& dt)
 		{
 			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
 				this->player->getPosition().y + (this->player->getBounds().height / 2.f));
-			float dx = this->mousePosView.x - pos.x;
-			float dy = this->mousePosView.y - pos.y;
+			float dx = this->mousePosWindow.x - pos.x;
+			float dy = this->mousePosWindow.y - pos.y;
 			float angle = atan2(dy, dx);																				 		   
-			float x = cos(angle);																						 		   
-			float y = sin(angle);				
-			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, angle * (180.f / 3.14f)));	 		   
+			float x = cos(this->weaponAngle);																						 		   
+			float y = sin(this->weaponAngle);				
+			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, this->weaponAngle * (180.f / 3.14f)));	 		   
 			this->bulletTimer = 0.f;	
 
 
@@ -310,8 +318,8 @@ void GameState::updateBullets(const float& dt)
 
 void GameState::updateWeaponAngle()
 {
-	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
-	sf::Vector2f distance = this->mousePosView - pos;
+	sf::Vector2f pos = sf::Vector2f(this->stateData->window->getSize().x / 2.f, this->stateData->window->getSize().y / 2.f);
+	sf::Vector2f distance = static_cast<sf::Vector2f>(this->mousePosWindow) - pos;
 
 	this->weaponAngle= atan2(distance.y, distance.x);
 }
@@ -329,7 +337,7 @@ void GameState::update(const float& dt)
 		this->player->update(dt);
 		this->tileMap->update(this->player, dt);
 		this->updateView();
-		
+		this->playerGUI->update(dt);
 	}
 	else	//Paused update;
 	{
@@ -347,10 +355,9 @@ void GameState::render(sf::RenderTarget* target)
 		target = this->window;
 	}
 	target->setView(this->view);
-
 	
 	
-	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(this->gridSize)), true);
+	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), true);
 	this->player->render(*target);
 	if (this->isGunEquipped)
 		this->gun->render(*target);
@@ -360,16 +367,16 @@ void GameState::render(sf::RenderTarget* target)
 		if (i)
 			i->render(*target);
 	}
+
+	target->setView(this->window->getDefaultView());
 	if (!this->paused)
 	{
-	}
-	
+		this->playerGUI->render(*target);		
+	}	
 	else
 	{
-		target->setView(this->window->getDefaultView());
 		this->pauseMenu.render(*target);
 	}
-
 
 	//if (!target)
 	//{

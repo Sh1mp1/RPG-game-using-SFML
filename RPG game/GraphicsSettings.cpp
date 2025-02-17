@@ -13,8 +13,7 @@ GraphicsSettings::GraphicsSettings()
 }
 
 void GraphicsSettings::saveToFile(const std::string path)
-{
-	
+{	
 	std::ofstream ofs(path);
 
 	if (ofs.is_open())
@@ -22,10 +21,17 @@ void GraphicsSettings::saveToFile(const std::string path)
 		//Todo erase/clear the file first before writing anything
 		ofs << this->title << '\n';
 		ofs << this->resolution.width << " " << this->resolution.height << '\n';
-		ofs << this->framerateLimit << '\n';
+		ofs << this->framerateLimit <<  '\n';
 		ofs << this->vsync << '\n';
 		ofs << this->contextSettings.antialiasingLevel << '\n';
 		ofs << this->fullScreen << '\n';
+
+		ofs << '\n' << "#TITLE" << '\n';
+		ofs << "#RESOLUTION" << '\n';
+		ofs << "#FRAMERATE LIMIT" << '\n';
+		ofs << "#VSYNC" << '\n';
+		ofs << "#ANTIALIASING LEVEL" << '\n';
+		ofs << "#FULLSCREEN" << '\n';
 	}
 	ofs.close();
 	

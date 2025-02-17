@@ -70,10 +70,10 @@ namespace gui
 		bool isMousePressed;
 
 		//Initialization functions
-		void initList(sf::Vector2f pos, std::vector<std::string> list, unsigned int defaultIndex = 0);
+		void initList(sf::Vector2f pos, sf::Vector2f size_offset, std::vector<std::string> list, unsigned int defaultIndex = 0);
 
 	public:
-		DropDownList(sf::Vector2f pos, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex);
+		DropDownList(sf::Vector2f pos, sf::Vector2f size_offset, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex);
 		~DropDownList();
 
 		//Accessors
@@ -148,7 +148,7 @@ namespace gui
 
 		void initShape(sf::Vector2f& centrePos, sf::Vector2f& size);
 	public:
-		ToggleButton(sf::Vector2f centrePos, sf::Vector2f size);
+		ToggleButton(sf::Vector2f centrePos, sf::Vector2f size, const bool default_status);
 
 		//Accessors
 		const bool& isEnabled() const;

@@ -5,9 +5,11 @@
 #include "Entity.h"
 #include "Gun.h"
 #include "TileMap.h"
+#include "PlayerGUI.h"
 
 class State;
 class Player;
+class PlayerGUI;
 class Entity;
 class Gun;
 class TileMap;
@@ -20,8 +22,9 @@ private:
 	sf::RenderTexture renderTexture;
 	sf::Sprite renderSprite;
 
-	Entity* player;
+	Player* player;
 	sf::Texture playerTexture;
+	PlayerGUI* playerGUI;
 
 	PauseMenu pauseMenu;
 	bool isEscapePressed;
@@ -54,6 +57,7 @@ private:
 	void initWindow();
 	void initKeybinds();
 	void initPlayer();
+	void initPlayerGUI();
 	void initBullet();
 	void initAudio();
 	void initGun();

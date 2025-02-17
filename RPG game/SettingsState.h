@@ -24,7 +24,8 @@ private:
 
 	std::map<std::string, gui::ToggleButton*> toggleButtons;
 
-	gui::DropDownList* dropDownList;
+	std::map<std::string, gui::DropDownList*> dropDownLists;
+	
 
 	sf::Text optionsText;
 

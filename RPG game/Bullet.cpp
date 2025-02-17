@@ -10,11 +10,23 @@ Bullet::Bullet(sf::Vector2f dir, sf::Vector2f pos, sf::Texture& texture, float a
 
 	this->initMovementComponent(3000.f ,0.f, 0 ,0.f, false);
 
-	this->sprite.setScale(sf::Vector2f(0.05f, 0.05f));
+	this->sprite.setScale(sf::Vector2f(0.03f, 0.03f));
 
 	this->sprite.setOrigin(sf::Vector2f(this->sprite.getGlobalBounds().width /2, this->sprite.getGlobalBounds().height /2));
 	this->sprite.setPosition(pos);
-	this->sprite.rotate(angle - 180);
+
+	//int deviation = 10;
+	//
+	//if (rand() % 2 == 0)
+	//{
+	//	this->sprite.rotate(angle - 180 + (rand() % deviation));
+	//}
+	//else
+	//{
+	//	this->sprite.rotate(angle - 180 - (rand() % deviation));
+	//}
+
+	this->sprite.rotate(angle - 180);	
 
 	this->sprite.move(this->velocity * 200.f);
 }

@@ -8,11 +8,11 @@ void gui::Button::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
 
 	this->shape.setSize(size);
 
-	sf::Vector2f pos(centrePos.x - (size.x / 2.f), centrePos.y - (size.y / 3.f));
+	sf::Vector2f pos(centrePos.x - (size.x / 2.f), centrePos.y - (size.y / 3.0f));	//Height of text is not the same as a rectangle, works for now, could fix later
 
 	this->shape.setOutlineThickness(1.f);
 	this->shape.setOutlineColor(sf::Color::White);
-
+	this->shape.setFillColor(sf::Color::White);
 	this->shape.setPosition(pos);
 }
 
@@ -116,7 +116,7 @@ void gui::Button::update(sf::Vector2i mousePosWindow)
 {
 	this->buttonState = BTN_IDLE;
 
-	if (this->text.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)))
+	if (this->text.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)) || this->shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)))
 	{
 		this->buttonState = BTN_HOVER;
 
@@ -171,18 +171,17 @@ DROP DOWN LIST==================================================================
 
 
 
-void gui::DropDownList::initList(sf::Vector2f pos, std::vector<std::string> list, unsigned int defaultIndex)
+void gui::DropDownList::initList(sf::Vector2f pos, sf::Vector2f size_offset, std::vector<std::string> list, unsigned int defaultIndex)
 {
 
 	sf::Text active_element_text(list.at(defaultIndex), this->font, 40);
-	sf::Vector2f sizeOffset(10.f, 30.f);
 
 	this->activeElement = new gui::Button(pos, &this->font, list.at(defaultIndex),
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, active_element_text.getGlobalBounds().getSize() + sizeOffset);
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40, active_element_text.getGlobalBounds().getSize() + size_offset);
 
 	sf::FloatRect bounds = this->activeElement->getRectangleBounds();
 
-	sf::Vector2f size(active_element_text.getGlobalBounds().width + sizeOffset.x, active_element_text.getGlobalBounds().height + sizeOffset.y);
+	sf::Vector2f size(active_element_text.getGlobalBounds().width + size_offset.x, active_element_text.getGlobalBounds().height + size_offset.y);
 
 
 	for (int i = 0; i < list.size(); ++i)
@@ -194,10 +193,10 @@ void gui::DropDownList::initList(sf::Vector2f pos, std::vector<std::string> list
 	this->list.push_back(this->activeElement);
 }
 
-gui::DropDownList::DropDownList(sf::Vector2f pos,sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex)
+gui::DropDownList::DropDownList(sf::Vector2f pos, sf::Vector2f size_offset, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex)
 	:font(font), showList(false), isMousePressed(false), centrePos(pos)
 {
-	this->initList(pos, list, defaultIndex);	//Initializes the drop down list and the active element
+	this->initList(pos, size_offset, list, defaultIndex);	//Initializes the drop down list and the active element
 }
 
 gui::DropDownList::~DropDownList()
@@ -470,8 +469,8 @@ void gui::ToggleButton::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
 
 }
 
-gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, sf::Vector2f size)
-	:isMousePressed(false)
+gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, sf::Vector2f size, const bool default_status)
+	:isMousePressed(false), enabled(default_status)
 {
 	this->initShape(centrePos, size);
 }

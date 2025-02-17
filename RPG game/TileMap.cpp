@@ -193,6 +193,8 @@ void TileMap::loadFromFile(const std::string path)
 		this->layers = layers;
 		this->texturePath = texture_path;
 
+		this->maxSizeWorld = sf::Vector2f(size.x * grid_size, size.y * grid_size);
+
 		this->maxSizeWorldGrid = sf::Vector2i(
 			static_cast<unsigned>(this->maxSizeWorld.x) / static_cast<unsigned>(this->gridSizeI),
 			static_cast<unsigned>(this->maxSizeWorld.y) / static_cast<unsigned>(this->gridSizeI)
@@ -475,7 +477,7 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 							//entity->setPosition(sf::Vector2f(tile_bounds.left + tile_bounds.width, hitbox.getPosition().y));
 							entity->moveConstant(sf::Vector2f(overlapLeft, 0.f));	//Moves player to the right
 							//entity->updateHitboxComponent();
-							std::cout << "LEFT" << '\n';
+							//std::cout << "LEFT" << '\n';
 						}
 						else if (smallestOverlap == overlapRight)
 						{
@@ -483,7 +485,7 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 							//entity->setPosition(sf::Vector2f(tile_bounds.left - (hitbox_bounds.width + 2.f), hitbox.getPosition().y));
 							entity->moveConstant(sf::Vector2f(-overlapRight, 0.f));	//Moves player to the left
 							//entity->updateHitboxComponent();
-							std::cout << "RIGHT" << '\n';
+							//std::cout << "RIGHT" << '\n';
 						}
 
 						if (smallestOverlap == overlapTop)
@@ -492,7 +494,7 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 							//entity->setPosition(sf::Vector2f(hitbox.getPosition().x, tile_bounds.top + tile_bounds.height));
 							entity->moveConstant(sf::Vector2f(0.f, overlapTop));	//Moves player downward
 							//entity->updateHitboxComponent();
-							std::cout << "TOP" << '\n';
+							//std::cout << "TOP" << '\n';
 
 
 						}
@@ -502,7 +504,7 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 							//entity->setPosition(sf::Vector2f(hitbox.getPosition().x, tile_bounds.top - hitbox_bounds.height));
 							entity->moveConstant(sf::Vector2f(0.f, -overlapBottom));	//Moves player upward
 							//entity->updateHitboxComponent();
-							std::cout << "BOTTOM" << '\n';
+							//std::cout << "BOTTOM" << '\n';
 						}
 					}
 				}				

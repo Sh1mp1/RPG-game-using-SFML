@@ -21,6 +21,7 @@ public:
 	GraphicsSettings* gfxSettings;
 	sf::Font* font;
 	float* mouseWheelDelta;
+	sf::Event* event;
 };
 
 class State
@@ -52,7 +53,7 @@ protected:
 	sf::Vector2i mousePosGridWindow;
 
 	//Resources
-	std::map <std::string, sf::Texture*> textures;
+	std::map <std::string, sf::Texture> textures;
 
 	//Functions
 	virtual void initKeybinds() = 0;

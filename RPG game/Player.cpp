@@ -29,6 +29,8 @@ void Player::initComponents(sf::Texture& texture_sheet)
 
 
 	this->initHitboxComponent(sf::Vector2f(10.f, 0.f), sf::Vector2f(44.f, 64.f));
+
+	this->initAttributeComponent(static_cast<unsigned>(1));
 }
 
 void Player::initText()
@@ -65,6 +67,11 @@ Player::~Player()
 }
 
 
+
+AttributeComponent* Player::getAttributeComponent() const
+{
+	return this->attributeComponent;
+}
 
 void Player::updateText()
 {
@@ -117,6 +124,7 @@ void Player::updateAnimation(const float& dt)
 
 void Player::update(const float& dt)
 {
+	this->attributeComponent->update();
 	this->movementComponent->update(dt);
 
 	this->updateAnimation(dt);
@@ -131,5 +139,5 @@ void Player::render(sf::RenderTarget& target)
 	target.draw(this->sprite);																	
 	target.draw(this->text);																	
 																								
-	this->hitboxComponent->render(target);				
+	this->hitboxComponent->render(target);
 }

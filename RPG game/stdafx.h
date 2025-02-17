@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <ctime>
 
 
 #include <stdlib.h>
@@ -15,7 +16,9 @@
 
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
+
+
+
+
 

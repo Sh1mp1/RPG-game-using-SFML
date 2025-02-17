@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Game.h"
 
+
+
 float mouseWheelDelta;
 
 //Initialization functions
@@ -34,6 +36,7 @@ void Game::initStateData()
 	this->stateData.gridSize = this->gridSize;
 	this->stateData.font = &this->font;
 	this->stateData.mouseWheelDelta = &this->mouseWheelDelta;
+	this->stateData.event = &this->event;
 }
 
 void Game::initWindow()

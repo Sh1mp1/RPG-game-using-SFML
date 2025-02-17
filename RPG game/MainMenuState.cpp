@@ -30,7 +30,6 @@ MainMenuState::MainMenuState(StateData* state_data)
 
 MainMenuState::~MainMenuState()
 {
-
 	for (auto i : this->buttons)
 	{
 		delete i.second;

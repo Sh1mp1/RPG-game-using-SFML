@@ -58,6 +58,8 @@ EditorState::~EditorState()
 	}
 
 	delete this->textureSelector;
+
+	delete this->tileMap;
 }
 
 void EditorState::initFont()
@@ -200,7 +202,7 @@ void EditorState::updateInput(const float& dt)
 void EditorState::updateEditorInput(const float& dt)
 { 
 	//Add tile
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime() && !this->sidebar.getGlobalBounds().contains(this->mousePosView))	//Adds a tile to the tileMap
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile to the tileMap
 	{
 		if (this->textureSelector->isHideButtonPressed())
 		{
@@ -211,6 +213,7 @@ void EditorState::updateEditorInput(const float& dt)
 		{
 			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->type, this->collision);
 		}
+
 		else if (this->isValidPos(this->textureSelector->getGridPos()) && this->textureSelector->getIsActive())
 		{
 			//Check if mouse is on the texture selector

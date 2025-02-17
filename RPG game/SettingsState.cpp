@@ -38,8 +38,15 @@ SettingsState::~SettingsState()
 		delete i.second;
 	}
 
-	if(this->dropDownList)
-		delete this->dropDownList;
+	for (auto& i : this->toggleButtons)
+	{
+		delete i.second;
+	}
+
+	for (auto& i : this->dropDownLists)
+	{
+		delete i.second;
+	}
 }
 
 
@@ -96,21 +103,48 @@ void SettingsState::initButtons()
 
 void SettingsState::initToggleButtons()
 {
-	this->toggleButtons.emplace("FULLSCREEN", new gui::ToggleButton(sf::Vector2f(1000.f, 570.f), sf::Vector2f(40.f, 40.f)));
+	this->toggleButtons.emplace("FULLSCREEN", new gui::ToggleButton(sf::Vector2f(1000.f, 570.f), sf::Vector2f(40.f, 40.f), this->stateData->gfxSettings->fullScreen));
 
-	this->toggleButtons.emplace("VSYNC", new gui::ToggleButton(sf::Vector2f(1000.f, 684.f), sf::Vector2f(40.f, 40.f)));
+	this->toggleButtons.emplace("VSYNC", new gui::ToggleButton(sf::Vector2f(1000.f, 684.f), sf::Vector2f(40.f, 40.f), this->stateData->gfxSettings->vsync));
 }
 
 void SettingsState::initDropDownList()
-{
+{	
+	int currentResolutionIndex = 0;
 	std::vector<std::string> dropDownText;
-	for (auto& i : this->videoModes)
+	for (int i = 0; i < this->videoModes.size(); ++i)
 	{
-		dropDownText.push_back(std::to_string(i.width) + " X " + std::to_string(i.height));
+		dropDownText.push_back(std::to_string(this->videoModes[i].width) + " X " + std::to_string(this->videoModes[i].height));
+
+		if (this->videoModes[i].width == this->stateData->gfxSettings->resolution.width &&
+			this->videoModes[i].height == this->stateData->gfxSettings->resolution.height)
+		{
+			currentResolutionIndex = i;	//Saves the index of the current window resolution in the video modes list
+		}
+
+	}
+	this->dropDownLists.emplace("RESOLUTION", new gui::DropDownList(sf::Vector2f(1000.f, 300.f), sf::Vector2f(10.f, 30.f), *this->stateData->font, dropDownText, currentResolutionIndex));
+
+	int currentAntiAliasingLevelIndex = 0;
+	std::vector<std::string> antiAliasingLevels;	
+	for (int i = 0; i <= 4; ++i)
+	{
+		if (i == 0)
+		{
+			antiAliasingLevels.push_back("0");
+			continue;
+		}
+		antiAliasingLevels.push_back(std::to_string(i) + "X");
+
+		if (i == this->stateData->gfxSettings->contextSettings.antialiasingLevel)
+		{
+			currentAntiAliasingLevelIndex = i;
+		}
 	}
 
+	this->dropDownLists.emplace("ANTIALIASINGLEVEL", new gui::DropDownList(sf::Vector2f(1000.f, 440.f), sf::Vector2f(50.f, 30.f), *this->stateData->font, antiAliasingLevels, 
+		currentAntiAliasingLevelIndex));
 
-	this->dropDownList = new gui::DropDownList(sf::Vector2f(1000.f, 300.f), *this->stateData->font, dropDownText, 0);
 }
 
 void SettingsState::initWindow()
@@ -158,9 +192,13 @@ void SettingsState::updateButtons()
 
 	if (this->buttons.at("APPLY")->isPressed())
 	{
-		short unsigned id = this->dropDownList->getActiveElementID();
+		short unsigned resolution_id = this->dropDownLists.at("RESOLUTION")->getActiveElementID();
 
-		this->gfxSettings.resolution = this->videoModes.at(id);
+		short unsigned antialiasing_id = this->dropDownLists.at("ANTIALIASINGLEVEL")->getActiveElementID();
+
+		this->gfxSettings.resolution = this->videoModes.at(resolution_id);
+
+		this->gfxSettings.contextSettings.antialiasingLevel = antialiasing_id;
 
 		this->gfxSettings.fullScreen = this->toggleButtons.at("FULLSCREEN")->isEnabled();
 
@@ -196,7 +234,11 @@ void SettingsState::updateGUI()
 
 void SettingsState::updateDropDownList()
 {
-	this->dropDownList->update(this->mousePosWindow);
+
+	for (auto& i : this->dropDownLists)
+	{
+		i.second->update(this->mousePosWindow);
+	}
 }
 
 void SettingsState::updateButtonPos()
@@ -237,7 +279,10 @@ void SettingsState::renderGUI(sf::RenderTarget& target)
 		i.second->render(target);
 	}
 
-	this->dropDownList->render(target);
+	for (auto i : this->dropDownLists)
+	{
+		i.second->render(target);
+	}
 }
 
 void SettingsState::render(sf::RenderTarget* target)
