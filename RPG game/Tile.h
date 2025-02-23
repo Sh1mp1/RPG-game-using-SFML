@@ -8,7 +8,7 @@ class Tile
 private:
 
 protected:
-	sf::RectangleShape shape;
+	sf::Sprite shape;
 
 	sf::IntRect textureRect;
 
@@ -35,6 +35,6 @@ public:
 	const bool intersects(const sf::FloatRect& bounds) const;	//Returns true if the tile is intersecting with the given bounds
 
 	void update();
-	void render(sf::RenderTarget& target);
+	void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 };
 

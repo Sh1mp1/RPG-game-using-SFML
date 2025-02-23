@@ -62,12 +62,31 @@ void SettingsState::initFont()
 	this->mousePosText.setCharacterSize(15);
 
 	
-	this->optionsText.setFont(*this->stateData->font);
+	
+	this->optionsText["RESOLUTION"] = sf::Text("RESOLUTION", *this->stateData->font, static_cast<unsigned>(this->p2pX(0.017f)));
+	this->optionsText["RESOLUTION"].setPosition(this->p2pX(0.052f), this->p2pY(0.13f));
 
-	this->optionsText.setPosition(sf::Vector2f(400.f, 300.f));
-	this->optionsText.setCharacterSize(35);
-	this->optionsText.setFillColor(sf::Color(255, 255, 255, 200));
-	this->optionsText.setString("RESOLUTION \n\n\n ANTIALIASING \n\n\n FULLSCREEN \n\n\n VSYNC");
+	this->optionsText["ANTI_ALIASING_LEVEL"] = sf::Text("ANTI ALIASING LEVEL", *stateData->font, static_cast<unsigned>(this->p2pX(0.017f)));
+	this->optionsText["ANTI_ALIASING_LEVEL"].setPosition(this->p2pX(0.36f), this->p2pY(0.13f));
+
+	this->optionsText["FPS LIMIT"] = sf::Text("FPS LIMIT", *this->stateData->font, static_cast<unsigned>(this->p2pX(0.019f)));
+	this->optionsText["FPS LIMIT"].setPosition(this->p2pX(0.7f), this->p2pY(0.13f));
+
+	this->optionsText["FULLSCREEN"] = sf::Text("FULLSCREEN", *this->stateData->font, static_cast<unsigned>(this->p2pX(0.017f)));
+	this->optionsText["FULLSCREEN"].setPosition(this->p2pX(0.4f), this->p2pY(0.51f));
+
+	this->optionsText["VSYNC"] = sf::Text("VSYNC", *this->stateData->font, static_cast<unsigned>(this->p2pX(0.017f)));
+	this->optionsText["VSYNC"].setPosition(this->p2pX(0.4f), this->p2pY(0.614f));
+
+	this->optionsText["SHOW FPS"] = sf::Text("SHOW FPS", *this->stateData->font, static_cast<unsigned>(this->p2pX(0.017f)));
+	this->optionsText["SHOW FPS"].setPosition(this->p2pX(0.4f), this->p2pY(0.72f));
+
+	
+
+	for (auto& i : this->optionsText)
+	{
+		i.second.setFillColor(sf::Color(255, 255, 255, 200));
+	}
 }
 
 void SettingsState::initBackground()
@@ -94,22 +113,65 @@ void SettingsState::initButtons()
 
 	float posY = static_cast<float>(this->stateData->window->getSize().y);
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(posX, posY * 0.8f), this->stateData->font, "EXIT",
+	for (auto& i : this->buttons)
+	{
+		if (i.second)
+		{
+			delete i.second;
+		}
+	}
+	this->buttons.clear();
+
+
+	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(this->p2pX(0.8f), this->p2pY(0.8f)), this->stateData->font, "EXIT",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(posX, posY * 0.65f), this->stateData->font, "APPLY",
+	this->buttons.emplace("APPLY", new gui::Button(sf::Vector2f(this->p2pX(0.8f), this->p2pY(0.65f)), this->stateData->font, "APPLY",
 		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 }
 
 void SettingsState::initToggleButtons()
 {
-	this->toggleButtons.emplace("FULLSCREEN", new gui::ToggleButton(sf::Vector2f(1000.f, 570.f), sf::Vector2f(40.f, 40.f), this->stateData->gfxSettings->fullScreen));
 
-	this->toggleButtons.emplace("VSYNC", new gui::ToggleButton(sf::Vector2f(1000.f, 684.f), sf::Vector2f(40.f, 40.f), this->stateData->gfxSettings->vsync));
+	for (auto& i : this->toggleButtons)
+	{
+		if (i.second)
+		{
+			delete i.second;
+		}
+	}
+	this->toggleButtons.clear();
+
+	this->toggleButtons["FULLSCREEN"] = new gui::ToggleButton(
+		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.527f)), 
+		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)), 
+		this->stateData->gfxSettings->fullScreen);
+
+	this->toggleButtons["VSYNC"] = new gui::ToggleButton(
+		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.63f)),
+		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)),
+		this->stateData->gfxSettings->vsync);
+
+	this->toggleButtons["SHOW FPS"] = new gui::ToggleButton(
+		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.74f)),
+		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)),
+		this->stateData->gfxSettings->showFps);
 }
 
 void SettingsState::initDropDownList()
 {	
+	//Clear the drop down list map
+	for (auto& i : this->dropDownLists)
+	{
+		if (i.second)
+		{
+			delete i.second;
+		}
+	}
+	this->dropDownLists.clear();
+
+
+
 	int currentResolutionIndex = 0;
 	std::vector<std::string> dropDownText;
 	for (int i = 0; i < this->videoModes.size(); ++i)
@@ -123,7 +185,8 @@ void SettingsState::initDropDownList()
 		}
 
 	}
-	this->dropDownLists.emplace("RESOLUTION", new gui::DropDownList(sf::Vector2f(1000.f, 300.f), sf::Vector2f(10.f, 30.f), *this->stateData->font, dropDownText, currentResolutionIndex));
+	this->dropDownLists.emplace("RESOLUTION", new gui::DropDownList(sf::Vector2f(this->p2pX(0.24f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(10.f, 30.f),
+		*this->stateData->font, dropDownText, currentResolutionIndex));
 
 	int currentAntiAliasingLevelIndex = 0;
 	std::vector<std::string> antiAliasingLevels;	
@@ -142,13 +205,33 @@ void SettingsState::initDropDownList()
 		}
 	}
 
-	this->dropDownLists.emplace("ANTIALIASINGLEVEL", new gui::DropDownList(sf::Vector2f(1000.f, 440.f), sf::Vector2f(50.f, 30.f), *this->stateData->font, antiAliasingLevels, 
-		currentAntiAliasingLevelIndex));
+	this->dropDownLists.emplace("ANTIALIASINGLEVEL", new gui::DropDownList(sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(50.f, 30.f),
+		*this->stateData->font, antiAliasingLevels,	currentAntiAliasingLevelIndex));
 
+
+	std::vector<std::string> framerates;
+	{
+		framerates.push_back("60");
+		framerates.push_back("90");
+		framerates.push_back("120");
+		framerates.push_back("144");
+	}
+	int currentFramerateIndex = 0;
+	for (int i = 0; i < framerates.size(); ++i)
+	{
+		if (std::stoi(framerates[i]) == this->gfxSettings.framerateLimit)
+		{
+			currentFramerateIndex = i;
+		}
+	}
+
+	this->dropDownLists.emplace("FRAMERATE", new gui::DropDownList(sf::Vector2f(this->p2pX(0.87f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(50.f, 30.f),
+		*this->stateData->font, framerates, currentFramerateIndex));
 }
 
 void SettingsState::initWindow()
 {
+	
 	if (this->gfxSettings.fullScreen)
 		this->window->create(this->gfxSettings.resolution, this->gfxSettings.title, sf::Style::Fullscreen, this->gfxSettings.contextSettings);
 
@@ -163,6 +246,11 @@ void SettingsState::initWindow()
 void SettingsState::initVariables()
 {
 	this->videoModes = sf::VideoMode::getFullscreenModes();
+
+	
+	//Delete resolution higher than 1080p
+	this->videoModes.erase(this->videoModes.begin() + 1);
+	this->videoModes.erase(this->videoModes.begin() + 0);
 }
 
 
@@ -196,17 +284,29 @@ void SettingsState::updateButtons()
 
 		short unsigned antialiasing_id = this->dropDownLists.at("ANTIALIASINGLEVEL")->getActiveElementID();
 
+		std::string framerate_limit = this->dropDownLists.at("FRAMERATE")->getActiveElement();
+
 		this->gfxSettings.resolution = this->videoModes.at(resolution_id);
 
+		
+
 		this->gfxSettings.contextSettings.antialiasingLevel = antialiasing_id;
+
+		this->gfxSettings.framerateLimit = std::stoi(framerate_limit);
 
 		this->gfxSettings.fullScreen = this->toggleButtons.at("FULLSCREEN")->isEnabled();
 
 		this->gfxSettings.vsync = this->toggleButtons.at("VSYNC")->isEnabled();
 
+		this->gfxSettings.showFps = this->toggleButtons.at("SHOW FPS")->isEnabled();
+
 		this->gfxSettings.saveToFile("config/window.ini");
 		
 		this->initWindow();
+		this->initFont();
+		this->initToggleButtons();
+		this->initButtons();
+		this->initDropDownList();
 		
 		this->updateButtonPos();
 
@@ -243,12 +343,8 @@ void SettingsState::updateDropDownList()
 
 void SettingsState::updateButtonPos()
 {
-	float posX = static_cast<float>(this->stateData->window->getSize().x) * 0.8f;
-
-	float posY = static_cast<float>(this->stateData->window->getSize().y);
-
-	this->buttons.at("EXIT")->centreText(sf::Vector2f(posX, posY * 0.8f));
-	this->buttons.at("APPLY")->centreText(sf::Vector2f(posX, posY * 0.65f));
+	this->buttons.at("EXIT")->centreText(sf::Vector2f(this->p2pX(0.8f), this->p2pY(0.8f)));
+	this->buttons.at("APPLY")->centreText(sf::Vector2f(this->p2pX(0.8f), this->p2pY(0.65f)));
 }
 
 void SettingsState::updateToggleButtons()
@@ -291,10 +387,13 @@ void SettingsState::render(sf::RenderTarget* target)
 	{
 		target = this->window;
 	}
+
 	//target->draw(this->background);
 	this->renderGUI(*target);
 	target->draw(this->mousePosText);
-	target->draw(this->optionsText);
+	
+	for (auto& i : this->optionsText)
+	{
+		target->draw(i.second);
+	}
 }
-
-

@@ -40,6 +40,7 @@ public:
 	virtual const sf::FloatRect getNextBounds() const;
 	virtual const sf::FloatRect getNextBoundsX() const;
 	virtual const sf::FloatRect getNextBoundsY() const;
+	virtual const sf::Vector2f getCenter() const;
 
 	//Modifiers
 	virtual void setPosition(const sf::Vector2f& position);
@@ -55,6 +56,6 @@ public:
 											
 	virtual void updateHitboxComponent();
 	virtual void update(const float& dt) = 0;
-	virtual void render(sf::RenderTarget& target) = 0;	
+	virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr , const bool show_hitbox = 0) = 0;	
 };													
 

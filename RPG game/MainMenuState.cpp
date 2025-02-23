@@ -40,8 +40,6 @@ void MainMenuState::initFont()
 {
 	
 	this->mousePosText.setFont(*this->stateData->font);
-
-
 	this->mousePosText.setOutlineColor(sf::Color::Black);
 	this->mousePosText.setOutlineThickness(1.f);
 	this->mousePosText.setString("START");
@@ -63,23 +61,24 @@ void MainMenuState::initBackground()
 
 	this->background.setScale(sf::Vector2f(scale_x, scale_y));
 
-	this->backgroundFade.setSize(sf::Vector2f(560.f, 1080.f));
+	this->backgroundFade.setSize(sf::Vector2f(this->p2pX(0.29f), this->p2pY(1.f)));
 	this->backgroundFade.setFillColor(sf::Color(20, 20, 20, 150));
 }
 
 void MainMenuState::initButtons()
 {
-	this->buttons.emplace("GAME", new gui::Button(sf::Vector2f(280.f, 510.f), this->stateData->font, "GAME",
-						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	this->buttons["GAME"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.47f)), this->stateData->font, "GAME",
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
 
-	this->buttons.emplace("SETTINGS", new gui::Button(sf::Vector2f(280.f, 600.f), this->stateData->font, "SETTINGS",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
 
-	this->buttons.emplace("EDITOR", new gui::Button(sf::Vector2f(280.f, 700), this->stateData->font, "EDITOR",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	this->buttons["SETTINGS"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.55f)), this->stateData->font, "SETTINGS",
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
 
-	this->buttons.emplace("EXIT", new gui::Button(sf::Vector2f(280.f, 800.f), this->stateData->font, "EXIT",
-						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), 40));
+	this->buttons["EDITOR"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.64f)), this->stateData->font, "EDITOR",
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
+
+	this->buttons["EXIT"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.74f)), this->stateData->font, "EXIT",
+						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
 }
 
 

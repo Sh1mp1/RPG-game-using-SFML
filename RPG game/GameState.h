@@ -26,7 +26,10 @@ private:
 	sf::Texture playerTexture;
 	PlayerGUI* playerGUI;
 
-	PauseMenu pauseMenu;
+
+	sf::Shader shader;
+
+	PauseMenu* pauseMenu;
 	bool isEscapePressed;
 
 	Gun* gun;
@@ -50,6 +53,8 @@ private:
 
 	float weaponAngle;
 
+	gui::FPS* fps;
+
 	
 	//Initialization functions
 	void initDefferedRender();
@@ -63,6 +68,8 @@ private:
 	void initGun();
 	void initPauseMenu();
 	void initTileMap();
+	void initFps();
+	void initShaders();
 
 public:
 	GameState(StateData* state_data);
@@ -76,6 +83,7 @@ public:
 	void updatePlayerInput(const float& dt);
 	void updateBullets(const float& dt);
 	void updateWeaponAngle();
+	void updateFps(const float& dt);
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);

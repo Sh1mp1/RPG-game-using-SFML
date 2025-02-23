@@ -12,24 +12,24 @@ private:
 
 	sf::Font font;
 
-	sf::RenderWindow& window;
+	sf::VideoMode videoMode;
 
 	std::map<std::string, gui::Button*> buttons;
 
 	//Initialization functions
-	void initBackground(sf::RenderWindow& window);
+	void initBackground();
 	void initButtons();
 	void initFont(sf::Font& font);
 
 public:
-	PauseMenu(sf::RenderWindow& window, sf::Font& font);
+	PauseMenu(sf::VideoMode& video_mode, sf::Font& font);
 	~PauseMenu();
 
 	//Accessors
 	const bool isPressed(std::string id) const;
 
 	//FUnctions;
-	void addButton(sf::Vector2f pos, std::string text);
+	void addButton(const sf::Vector2f pos, const std::string text, const unsigned char_size);
 	void update(sf::Vector2i& mousePosWindow);
 	void render(sf::RenderTarget& target);
 };

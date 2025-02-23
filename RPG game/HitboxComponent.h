@@ -22,6 +22,7 @@ public:
 	const sf::FloatRect& getNextPosition(const sf::Vector2f& velocity);
 	const sf::FloatRect& getNextPositionX(const float velocity);
 	const sf::FloatRect& getNextPositionY(const float velocity);
+	const sf::FloatRect getBounds() const;
 
 	//Modifiers
 	void setPosition(const sf::Vector2f& position);

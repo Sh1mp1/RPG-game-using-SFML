@@ -50,7 +50,7 @@ void Gun::update(const float& dt, const sf::Vector2f& player_pos, const float& a
 
 }
 
-void Gun::render(sf::RenderTarget& target)
+void Gun::render(sf::RenderTarget& target, sf::Shader* shader, const bool show_hitbox)
 {
 	target.draw(this->sprite);
 }

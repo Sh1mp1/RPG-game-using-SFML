@@ -44,6 +44,17 @@ const bool State::getKeyTime()
 }
 
 
+//Functions
+
+const float State::p2pX(const float percent)
+{
+	return std::floor(static_cast<float>(this->stateData->gfxSettings->resolution.width) * (percent));
+}
+
+const float State::p2pY(const float percent)
+{
+	return std::floor(static_cast<float>(this->stateData->gfxSettings->resolution.height) * (percent));
+}
 
 void State::endState()
 {
@@ -59,7 +70,6 @@ void State::updateMousePositions(const sf::View* view)
 	{
 		this->window->setView(*view);
 	}
-	
 
 	this->mousePosView = this->stateData->window->mapPixelToCoords(this->mousePosWindow);
 	this->mousePosGrid = sf::Vector2i(static_cast<int>(this->mousePosView.x / this->gridSize),

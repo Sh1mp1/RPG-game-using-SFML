@@ -27,7 +27,7 @@ private:
 	std::map<std::string, gui::DropDownList*> dropDownLists;
 	
 
-	sf::Text optionsText;
+	std::map<std::string, sf::Text> optionsText;
 
 	std::vector<sf::VideoMode> videoModes;
 

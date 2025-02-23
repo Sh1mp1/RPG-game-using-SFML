@@ -15,15 +15,18 @@ void GameState::initDefferedRender()
 void GameState::initView()
 {
 	this->view.setSize(sf::Vector2f(
-		static_cast<float>(this->stateData->gfxSettings->resolution.width),
-		static_cast<float>(this->stateData->gfxSettings->resolution.height)));
+		static_cast<float>(this->stateData->gfxSettings->resolution.width) * 1.1f,
+		static_cast<float>(this->stateData->gfxSettings->resolution.height) * 1.1f));
 
 
 	sf::FloatRect bounds = this->player->getBounds();
 	float posX = bounds.left + (bounds.width / 2.f);
 	float posY = bounds.top + (bounds.height / 2.f);
 
-	this->view.setCenter(sf::Vector2f(posX, posY));
+	this->view.setCenter(sf::Vector2f(
+		std::floor(posX + (static_cast<float>(this->mousePosWindow.x) - static_cast<float>(this->stateData->gfxSettings->resolution.width) / 2)),
+		std::floor(posY + (static_cast<float>(this->mousePosWindow.y) - static_cast<float>(this->stateData->gfxSettings->resolution.height) / 2))
+	));
 }
 
 void GameState::initWindow()
@@ -67,7 +70,7 @@ void GameState::initPlayer()
 
 void GameState::initPlayerGUI()
 {
-	this->playerGUI = new PlayerGUI(this->player);
+	this->playerGUI = new PlayerGUI(this->player, this->stateData->gfxSettings->resolution);
 }
 
 void GameState::initBullet()
@@ -89,8 +92,7 @@ void GameState::initAudio()
 
 	for (int i = 0; i < 15; ++i)
 	{
-		this->shootSounds.push_back(sf::Sound(this->shootBuffer));
-		
+		this->shootSounds.push_back(sf::Sound(this->shootBuffer));		
 	}
 }
 
@@ -107,8 +109,13 @@ void GameState::initGun()
 
 void GameState::initPauseMenu()
 {
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 500.f), "RESUME");
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 800.f), "EXIT");
+	this->pauseMenu = new PauseMenu(this->stateData->gfxSettings->resolution, *this->stateData->font);
+
+	this->pauseMenu->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.46f), "RESUME", 
+		this->stateData->gfxSettings->resolution.width * 0.026);
+
+	this->pauseMenu->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.74f), "EXIT", 
+		this->stateData->gfxSettings->resolution.width * 0.026);
 }
 
 void GameState::initTileMap()
@@ -126,11 +133,24 @@ void GameState::initTileMap()
 
 
 	this->tileMap->loadFromFile("testtilemap");
-
 }
 
+void GameState::initFps()
+{
+	this->fps = new gui::FPS(sf::Vector2f(300.f, 70.f), 40);
+}
+
+void GameState::initShaders()
+{
+	if (!this->shader.loadFromFile("vertex_shader.vert", "fragment_shader.frag"))
+	{
+		std::cout << "ERROR::GAMESTATE::COULDNT LOAD SHADERS" << '\n';
+	}
+}
+
+
 GameState::GameState(StateData* state_data)
-	:State(state_data), isEscapePressed(false), isGunEquipped(false), isEPressed(false), pauseMenu(*this->window, *state_data->font)
+	:State(state_data), isEscapePressed(false), isGunEquipped(false), isEPressed(false)
 {
 	/*
 	Fix later :- Change the video resolution immediately or change it only in gameState
@@ -149,6 +169,8 @@ GameState::GameState(StateData* state_data)
 	this->initGun();
 	this->initPauseMenu();
 	this->initTileMap();
+	this->initFps();
+	this->initShaders();
 }
 
 GameState::~GameState()
@@ -168,24 +190,32 @@ GameState::~GameState()
 
 void GameState::updateView()
 {
-	sf::FloatRect bounds = this->player->getBounds();
-	float posX = bounds.left + (bounds.width / 2.f);
-	float posY = bounds.top + (bounds.height / 2.f);
+	float posX = this->player->getBounds().left + (this->player->getBounds().width / 2.f);
+	float posY = this->player->getBounds().top + (this->player->getBounds().height / 2.f);
 
-	this->view.setCenter(sf::Vector2f(posX, posY));
+	this->view.setCenter(sf::Vector2f(
+		posX ,
+		posY 
+	));
+
+
+	/*this->view.setCenter(sf::Vector2f(
+		posX + ((static_cast<float>(this->mousePosWindow.x) - static_cast<float>(this->stateData->gfxSettings->resolution.width) / 2) / 12.f),
+		posY + ((static_cast<float>(this->mousePosWindow.y) - static_cast<float>(this->stateData->gfxSettings->resolution.height) / 2) / 12.f)
+	));*/
 }
 
 void GameState::updatePauseMenu()
 {
 	if (this->paused)
 	{
-		if (this->pauseMenu.isPressed("EXIT"))
+		if (this->pauseMenu->isPressed("EXIT"))
 		{
 			this->endState();
 		}
 
 
-		if (this->pauseMenu.isPressed("RESUME"))
+		if (this->pauseMenu->isPressed("RESUME"))
 		{
 			this->unPauseState();
 		}
@@ -264,10 +294,7 @@ void GameState::updatePlayerInput(const float& dt)
 		if (this->bulletTimer >= this->bulletTimerMax && this->isGunEquipped)																	 		   
 		{
 			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
-				this->player->getPosition().y + (this->player->getBounds().height / 2.f));
-			float dx = this->mousePosWindow.x - pos.x;
-			float dy = this->mousePosWindow.y - pos.y;
-			float angle = atan2(dy, dx);																				 		   
+				this->player->getPosition().y + (this->player->getBounds().height / 2.f));																			 		   
 			float x = cos(this->weaponAngle);																						 		   
 			float y = sin(this->weaponAngle);				
 			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, this->weaponAngle * (180.f / 3.14f)));	 		   
@@ -298,14 +325,16 @@ void GameState::updateBullets(const float& dt)
 		this->bullets[i]->update(dt);
 
 		//Delete bullets when out of screen
-		if (this->bullets[i]->getPosition().x < -200 || this->bullets[i]->getPosition().x > 2500)
+		if (this->bullets[i]->getPosition().x < (this->view.getCenter().x - (this->view.getSize().x / 2.f) - 200.f) || 
+			this->bullets[i]->getPosition().x > (this->view.getCenter().x + (this->view.getSize().x / 2.f) + 200.f))
 		{
 			delete this->bullets[i];
 			this->bullets.erase(this->bullets.begin() + i);
 			--i;
 			continue;
 		}
-		if (this->bullets[i]->getPosition().y < -200 || this->bullets[i]->getPosition().y > 2000)
+		if (this->bullets[i]->getPosition().y < (this->view.getCenter().y - (this->view.getSize().y / 2.f) - 200.f) ||
+			this->bullets[i]->getPosition().y > (this->view.getCenter().y + (this->view.getSize().y / 2.f) + 200.f))
 		{
 			delete this->bullets[i];
 			this->bullets.erase(this->bullets.begin() + i);
@@ -324,6 +353,12 @@ void GameState::updateWeaponAngle()
 	this->weaponAngle= atan2(distance.y, distance.x);
 }
 
+void GameState::updateFps(const float& dt)
+{
+	this->fps->update(dt);
+}
+
+
 void GameState::update(const float& dt)
 {
 	this->updateMousePositions();
@@ -338,11 +373,12 @@ void GameState::update(const float& dt)
 		this->tileMap->update(this->player, dt);
 		this->updateView();
 		this->playerGUI->update(dt);
+		this->updateFps(dt);
 	}
 	else	//Paused update;
 	{
 		
-		this->pauseMenu.update(this->mousePosWindow);
+		this->pauseMenu->update(this->mousePosWindow);
 		this->updatePauseMenu();
 		this->bulletTimer = -0.1f;
 	}
@@ -357,25 +393,29 @@ void GameState::render(sf::RenderTarget* target)
 	target->setView(this->view);
 	
 	
-	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), true);
-	this->player->render(*target);
+	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
+	this->player->render(*target, &this->shader);
 	if (this->isGunEquipped)
-		this->gun->render(*target);
+		this->gun->render(*target, &this->shader);
 	
 	for (auto i : this->bullets)
 	{
 		if (i)
-			i->render(*target);
+			i->render(*target, &this->shader);
 	}
 
 	target->setView(this->window->getDefaultView());
 	if (!this->paused)
 	{
-		this->playerGUI->render(*target);		
+		this->playerGUI->render(*target);	
+		if (this->gfxSettings.showFps)
+		{
+			this->fps->render(*target);
+		}
 	}	
 	else
 	{
-		this->pauseMenu.render(*target);
+		this->pauseMenu->render(*target);
 	}
 
 	//if (!target)

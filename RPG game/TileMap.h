@@ -54,7 +54,7 @@ public:
 	void updateCollision(Entity* entity, const float& dt);
 
 	void update(Entity* entity, const float& dt);
-	void render(sf::RenderTarget& target, sf::Vector2i grid_pos , bool draw_collision_box);
+	void render(sf::RenderTarget& target,  sf::Vector2i grid_pos , bool draw_collision_box = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 
 };
 

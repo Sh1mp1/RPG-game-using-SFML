@@ -4,8 +4,8 @@
 
 void Tile::initShape(sf::Vector2u grid_pos, float gridSize)
 {
-	this->shape.setSize(sf::Vector2f(gridSize, gridSize));
-	this->shape.setFillColor(sf::Color(255, 255, 255, 255));
+	//this->shape.setSize(sf::Vector2f(gridSize, gridSize));
+	//this->shape.setFillColor(sf::Color(255, 255, 255, 255));
 
 	this->shape.setPosition(static_cast<sf::Vector2f>(grid_pos) * gridSize);
 }
@@ -14,7 +14,7 @@ void Tile::initTexture(const sf::Texture& texture, const sf::IntRect& texture_re
 {
 	this->textureRect = texture_rect;
 
-	this->shape.setTexture(&texture);
+	this->shape.setTexture(texture);
 	this->shape.setTextureRect(texture_rect);
 }
 
@@ -81,9 +81,20 @@ void Tile::update()
 {
 }
 
-void Tile::render(sf::RenderTarget& target)
+void Tile::render(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f playerPos)
 {
-	target.draw(this->shape);
+	if (shader)
+	{
+		shader->setUniform("hasTexture", true);
+		shader->setUniform("lightPos", playerPos);
+		target.draw(this->shape, shader);
+	}
+	else
+	{
+		target.draw(this->shape);
+	}
+
+	
 }
 
 

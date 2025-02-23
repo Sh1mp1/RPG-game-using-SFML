@@ -15,6 +15,6 @@ public:
 
     void flip();
     void update(const float& dt, const sf::Vector2f& player_pos, const float& angle);
-    void render(sf::RenderTarget& target);
+    void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const bool show_hitbox = false);
 };
 

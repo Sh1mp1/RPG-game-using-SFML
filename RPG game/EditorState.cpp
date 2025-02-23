@@ -35,7 +35,7 @@ void EditorState::initKeybinds()
 }
 
 EditorState::EditorState(StateData* state_data)
-	:State(state_data), pauseMenu(*this->window, *state_data->font), isEscapePressed(false), addTileCooldown(0.f), addTileCooldownMax(0.1f)
+	:State(state_data), pauseMenu(this->stateData->gfxSettings->resolution, *state_data->font), isEscapePressed(false), addTileCooldown(0.f), addTileCooldownMax(0.1f)
 {
 	this->initView();
 	this->initVariables();
@@ -112,13 +112,13 @@ void EditorState::initGUI()
 
 void EditorState::initPauseMenu()
 {
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 300.f), "RESUME");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 300.f), "RESUME", static_cast<int>(this->stateData->gfxSettings->resolution.width * 0.026));
 
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 500.f), "SAVE");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 500.f), "SAVE", static_cast<int>(this->stateData->gfxSettings->resolution.width * 0.026));
 
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 650.f), "LOAD");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 650.f), "LOAD", static_cast<int>(this->stateData->gfxSettings->resolution.width * 0.026));
 
-	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 850.f), "EXIT");
+	this->pauseMenu.addButton(sf::Vector2f(this->window->getSize().x / 2.f, 850.f), "EXIT", static_cast<int>(this->stateData->gfxSettings->resolution.width * 0.026));
 
 }
 

@@ -12,6 +12,7 @@ public:
 	sf::VideoMode resolution;
 	bool fullScreen;
 	bool vsync;
+	bool showFps;
 	unsigned framerateLimit;
 	sf::ContextSettings contextSettings;
 	std::vector<sf::VideoMode> videoModes;

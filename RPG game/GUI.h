@@ -70,14 +70,15 @@ namespace gui
 		bool isMousePressed;
 
 		//Initialization functions
-		void initList(sf::Vector2f pos, sf::Vector2f size_offset, std::vector<std::string> list, unsigned int defaultIndex = 0);
+		void initList(sf::Vector2f pos, const unsigned char_size, sf::Vector2f size_offset, std::vector<std::string> list, unsigned int defaultIndex = 0);
 
 	public:
-		DropDownList(sf::Vector2f pos, sf::Vector2f size_offset, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex);
+		DropDownList(sf::Vector2f pos, const unsigned char_size, sf::Vector2f size_offset, sf::Font& font, std::vector<std::string> list, unsigned int defaultIndex);
 		~DropDownList();
 
 		//Accessors
 		const short unsigned getActiveElementID() const;
+		const std::string getActiveElement() const;
 		
 
 		void update(const sf::Vector2i& mousePosWindow);
@@ -157,6 +158,31 @@ namespace gui
 		void update(sf::Vector2f mousePos);
 		void render(sf::RenderTarget& target);
 
+	};
+
+
+	//FPS======================================================================================================================================
+	class FPS
+	{
+	private:
+
+		sf::Text fpsText;
+		sf::Font font;
+
+		float time;
+		int frameCount;
+		int fps;
+
+		//Initialization functions
+		void initText(sf::Vector2f pos, const unsigned char_size);
+		void initVariables();
+
+	public:
+		FPS(sf::Vector2f pos, const unsigned char_size);
+		~FPS();
+
+		void update(const float& dt);
+		void render(sf::RenderTarget& target);
 	};
 }
 

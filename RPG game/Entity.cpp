@@ -5,7 +5,8 @@ void Entity::initVariables()
 {
 	this->animationComponent = nullptr;
 	this->movementComponent = nullptr;
-
+	this->hitboxComponent = nullptr;
+	this->attributeComponent = nullptr;
 }
 
 void Entity::initSprite(sf::Texture& texture)
@@ -47,6 +48,7 @@ Entity::~Entity()
 	delete this->movementComponent;
 	delete this->animationComponent;
 	delete this->hitboxComponent;
+	delete this->attributeComponent;
 }
 
 //Accessors
@@ -93,6 +95,21 @@ const sf::FloatRect Entity::getNextBoundsX() const
 const sf::FloatRect Entity::getNextBoundsY() const
 {
 	return this->hitboxComponent->getNextPositionY(this->movementComponent->getVelocity().y);
+}
+
+const sf::Vector2f Entity::getCenter() const
+{
+	if (this->hitboxComponent)
+	{
+		return sf::Vector2f(
+			this->hitboxComponent->getBounds().left + (this->hitboxComponent->getBounds().width / 2.f),
+			this->hitboxComponent->getBounds().top + (this->hitboxComponent->getBounds().height / 2.f)
+		);
+	}
+
+	return sf::Vector2f(
+		this->sprite.getGlobalBounds().left + (this->sprite.getGlobalBounds().width / 2.f),
+		this->sprite.getGlobalBounds().top + (this->sprite.getGlobalBounds().height / 2.f));
 }
 
 const sf::RectangleShape& Entity::getHitbox() const
@@ -157,16 +174,4 @@ void Entity::updateHitboxComponent()
 	}
 }
 
-void Entity::update(const float& dt)
-{
-	if (this->movementComponent != nullptr)
-	{
-		this->movementComponent->update(dt);
-	}	
-}
-
-void Entity::render(sf::RenderTarget& target)
-{
-	target.draw(this->sprite);
-}
 

@@ -68,6 +68,13 @@ public:
 	const bool getKeyTime();
 
 	//Functions
+	// 
+	//Takes a percentage value and returns the X coordinate corresponding to that percentage on the current resolution
+	const float p2pX(const float percent);
+
+	//Takes a percentage value and returns the Y coordinate corresponding to that percentage on the current resolution
+	const float p2pY(const float percent);	
+
 	virtual void endState();
 	virtual void updateMousePositions(const sf::View* view = nullptr);
 	virtual void updateKeyTime(const float& dt);

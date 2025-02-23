@@ -4,7 +4,7 @@
 AttributeComponent::AttributeComponent(unsigned level)
 {
 	this->level = level;
-	this->exp = 1;
+	this->exp = 0;
 
 	this->expNext = static_cast<unsigned>((50 / 3) * (pow(this->level + 1, 3) - pow(this->level + 1, 2) + ((this->level + 1) * 17) - 12));
 	
@@ -69,6 +69,10 @@ void AttributeComponent::gainExp(const int exp)
 void AttributeComponent::loseExp(const int exp)
 {
 	this->exp -= exp;
+	if (this->exp < 0)
+	{
+		this->exp = 0;
+	}
 	this->updateLevel();
 }
 

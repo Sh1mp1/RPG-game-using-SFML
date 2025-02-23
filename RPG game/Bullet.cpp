@@ -50,7 +50,7 @@ void Bullet::update(const float& dt)
 	}
 }
 
-void Bullet::render(sf::RenderTarget& target)
+void Bullet::render(sf::RenderTarget& target, sf::Shader* shader, const bool show_hitbox)
 {
 	target.draw(this->sprite);
 }

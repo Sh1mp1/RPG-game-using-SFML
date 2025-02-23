@@ -41,8 +41,6 @@ void TileMap::initTileMap(float grid_size, unsigned width, unsigned height)
 			this->map[x][y].resize(this->layers, nullptr);
 		}
 	}
-
-	std::cout << "X : " << this->map.size() << " Y : " << this->map[0].size() << " Z : " << this->map[0][0].size() << '\n';
 }
 
 void TileMap::initTileTextureSheet()
@@ -546,7 +544,7 @@ void TileMap::update(Entity* entity, const float& dt)
 	this->updateCollision(entity, dt);																	 
 }																										 
 																										 
-void TileMap::render(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_collision_box)
+void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw_collision_box, sf::Shader* shader, const sf::Vector2f playerPos)
 {
 
 	sf::Vector2i window_size = static_cast<sf::Vector2i>(target.getSize());
@@ -558,7 +556,7 @@ void TileMap::render(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_
 		this->fromX = 0;
 	}
 
-	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 2);
+	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 4);
 	if (this->toX > this->maxSizeGrid.x)
 	{
 		this->toX = this->maxSizeGrid.x;
@@ -584,7 +582,14 @@ void TileMap::render(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_
 			{
 				if (this->map[x][y][z])
 				{
-					this->map[x][y][z]->render(target);
+					if (shader)
+					{
+						this->map[x][y][z]->render(target, shader, playerPos);
+					}
+					else
+					{
+						this->map[x][y][z]->render(target);
+					}
 					if (this->map[x][y][z]->hasCollision() && draw_collision_box)
 					{
 						this->collisionBox.setPosition(this->map[x][y][z]->getPosition());
