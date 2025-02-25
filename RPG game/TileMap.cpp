@@ -99,6 +99,11 @@ int TileMap::getTopLayer(sf::Vector2i mousePosGrid)
 	
 }
 
+const sf::Vector2f TileMap::getMaxSizeWorld() const
+{
+	return this->maxSizeWorld;
+}
+
 //Functions
 
 void TileMap::savetoFile(const std::string path)
@@ -546,17 +551,17 @@ void TileMap::update(Entity* entity, const float& dt)
 																										 
 void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw_collision_box, sf::Shader* shader, const sf::Vector2f playerPos)
 {
-
-	sf::Vector2i window_size = static_cast<sf::Vector2i>(target.getSize());
+	
+	sf::Vector2i window_size = static_cast<sf::Vector2i>(target.getView().getSize());
 	sf::Vector2i number_of_tiles = window_size / this->gridSizeI;
-
+	
 	this->fromX = grid_pos.x - ((number_of_tiles.x / 2) + 1);
 	if (this->fromX < 0)
 	{
 		this->fromX = 0;
 	}
 
-	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 4);
+	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 1);
 	if (this->toX > this->maxSizeGrid.x)
 	{
 		this->toX = this->maxSizeGrid.x;
@@ -568,7 +573,7 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 		this->fromY = 0;
 	}
 
-	this->toY = grid_pos.y + ((number_of_tiles.y / 2) + 2);
+	this->toY = grid_pos.y + ((number_of_tiles.y / 2) + 1);
 	if (this->toY > this->maxSizeGrid.y)
 	{
 		this->toY = this->maxSizeGrid.y;
@@ -582,6 +587,11 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 			{
 				if (this->map[x][y][z])
 				{
+					if (this->map[x][y][z]->getType() == TileTypes::DEFERRED)
+					{
+						this->deferredTiles.push(this->map[x][y][z]);
+						continue;
+					}
 					if (shader)
 					{
 						this->map[x][y][z]->render(target, shader, playerPos);
@@ -626,13 +636,7 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 			}
 		}
 	}*/
-
-	
-
-
-
-
-
+		
 	/*if (entity)
 	{
 		
@@ -661,5 +665,22 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 			}
 		}
 	}	*/
-}																										 
+}
+
+void TileMap::deferredRender(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_collision_box, sf::Shader* shader, const sf::Vector2f playerPos)
+{
+	while (!this->deferredTiles.empty())
+	{
+		if (shader)
+		{
+			this->deferredTiles.top()->render(target, shader, playerPos);
+		}
+		else
+		{
+			this->deferredTiles.top()->render(target);
+		}
+			
+		this->deferredTiles.pop();
+	}
+}
 																										 

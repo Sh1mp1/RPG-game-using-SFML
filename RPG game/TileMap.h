@@ -26,6 +26,8 @@ private:
 
 	sf::RectangleShape collisionBox;
 
+	std::stack<Tile*> deferredTiles;
+
 	//Culling
 	int fromX;
 	int fromY;
@@ -42,7 +44,11 @@ public:
 	~TileMap();
 
 	//Accessors
-	int getTopLayer(sf::Vector2i mousePosGrid);	//Returns the total number of tiles added to a grid position
+	//Returns the total number of tiles added to a grid position
+	int getTopLayer(sf::Vector2i mousePosGrid);	
+
+	//Returns the total size of tileMap
+	const sf::Vector2f getMaxSizeWorld() const;
 
 	//Functions
 	void savetoFile(const std::string path);
@@ -56,5 +62,6 @@ public:
 	void update(Entity* entity, const float& dt);
 	void render(sf::RenderTarget& target,  sf::Vector2i grid_pos , bool draw_collision_box = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 
+	void deferredRender(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_collision_box = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 };
 

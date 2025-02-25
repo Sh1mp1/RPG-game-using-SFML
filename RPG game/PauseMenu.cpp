@@ -3,14 +3,14 @@
 
 void PauseMenu::initBackground()
 {
-	this->background.setSize(sf::Vector2f(this->videoMode.width, this->videoMode.height));
-	this->container.setSize(sf::Vector2f(this->videoMode.width / 4.f, this->videoMode.height));
+	this->background.setSize(sf::Vector2f(static_cast<float>(this->videoMode.width), static_cast<float>(this->videoMode.height)));
+	this->container.setSize(sf::Vector2f(static_cast<float>(this->videoMode.width) / 4.f, static_cast<float>(this->videoMode.height)));
 
 	this->background.setFillColor(sf::Color(20, 20, 20, 200));
 	this->container.setFillColor(sf::Color(20, 20, 20, 250));
 	this->background.setPosition(sf::Vector2f(0.f, 0.f));
 
-	this->container.setPosition(sf::Vector2f((this->videoMode.width / 2.f) - (this->container.getGlobalBounds().width / 2.f), 0.f));
+	this->container.setPosition(sf::Vector2f((static_cast<float>(this->videoMode.width) / 2.f) - (this->container.getGlobalBounds().width / 2.f), 0.f));
 }
 
 void PauseMenu::initButtons()

@@ -520,7 +520,7 @@ void gui::ToggleButton::render(sf::RenderTarget& target)
 
 void gui::FPS::initText(sf::Vector2f pos, const unsigned char_size)
 {
-	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
+	if (!this->font.loadFromFile("Font/joystix monospace.otf"))
 	{
 		std::cout << "ERROR::FPS::COULNT LOAD FONT" << '\n';
 	}
@@ -529,7 +529,7 @@ void gui::FPS::initText(sf::Vector2f pos, const unsigned char_size)
 	this->fpsText.setPosition(pos);
 	this->fpsText.setCharacterSize(char_size);
 
-
+	
 }
 
 void gui::FPS::initVariables()
@@ -545,7 +545,7 @@ gui::FPS::FPS(sf::Vector2f pos, const unsigned char_size)
 	this->initText(pos, char_size);
 	this->initVariables();
 
-	this->fpsText.setString(std::to_string(this->fps));
+	this->fpsText.setString("FPS: " + std::to_string(this->fps));
 }
 
 gui::FPS::~FPS()
@@ -560,11 +560,15 @@ void gui::FPS::update(const float& dt)
 
 	if (this->time >= 1.f)
 	{
+		std::stringstream ss;
+		
 		this->fps = this->frameCount;
 		this->frameCount = 0;
 		this->time = 0.f;
 
-		this->fpsText.setString(std::to_string(this->fps));
+		ss << "FPS : " << this->fps << '\n'
+			<< "FRAMETIME: " << std::round(dt * 1000) << '\n';
+		this->fpsText.setString(ss.str());
 	}
 }
 

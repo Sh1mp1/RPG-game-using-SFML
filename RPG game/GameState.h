@@ -55,6 +55,8 @@ private:
 
 	gui::FPS* fps;
 
+	sf::Text debugText;
+
 	
 	//Initialization functions
 	void initDefferedRender();
@@ -70,6 +72,7 @@ private:
 	void initTileMap();
 	void initFps();
 	void initShaders();
+	void initText();
 
 public:
 	GameState(StateData* state_data);
@@ -84,6 +87,7 @@ public:
 	void updateBullets(const float& dt);
 	void updateWeaponAngle();
 	void updateFps(const float& dt);
+	void updateDebugText();
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);

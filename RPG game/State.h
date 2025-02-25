@@ -75,6 +75,9 @@ public:
 	//Takes a percentage value and returns the Y coordinate corresponding to that percentage on the current resolution
 	const float p2pY(const float percent);	
 
+	//Takes world position coords and converts it into the corresponding grid position
+	const sf::Vector2i pos2GridPos(const sf::Vector2f position) const;
+
 	virtual void endState();
 	virtual void updateMousePositions(const sf::View* view = nullptr);
 	virtual void updateKeyTime(const float& dt);

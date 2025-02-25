@@ -172,6 +172,7 @@ namespace gui
 		float time;
 		int frameCount;
 		int fps;
+		float frameTime;
 
 		//Initialization functions
 		void initText(sf::Vector2f pos, const unsigned char_size);

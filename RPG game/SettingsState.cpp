@@ -185,7 +185,7 @@ void SettingsState::initDropDownList()
 		}
 
 	}
-	this->dropDownLists.emplace("RESOLUTION", new gui::DropDownList(sf::Vector2f(this->p2pX(0.24f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(10.f, 30.f),
+	this->dropDownLists.emplace("RESOLUTION", new gui::DropDownList(sf::Vector2f(this->p2pX(0.24f), this->p2pY(0.14f)), static_cast<unsigned>(this->p2pX(0.02f)), sf::Vector2f(10.f, 30.f),
 		*this->stateData->font, dropDownText, currentResolutionIndex));
 
 	int currentAntiAliasingLevelIndex = 0;
@@ -205,12 +205,13 @@ void SettingsState::initDropDownList()
 		}
 	}
 
-	this->dropDownLists.emplace("ANTIALIASINGLEVEL", new gui::DropDownList(sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(50.f, 30.f),
-		*this->stateData->font, antiAliasingLevels,	currentAntiAliasingLevelIndex));
+	this->dropDownLists.emplace("ANTIALIASINGLEVEL", new gui::DropDownList(sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.14f)), static_cast<unsigned>(this->p2pX(0.02f)), 
+		sf::Vector2f(50.f, 30.f), *this->stateData->font, antiAliasingLevels,	currentAntiAliasingLevelIndex));
 
 
 	std::vector<std::string> framerates;
 	{
+		framerates.push_back("0");
 		framerates.push_back("60");
 		framerates.push_back("90");
 		framerates.push_back("120");
@@ -225,7 +226,7 @@ void SettingsState::initDropDownList()
 		}
 	}
 
-	this->dropDownLists.emplace("FRAMERATE", new gui::DropDownList(sf::Vector2f(this->p2pX(0.87f), this->p2pY(0.14f)), this->p2pX(0.02f), sf::Vector2f(50.f, 30.f),
+	this->dropDownLists.emplace("FRAMERATE", new gui::DropDownList(sf::Vector2f(this->p2pX(0.87f), this->p2pY(0.14f)), static_cast<unsigned>(this->p2pX(0.02f)), sf::Vector2f(50.f, 30.f),
 		*this->stateData->font, framerates, currentFramerateIndex));
 }
 

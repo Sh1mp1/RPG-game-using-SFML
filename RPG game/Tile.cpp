@@ -70,6 +70,11 @@ const sf::IntRect& Tile::getTextureRect() const
 	return this->textureRect;
 }
 
+const short Tile::getType() const
+{
+	return this->type;
+}
+
 //Functions
 
 const bool Tile::intersects(const sf::FloatRect& bounds) const

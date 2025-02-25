@@ -22,7 +22,7 @@ void PlayerGUI::initHpBar()
 	this->hpBarInner.setPosition(this->p2pX(0.0104f), this->p2pY(0.13f));
 
 	this->hpText.setFont(this->font);
-	this->hpText.setCharacterSize(this->p2pX(0.015f));
+	this->hpText.setCharacterSize(static_cast<unsigned>(this->p2pX(0.015f)));
 	this->hpText.setPosition(sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.13f)));
 	this->hpText.setOutlineThickness(1.f);
 	this->hpText.setOutlineColor(sf::Color::Black);
@@ -42,7 +42,7 @@ void PlayerGUI::initExpBar()
 	this->expBarInner.setPosition(this->p2pX(0.0104f), this->p2pY(0.078f));
 
 	this->expText.setFont(this->font);
-	this->expText.setCharacterSize(this->p2pX(0.015f));
+	this->expText.setCharacterSize(static_cast<unsigned>(this->p2pX(0.015f)));
 	this->expText.setPosition(sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.078f)));
 	this->expText.setOutlineThickness(1.f);
 	this->expText.setOutlineColor(sf::Color::Black);
@@ -64,20 +64,20 @@ PlayerGUI::~PlayerGUI()
 //Functions
 void PlayerGUI::update(const float& dt)
 {
-	//TODO call updateHpBar whenever player takes damage
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
-	{
-		this->player->getAttributeComponent()->takeDamage(1);
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-	{
-		this->player->getAttributeComponent()->gainExp(1);
-	}
-
-	this->updateHpBar();
-	this->updateExpBar();
+	////TODO call updateHpBar whenever player takes damage
+	//
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+	//{
+	//	this->player->getAttributeComponent()->takeDamage(1);
+	//}
+	//
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+	//{
+	//	this->player->getAttributeComponent()->gainExp(1);
+	//}
+	//
+	//this->updateHpBar();
+	//this->updateExpBar();
 }
 
 const float PlayerGUI::p2pX(const float modifier)

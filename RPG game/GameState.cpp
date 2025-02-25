@@ -112,10 +112,10 @@ void GameState::initPauseMenu()
 	this->pauseMenu = new PauseMenu(this->stateData->gfxSettings->resolution, *this->stateData->font);
 
 	this->pauseMenu->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.46f), "RESUME", 
-		this->stateData->gfxSettings->resolution.width * 0.026);
+		static_cast<unsigned>(this->stateData->gfxSettings->resolution.width * 0.026));
 
 	this->pauseMenu->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.74f), "EXIT", 
-		this->stateData->gfxSettings->resolution.width * 0.026);
+		static_cast<unsigned>(this->stateData->gfxSettings->resolution.width * 0.026));
 }
 
 void GameState::initTileMap()
@@ -137,7 +137,7 @@ void GameState::initTileMap()
 
 void GameState::initFps()
 {
-	this->fps = new gui::FPS(sf::Vector2f(300.f, 70.f), 40);
+	this->fps = new gui::FPS(sf::Vector2f(300.f, 70.f), 20);
 }
 
 void GameState::initShaders()
@@ -146,6 +146,12 @@ void GameState::initShaders()
 	{
 		std::cout << "ERROR::GAMESTATE::COULDNT LOAD SHADERS" << '\n';
 	}
+}
+
+void GameState::initText()
+{
+	this->debugText.setFont(*this->stateData->font);
+	this->debugText.setPosition(sf::Vector2f(100.f, 900.f));
 }
 
 
@@ -171,6 +177,7 @@ GameState::GameState(StateData* state_data)
 	this->initTileMap();
 	this->initFps();
 	this->initShaders();
+	this->initText();
 }
 
 GameState::~GameState()
@@ -198,6 +205,24 @@ void GameState::updateView()
 		posY 
 	));
 
+
+	if (this->view.getCenter().x + (this->view.getSize().x / 2.f) > this->tileMap->getMaxSizeWorld().x)
+	{
+		this->view.setCenter(this->tileMap->getMaxSizeWorld().x - (this->view.getSize().x / 2.f), this->view.getCenter().y);
+	}
+	else if (this->view.getCenter().x - (this->view.getSize().x / 2.f) < 0.f)
+	{
+		this->view.setCenter(this->view.getSize().x / 2.f, this->view.getCenter().y);
+	}
+	
+	if (this->view.getCenter().y + (this->view.getSize().y / 2.f) > this->tileMap->getMaxSizeWorld().y)
+	{
+		this->view.setCenter(this->view.getCenter().x, this->tileMap->getMaxSizeWorld().y - (this->view.getSize().y / 2.f));
+	}
+	else if (this->view.getCenter().y - (this->view.getSize().y / 2.f) < 0.f)
+	{
+		this->view.setCenter(this->view.getCenter().x, this->view.getSize().y / 2.f);
+	}
 
 	/*this->view.setCenter(sf::Vector2f(
 		posX + ((static_cast<float>(this->mousePosWindow.x) - static_cast<float>(this->stateData->gfxSettings->resolution.width) / 2) / 12.f),
@@ -347,9 +372,11 @@ void GameState::updateBullets(const float& dt)
 
 void GameState::updateWeaponAngle()
 {
-	sf::Vector2f pos = sf::Vector2f(this->stateData->window->getSize().x / 2.f, this->stateData->window->getSize().y / 2.f);
-	sf::Vector2f distance = static_cast<sf::Vector2f>(this->mousePosWindow) - pos;
+	//sf::Vector2f pos = sf::Vector2f(this->stateData->window->getSize().x / 2.f, this->stateData->window->getSize().y / 2.f);
+	//sf::Vector2f distance = static_cast<sf::Vector2f>(this->mousePosWindow) - pos;
 
+	sf::Vector2f pos = this->player->getCenter();
+	sf::Vector2f distance = this->mousePosView - pos; 
 	this->weaponAngle= atan2(distance.y, distance.x);
 }
 
@@ -358,10 +385,16 @@ void GameState::updateFps(const float& dt)
 	this->fps->update(dt);
 }
 
+void GameState::updateDebugText()
+{
+	this->debugText.setString("X : " + std::to_string(this->mousePosView.x) + " Y : " + std::to_string(this->mousePosView.y));
+}
+
 
 void GameState::update(const float& dt)
 {
-	this->updateMousePositions();
+	
+	this->updateMousePositions(&this->view);
 	this->updateInput(dt);
 	if (!this->paused)	//Unpaused update;
 	{
@@ -382,6 +415,7 @@ void GameState::update(const float& dt)
 		this->updatePauseMenu();
 		this->bulletTimer = -0.1f;
 	}
+	this->updateDebugText();
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -393,7 +427,10 @@ void GameState::render(sf::RenderTarget* target)
 	target->setView(this->view);
 	
 	
-	this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
+	//this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
+
+	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
+
 	this->player->render(*target, &this->shader);
 	if (this->isGunEquipped)
 		this->gun->render(*target, &this->shader);
@@ -403,6 +440,8 @@ void GameState::render(sf::RenderTarget* target)
 		if (i)
 			i->render(*target, &this->shader);
 	}
+
+	this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
 
 	target->setView(this->window->getDefaultView());
 	if (!this->paused)
@@ -418,6 +457,7 @@ void GameState::render(sf::RenderTarget* target)
 		this->pauseMenu->render(*target);
 	}
 
+	//target->draw(this->debugText);
 	//if (!target)
 	//{
 	//	target = this->window;

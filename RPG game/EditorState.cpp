@@ -532,7 +532,11 @@ void EditorState::render(sf::RenderTarget* target)
 
 	//target->draw(this->background);
 	//this->renderButtons(target);
-	this->tileMap->render(*target, this->mousePosGrid, true);
+	//this->tileMap->render(*target, this->mousePosGrid, true);
+	//this->tileMap->deferredRender(*target, this->mousePosGrid, true);
+
+	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), true);
+	this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), true);
 
 	target->setView(this->window->getDefaultView());
 
@@ -546,8 +550,5 @@ void EditorState::render(sf::RenderTarget* target)
 		this->renderGUI(*target);
 		target->draw(this->mouseText);
 		target->setView(this->window->getDefaultView());
-	}
-
-
-	
+	}	
 }

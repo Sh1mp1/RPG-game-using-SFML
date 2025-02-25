@@ -34,6 +34,8 @@ private:
 	void initBackground();
 	void initButtons();
 
+	void resetBackground();
+
 
 public:
 	MainMenuState(StateData* state_data);

@@ -56,6 +56,16 @@ const float State::p2pY(const float percent)
 	return std::floor(static_cast<float>(this->stateData->gfxSettings->resolution.height) * (percent));
 }
 
+const sf::Vector2i State::pos2GridPos(const sf::Vector2f position) const
+{
+	return sf::Vector2i(
+		static_cast<int>(position.x) / static_cast<int>(this->stateData->gridSize),
+		static_cast<int>(position.y) / static_cast<int>(this->stateData->gridSize)
+	);
+
+	//return sf::Vector2i(position.x / this->gridSize, position.y / this->gridSize);
+}
+
 void State::endState()
 {
 	this->quit = true;
@@ -66,12 +76,13 @@ void State::updateMousePositions(const sf::View* view)
 	this->mousePosScreen = sf::Mouse::getPosition();
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 
+	
 	if (view)
 	{
 		this->window->setView(*view);
 	}
 
-	this->mousePosView = this->stateData->window->mapPixelToCoords(this->mousePosWindow);
+	this->mousePosView = this->stateData->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
 	this->mousePosGrid = sf::Vector2i(static_cast<int>(this->mousePosView.x / this->gridSize),
 									  static_cast<int>(this->mousePosView.y / this->gridSize));
 	this->mousePosGridWindow = sf::Vector2i(

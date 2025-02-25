@@ -1,7 +1,7 @@
 #pragma once
 
 
-enum TileTypes {DEFAULT = 0, DAMAGING, NO_OF_TYPES};
+enum TileTypes {DEFAULT = 0, DAMAGING, DEFERRED, NO_OF_TYPES};
 
 class Tile
 {
@@ -30,6 +30,7 @@ public:
 	const sf::Vector2f getTextureRectPosition() const;
 	const sf::FloatRect getBounds() const;
 	const sf::IntRect& getTextureRect() const;
+	const short getType() const;
 
 	//Functions
 	const bool intersects(const sf::FloatRect& bounds) const;	//Returns true if the tile is intersecting with the given bounds

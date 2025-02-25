@@ -45,6 +45,8 @@ void MainMenuState::initFont()
 	this->mousePosText.setString("START");
 	this->mousePosText.setPosition(sf::Vector2f(0.f , 0.f));
 	this->mousePosText.setCharacterSize(15);
+
+	
 }
 
 void MainMenuState::initBackground()
@@ -68,17 +70,29 @@ void MainMenuState::initBackground()
 void MainMenuState::initButtons()
 {
 	this->buttons["GAME"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.47f)), this->stateData->font, "GAME",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), static_cast<unsigned>(this->p2pX(0.02f)));
 
 
 	this->buttons["SETTINGS"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.55f)), this->stateData->font, "SETTINGS",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), static_cast<unsigned>(this->p2pX(0.02f)));
 
 	this->buttons["EDITOR"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.64f)), this->stateData->font, "EDITOR",
-		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
+		sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), static_cast<unsigned>(this->p2pX(0.02f)));
 
 	this->buttons["EXIT"] = new gui::Button(sf::Vector2f(this->p2pX(0.14f), this->p2pY(0.74f)), this->stateData->font, "EXIT",
-						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), this->p2pX(0.02f));
+						sf::Color(250, 250, 250), sf::Color(200, 200, 200), sf::Color(80, 80, 80), static_cast<unsigned>(this->p2pX(0.02f)));
+}
+
+void MainMenuState::resetBackground()
+{
+	float scale_x = static_cast<float>(this->stateData->window->getSize().x) / this->backgroundTexture.getSize().x;
+	float scale_y = static_cast<float>(this->stateData->window->getSize().y) / this->backgroundTexture.getSize().y;
+
+
+	this->background.setScale(sf::Vector2f(scale_x, scale_y));
+
+	this->backgroundFade.setSize(sf::Vector2f(this->p2pX(0.29f), this->p2pY(1.f)));
+	this->backgroundFade.setFillColor(sf::Color(20, 20, 20, 150));
 }
 
 
@@ -136,6 +150,13 @@ void MainMenuState::update(const float& dt)
 	this->updateText();
 	this->updateButtons();
 
+
+	if (this->background.getGlobalBounds().width != this->gfxSettings.resolution.width ||
+		this->background.getGlobalBounds().height != this->gfxSettings.resolution.height)
+	{
+		this->resetBackground();
+		this->initButtons();
+	}
 
 }
 
