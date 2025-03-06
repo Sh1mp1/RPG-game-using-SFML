@@ -3,11 +3,13 @@
 #include "AnimationComponent.h"
 #include "HitboxComponent.h"
 #include "AttributeComponent.h"
+#include "SkillComponent.h"
 
 class MmovementComponent;
 class AnimationComponent;
 class HitboxComponent;
 class AttributeComponent;
+class SkillComponent;
 
 class Entity
 {
@@ -21,6 +23,7 @@ protected:
 	AnimationComponent* animationComponent;
 	HitboxComponent* hitboxComponent;
 	AttributeComponent* attributeComponent;
+	SkillComponent* skillComponent;
 
 	//Initialization functions
 	void initSprite(sf::Texture& texture);
@@ -28,6 +31,7 @@ protected:
 	void initAnimationComponent(sf::Texture& texture_sheet);
 	void initHitboxComponent(sf::Vector2f offset, sf::Vector2f size);
 	void initAttributeComponent(const unsigned level);
+	void initSkillComponent();
 													
 public:												
 	Entity(const float x , const float y , sf::Texture& texture);										

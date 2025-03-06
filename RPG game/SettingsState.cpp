@@ -29,6 +29,10 @@ SettingsState::SettingsState(StateData* state_data)
 	this->initFont();
 	this->initVariables();
 	this->initDropDownList();
+
+
+	this->bg.setSize(static_cast<sf::Vector2f>(this->stateData->window->getSize()));
+	this->bg.setFillColor(sf::Color(20, 20, 20, 150));
 }
 
 SettingsState::~SettingsState()
@@ -311,6 +315,8 @@ void SettingsState::updateButtons()
 		
 		this->updateButtonPos();
 
+
+		
 		//std::cout << "X " << this->window->getSize().x << " Y " << this->window->getSize().y;
 	}
 }
@@ -389,7 +395,8 @@ void SettingsState::render(sf::RenderTarget* target)
 		target = this->window;
 	}
 
-	//target->draw(this->background);
+	target->draw(this->background);
+	target->draw(this->bg);
 	this->renderGUI(*target);
 	target->draw(this->mousePosText);
 	

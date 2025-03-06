@@ -15,7 +15,7 @@ private:
 	sf::Sprite background;
 	sf::Texture backgroundTexture;
 
-
+	sf::RectangleShape bg;
 	std::map <std::string, int> keybinds;
 
 	sf::Text mousePosText;

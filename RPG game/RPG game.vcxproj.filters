@@ -108,6 +108,9 @@
     <ClCompile Include="GraphicsSettings.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
+    <ClCompile Include="SkillComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -176,12 +179,15 @@
     <ClInclude Include="GraphicsSettings.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="SkillComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex_shader.vert">
+    <None Include="..\x64\Release\fragment_shader.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="fragment_shader.frag">
+    <None Include="..\x64\Release\vertex_shader.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

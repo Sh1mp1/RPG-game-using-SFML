@@ -44,6 +44,7 @@ public:
 	~TileMap();
 
 	//Accessors
+	// 
 	//Returns the total number of tiles added to a grid position
 	int getTopLayer(sf::Vector2i mousePosGrid);	
 

@@ -57,6 +57,8 @@ private:
 
 	sf::Text debugText;
 
+	sf::Font progressBarFont;
+	gui::ProgressBar* hpBar;
 	
 	//Initialization functions
 	void initDefferedRender();

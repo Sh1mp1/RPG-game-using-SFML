@@ -472,6 +472,24 @@ void gui::ToggleButton::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
 	this->outerRectangle.setFillColor(sf::Color::White);
 	this->innerRectangle.setFillColor(sf::Color::Black);
 
+
+
+	this->leftCheck.setSize(sf::Vector2f(size.x / 2.5f, size.y / 5.f));
+	this->leftCheck.setPosition(this->outerRectangle.getPosition().x + 5.f, this->outerRectangle.getPosition().y + (this->outerRectangle.getSize().y / 2.f) - (0.f));
+	//this->leftCheck.setRotation(45);
+	this->leftCheck.setFillColor(sf::Color::Black);
+
+	this->rightCheck.setSize(sf::Vector2f(size.x, size.y / 5.f));
+	//this->rightCheck.setPosition(this->leftCheck.getPosition().x + (this->leftCheck.getSize().x / 2.f), 
+	//	this->outerRectangle.getPosition().y + this->outerRectangle.getSize().y - this->rightCheck.getSize().y);
+
+	this->rightCheck.setPosition(this->leftCheck.getPosition().x + (this->leftCheck.getSize().x / 2.f), this->leftCheck.getPosition().y);
+	this->rightCheck.setFillColor(sf::Color::Black);
+
+	sf::FloatRect bounds = this->leftCheck.getGlobalBounds();
+
+	this->leftCheck.setOrigin((bounds.width), 0.f);
+	this->rightCheck.setRotation(-45);
 }
 
 gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, sf::Vector2f size, const bool default_status)
@@ -511,7 +529,9 @@ void gui::ToggleButton::render(sf::RenderTarget& target)
 
 	if (this->enabled)
 	{
-		target.draw(this->innerRectangle);
+		//target.draw(this->innerRectangle);
+		target.draw(this->leftCheck);
+		target.draw(this->rightCheck);
 	}
 }
 
@@ -520,16 +540,14 @@ void gui::ToggleButton::render(sf::RenderTarget& target)
 
 void gui::FPS::initText(sf::Vector2f pos, const unsigned char_size)
 {
-	if (!this->font.loadFromFile("Font/joystix monospace.otf"))
+	if (!this->font.loadFromFile("Font/Roboto-Black.ttf"))
 	{
 		std::cout << "ERROR::FPS::COULNT LOAD FONT" << '\n';
 	}
 
 	this->fpsText.setFont(this->font);
 	this->fpsText.setPosition(pos);
-	this->fpsText.setCharacterSize(char_size);
-
-	
+	this->fpsText.setCharacterSize(char_size);	
 }
 
 void gui::FPS::initVariables()
@@ -544,36 +562,86 @@ gui::FPS::FPS(sf::Vector2f pos, const unsigned char_size)
 {
 	this->initText(pos, char_size);
 	this->initVariables();
+																									   
+	this->fpsText.setString("FPS: " + std::to_string(this->fps));									   
+}																									   
+																									   
+gui::FPS::~FPS()																					   
+{																									   
+}																									   
+																									   
+//Functions																							   
+void gui::FPS::update(const float& dt)																   
+{																									   
+	++this->frameCount;																				   
+	this->time += dt;																				   
+																									   
+	if (this->time >= 1.f)																			   
+	{																								   
+		std::stringstream ss;																		   
+																									   
+		this->fps = this->frameCount;																   
+		this->frameCount = 0;																		   
+		this->time = 0.f;																			   
+																									   
+		ss << "FPS : " << this->fps << '\n'															   
+			<< "FRAMETIME: " << std::round(dt * 1000) << " ms" << '\n';								   
+		this->fpsText.setString(ss.str());															   
+	}																								   
+}																									   
+																									   
+void gui::FPS::render(sf::RenderTarget& target)														   
+{																									   
+	target.draw(this->fpsText);																		   
+}	
 
-	this->fpsText.setString("FPS: " + std::to_string(this->fps));
+//PROGRESS BAR=================================================================================================================================================PROGRESS BAR
+																									   
+gui::ProgressBar::ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, const float max_value, const float current_value, sf::Color background_color, sf::Color foreground_color,
+	sf::Font& font, const unsigned text_size)
+{
+	this->back.setPosition(pos);
+	this->back.setFillColor(background_color);
+	this->back.setOutlineThickness(1.f);
+	this->back.setOutlineColor(sf::Color::White);
+
+	this->inner.setPosition(pos);
+	this->inner.setFillColor(foreground_color);
+
+	this->back.setSize(size);
+	this->inner.setSize(sf::Vector2f((current_value / max_value) * size.x, size.y));
+
+	this->maxValue = max_value;
+
+
+
+
+
+	this->font = font;
+	this->text.setFont(this->font);
+	this->text.setString(std::to_string(static_cast<int>(current_value)) + "/" + std::to_string(this->maxValue));
+	this->text.setPosition(this->back.getPosition());
+	this->text.setOutlineThickness(1.f);
+	this->text.setOutlineColor(sf::Color::Black);
+
 }
 
-gui::FPS::~FPS()
+gui::ProgressBar::~ProgressBar()
 {
 }
 
-//Functions
-void gui::FPS::update(const float& dt)
+void gui::ProgressBar::update(const int current_value)
 {
-	++this->frameCount;
-	this->time += dt;
+	this->inner.setSize(sf::Vector2f((current_value / this->maxValue) * this->inner.getSize().x, this->inner.getSize().y));
 
-	if (this->time >= 1.f)
-	{
-		std::stringstream ss;
-		
-		this->fps = this->frameCount;
-		this->frameCount = 0;
-		this->time = 0.f;
-
-		ss << "FPS : " << this->fps << '\n'
-			<< "FRAMETIME: " << std::round(dt * 1000) << '\n';
-		this->fpsText.setString(ss.str());
-	}
+	this->text.setString(std::to_string(static_cast<int>(current_value)) + "/" + std::to_string(this->maxValue));
 }
 
-void gui::FPS::render(sf::RenderTarget& target)
+void gui::ProgressBar::render(sf::RenderTarget& target)
 {
-	target.draw(this->fpsText);
-}
+	target.draw(this->back);
+	target.draw(this->inner);
 
+	target.draw(this->text);
+
+}

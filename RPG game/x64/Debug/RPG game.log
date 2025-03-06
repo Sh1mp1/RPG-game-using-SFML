@@ -1,14 +1,5 @@
-﻿  AttributeComponent.cpp
-  Bullet.cpp
-  EditorState.cpp
-  Entity.cpp
-  Game.cpp
-  GameState.cpp
-  MainMenuState.cpp
-  Player.cpp
-  SettingsState.cpp
-  State.cpp
-  TileMap.cpp
-  main.cpp
-  Generating Code...
+﻿  GUI.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\GUI.cpp(614,19): warning C4244: '=': conversion from 'const float' to 'int', possible loss of data
+  (compiling source file '/GUI.cpp')
+  
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Debug\RPG game.exe

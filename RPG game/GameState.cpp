@@ -71,6 +71,13 @@ void GameState::initPlayer()
 void GameState::initPlayerGUI()
 {
 	this->playerGUI = new PlayerGUI(this->player, this->stateData->gfxSettings->resolution);
+
+	if (!this->progressBarFont.loadFromFile("Font/joystix monospace.otf"))
+	{
+		std::cout << "ERROR::GAMESTATE::COULDNT LOAD PROGRESS BAR FONT" << '\n';
+	}
+
+	this->hpBar = new gui::ProgressBar(sf::Vector2f(200.f, 500.f), sf::Vector2f(300.f, 50.f), 100, 50, sf::Color::White, sf::Color::Red, this->progressBarFont, 20);
 }
 
 void GameState::initBullet()
@@ -184,6 +191,8 @@ GameState::~GameState()
 {
 	delete this->player;
 
+	delete this->playerGUI;
+
 	for (int i = 0; i < this->bullets.size(); ++i)
 	{
 		delete this->bullets[i];
@@ -191,6 +200,10 @@ GameState::~GameState()
 	delete this->tileMap;
 
 	delete this->gun;	
+
+	delete this->pauseMenu;
+
+	delete this->fps;
 }
 
 
@@ -206,22 +219,29 @@ void GameState::updateView()
 	));
 
 
-	if (this->view.getCenter().x + (this->view.getSize().x / 2.f) > this->tileMap->getMaxSizeWorld().x)
+	if (this->view.getSize().x <= this->tileMap->getMaxSizeWorld().x)
 	{
-		this->view.setCenter(this->tileMap->getMaxSizeWorld().x - (this->view.getSize().x / 2.f), this->view.getCenter().y);
+		if (this->view.getCenter().x + (this->view.getSize().x / 2.f) > this->tileMap->getMaxSizeWorld().x)
+		{
+			this->view.setCenter(this->tileMap->getMaxSizeWorld().x - (this->view.getSize().x / 2.f), this->view.getCenter().y);
+		}
+		else if (this->view.getCenter().x - (this->view.getSize().x / 2.f) < 0.f)
+		{
+			this->view.setCenter(this->view.getSize().x / 2.f, this->view.getCenter().y);
+		}
 	}
-	else if (this->view.getCenter().x - (this->view.getSize().x / 2.f) < 0.f)
-	{
-		this->view.setCenter(this->view.getSize().x / 2.f, this->view.getCenter().y);
-	}
+
 	
-	if (this->view.getCenter().y + (this->view.getSize().y / 2.f) > this->tileMap->getMaxSizeWorld().y)
+	if (this->view.getSize().y <= this->tileMap->getMaxSizeWorld().y)
 	{
-		this->view.setCenter(this->view.getCenter().x, this->tileMap->getMaxSizeWorld().y - (this->view.getSize().y / 2.f));
-	}
-	else if (this->view.getCenter().y - (this->view.getSize().y / 2.f) < 0.f)
-	{
-		this->view.setCenter(this->view.getCenter().x, this->view.getSize().y / 2.f);
+		if (this->view.getCenter().y + (this->view.getSize().y / 2.f) > this->tileMap->getMaxSizeWorld().y)
+		{
+			this->view.setCenter(this->view.getCenter().x, this->tileMap->getMaxSizeWorld().y - (this->view.getSize().y / 2.f));
+		}
+		else if (this->view.getCenter().y - (this->view.getSize().y / 2.f) < 0.f)
+		{
+			this->view.setCenter(this->view.getCenter().x, this->view.getSize().y / 2.f);
+		}
 	}
 
 	/*this->view.setCenter(sf::Vector2f(
@@ -456,6 +476,7 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		this->pauseMenu->render(*target);
 	}
+	this->hpBar->render(*target);
 
 	//target->draw(this->debugText);
 	//if (!target)

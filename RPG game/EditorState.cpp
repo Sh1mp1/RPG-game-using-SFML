@@ -202,7 +202,7 @@ void EditorState::updateInput(const float& dt)
 void EditorState::updateEditorInput(const float& dt)
 { 
 	//Add tile
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getKeyTime())	//Adds a tile to the tileMap
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))	//Adds a tile to the tileMap
 	{
 		if (this->textureSelector->isHideButtonPressed())
 		{
@@ -459,10 +459,9 @@ void EditorState::updateCurrentTextureGUI()
 void EditorState::updateText()
 {
 	this->mouseText.setPosition(sf::Vector2f(this->mousePosView.x + 10.f, this->mousePosView.y + 10.f));
-	int layer = this->tileMap->getTopLayer(this->mousePosGrid);
 	std::stringstream ss;
 	ss <<  "POS " << this->mousePosView.x << " " << this->mousePosView.y << '\n'
-		<< "GRID POS " << this->mousePosGrid.x << " " << this->mousePosGrid.y << " " << layer << '\n'
+		<< "GRID POS " << this->mousePosGrid.x << " " << this->mousePosGrid.y << " " << this->tileMap->getTopLayer(this->mousePosGrid) << '\n'
 		<< "COLLISION " << this->collision << '\n'
 		<< "TYPE " << this->type << '\n';
 	this->mouseText.setString(ss.str());

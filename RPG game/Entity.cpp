@@ -7,6 +7,7 @@ void Entity::initVariables()
 	this->movementComponent = nullptr;
 	this->hitboxComponent = nullptr;
 	this->attributeComponent = nullptr;
+	this->skillComponent = nullptr;
 }
 
 void Entity::initSprite(sf::Texture& texture)
@@ -34,6 +35,11 @@ void Entity::initAttributeComponent(const unsigned level)
 	this->attributeComponent = new AttributeComponent(level);
 }
 
+void Entity::initSkillComponent()
+{
+	this->skillComponent = new SkillComponent();
+}
+
 Entity::Entity(const float x, const float y, sf::Texture& texture)
 {
 	this->initVariables();
@@ -49,6 +55,7 @@ Entity::~Entity()
 	delete this->animationComponent;
 	delete this->hitboxComponent;
 	delete this->attributeComponent;
+	delete this->skillComponent;
 }
 
 //Accessors

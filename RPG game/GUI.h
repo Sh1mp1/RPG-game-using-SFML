@@ -8,6 +8,7 @@ namespace gui
 	class Button;
 	class DropDownList;
 	class TextureSelector;
+	class ProgressBar;
 
 
 	class Button
@@ -140,6 +141,9 @@ namespace gui
 		sf::RectangleShape outerRectangle;
 		sf::RectangleShape innerRectangle;	//The box inside the button which only renders when the button is set to on/enabled
 
+		sf::RectangleShape leftCheck;
+		sf::RectangleShape rightCheck;
+
 		sf::Font* font;
 		sf::Text text;
 
@@ -183,6 +187,27 @@ namespace gui
 		~FPS();
 
 		void update(const float& dt);
+		void render(sf::RenderTarget& target);
+	};
+
+	class ProgressBar
+	{
+	private:
+
+		sf::RectangleShape back;
+		sf::RectangleShape inner;
+
+		sf::Font font;
+		sf::Text text;
+
+		int maxValue;
+
+	public:
+		ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, const float max_value, const float current_value, sf::Color background_color, sf::Color foreground_color,
+			sf::Font& font, const unsigned text_size);
+		~ProgressBar();
+
+		void update(const int current_value);
 		void render(sf::RenderTarget& target);
 	};
 }
