@@ -6,7 +6,7 @@ Gun::Gun()
 }
 
 Gun::Gun(sf::Vector2f pos, sf::Texture& texture)
-	:WeaponComponent(texture, pos)
+	:WeaponComponent(texture, pos, 10, 0)
 {
 	this->sprite.setScale(sf::Vector2f(0.07f, 0.07f));
 

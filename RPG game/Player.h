@@ -30,7 +30,7 @@ public:
 	void updateAnimation(const float& dt);																	  
 	void update(const float& dt);																			  
 																											  
-	void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const bool show_hitbox = false);																	  
+	void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const bool show_hitbox = false, sf::Vector2f lightPos = sf::Vector2f());
 };																											  
 																											  
 																											  

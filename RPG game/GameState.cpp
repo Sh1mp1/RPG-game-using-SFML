@@ -77,7 +77,12 @@ void GameState::initPlayerGUI()
 		std::cout << "ERROR::GAMESTATE::COULDNT LOAD PROGRESS BAR FONT" << '\n';
 	}
 
-	this->hpBar = new gui::ProgressBar(sf::Vector2f(200.f, 500.f), sf::Vector2f(300.f, 50.f), 100, 50, sf::Color::White, sf::Color::Red, this->progressBarFont, 20);
+	//this->hpBar = new gui::ProgressBar(sf::Vector2f(200.f, 500.f), sf::Vector2f(300.f, 50.f), 100, 50, sf::Color::White, sf::Color::Red, this->progressBarFont, 20);
+}
+
+void GameState::initEnemyHandler()
+{
+	this->enemyHandler = new EnemyHandler(this->enemies);
 }
 
 void GameState::initBullet()
@@ -103,15 +108,24 @@ void GameState::initAudio()
 	}
 }
 
-void GameState::initGun()
+void GameState::initWeapons()
 {
 	if (!this->gunTexture.loadFromFile("Textures/smg.png"))
 	{
 		std::cout << "ERROR::GAMESTATE::COULDNT LOAD GUN TEXTURE" << '\n';
 	}
 
-	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
-	this->gun = new Gun(pos, this->gunTexture);
+	this->gun = new Gun(this->player->getCenter(), this->gunTexture);
+
+
+	if (!this->swordTexture.loadFromFile("Textures/sword.png"))
+	{
+		std::cout << "ERROR::GAMESTATE::COULDNT LOAD SWORD TEXTURE" << '\n';
+	}
+
+	this->sword = new Sword(this->swordTexture, this->player->getCenter());
+	this->attackTimer = 0.f;
+	this->attackTimerMax = 0.5f;
 }
 
 void GameState::initPauseMenu()
@@ -177,14 +191,22 @@ GameState::GameState(StateData* state_data)
 	this->initAudio();
 	this->initPlayer();
 	this->initPlayerGUI();
+	this->initEnemyHandler();
 	this->initView();
 	this->initBullet();
-	this->initGun();
+	this->initWeapons();
 	this->initPauseMenu();
 	this->initTileMap();
 	this->initFps();
 	this->initShaders();
 	this->initText();
+
+
+
+	if (!this->ratEnemyTexture.loadFromFile("Textures/scorpion1_60x64.png"))
+	{
+		std::cout << "ERROR::COULNT LOAD RAT TEXTURE" << '\n';
+	}
 }
 
 GameState::~GameState()
@@ -204,6 +226,14 @@ GameState::~GameState()
 	delete this->pauseMenu;
 
 	delete this->fps;
+
+	delete this->enemyHandler;
+
+	for (auto& i : this->enemies)
+	{
+		if (i)
+			delete i;
+	}
 }
 
 
@@ -269,9 +299,7 @@ void GameState::updatePauseMenu()
 
 void GameState::updateGun(const float& dt)
 {
-
-	sf::Vector2f pos = sf::Vector2f(this->player->getBounds().left + (this->player->getBounds().width / 2), this->player->getBounds().top + (this->player->getBounds().height / 2.f));
-	this->gun->update(dt, pos, this->weaponAngle * (180.f / 3.14f));
+	this->gun->update(dt, this->player->getCenter(), this->weaponAngle * (180.f / 3.14f));
 }
 
 void GameState::updateInput(const float& dt)
@@ -300,23 +328,28 @@ void GameState::updateInput(const float& dt)
 
 void GameState::updatePlayerInput(const float& dt)
 {
+	this->attackTimer += dt;
 	
 	//Update player movement
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_left"))))
 	{
 		this->player->move(dt, sf::Vector2f(-1.f, 0.f));
+		//this->ratEnemy->move(dt, sf::Vector2f(-1.f, 0.f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_right"))))
 	{
 		this->player->move(dt, sf::Vector2f(1.f, 0.f));
+		//this->ratEnemy->move(dt, sf::Vector2f(1.f, 0.f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_up"))))
 	{
 		this->player->move(dt, sf::Vector2f(0.f, -1.f));
+		//this->ratEnemy->move(dt, sf::Vector2f(0.f, -1.f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("move_down"))))
 	{
 		this->player->move(dt, sf::Vector2f(0.f, 1.f));
+		//this->ratEnemy->move(dt, sf::Vector2f(0.f, 1.f));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("equip_gun"))))
@@ -336,31 +369,44 @@ void GameState::updatePlayerInput(const float& dt)
 																														 		   
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))																	 		   
 	{		
-		if (this->bulletTimer >= this->bulletTimerMax && this->isGunEquipped)																	 		   
+		if (this->isGunEquipped)
 		{
-			sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
-				this->player->getPosition().y + (this->player->getBounds().height / 2.f));																			 		   
-			float x = cos(this->weaponAngle);																						 		   
-			float y = sin(this->weaponAngle);				
-			this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, this->weaponAngle * (180.f / 3.14f)));	 		   
-			this->bulletTimer = 0.f;	
-
-
-			for (int i = 0; i < this->shootSounds.size(); ++i)
+			if (this->bulletTimer >= this->bulletTimerMax)
 			{
-				if (this->shootSounds[i].getStatus() != sf::SoundSource::Playing)
+				sf::Vector2f pos = sf::Vector2f(this->player->getPosition().x + (this->player->getBounds().width / 2.f),
+					this->player->getPosition().y + (this->player->getBounds().height / 2.f));
+				float x = cos(this->weaponAngle);
+				float y = sin(this->weaponAngle);
+				this->bullets.push_back(new Bullet(sf::Vector2f(x, y), pos, this->bulletTexture, this->weaponAngle * (180.f / 3.14f)));
+				this->bulletTimer = 0.f;
+
+
+				for (int i = 0; i < this->shootSounds.size(); ++i)
 				{
-					this->shootSounds[i].play();
-					break;
+					if (this->shootSounds[i].getStatus() != sf::SoundSource::Playing)
+					{
+						this->shootSounds[i].play();
+						break;
+					}
 				}
 			}
-		}																												 		   
+		}
+		else
+		{
+			if (this->attackTimer >= this->attackTimerMax)
+			{
+				this->enemyHandler->damageEnemy(this->sword->getDamage(), this->mousePosView, this->player->getCenter());
+				this->attackTimer = 0.f;
+			}
+		}
 	}
 
 	if (this->bulletTimer <= this->bulletTimerMax)
 	{
 		this->bulletTimer += 1 * dt;
 	}
+
+	//std::cout << this->attackTimer << " " << this->attackTimerMax << '\n';
 }
 
 void GameState::updateBullets(const float& dt)
@@ -420,13 +466,28 @@ void GameState::update(const float& dt)
 	{
 		this->updateWeaponAngle();
 		this->updatePlayerInput(dt);
+
 		this->updateBullets(dt);
-		this->updateGun(dt);
+		
+		if (this->isGunEquipped)
+			this->updateGun(dt);
+		else
+			this->sword->update(dt, this->player->getCenter(), this->weaponAngle * (180.f / 3.14f));
+
+
 		this->player->update(dt);
+
 		this->tileMap->update(this->player, dt);
+		this->tileMap->update(this->enemy, dt);
+
+		this->tileMap->updateSpawners(*this->enemyHandler, dt);
+
+		this->enemyHandler->update(dt, this->player->getCenter(), *this->player->getAttributeComponent());
 		this->updateView();
 		this->playerGUI->update(dt);
 		this->updateFps(dt);
+
+		//this->enemy->update(dt);
 	}
 	else	//Paused update;
 	{
@@ -436,6 +497,8 @@ void GameState::update(const float& dt)
 		this->bulletTimer = -0.1f;
 	}
 	this->updateDebugText();
+
+	//this->ratEnemy->update(dt);
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -449,11 +512,20 @@ void GameState::render(sf::RenderTarget* target)
 	
 	//this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
 
-	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
+	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, false, &this->shader, this->player->getCenter());
+
+	//this->enemy->render(*target, &this->shader, false, this->player->getCenter());
+	//this->ratEnemy->render(*target, &this->shader, true, this->player->getCenter());
+
+	this->enemyHandler->render(*target, &this->shader, false, this->player->getCenter());
 
 	this->player->render(*target, &this->shader);
+	
+	
 	if (this->isGunEquipped)
 		this->gun->render(*target, &this->shader);
+	else
+		this->sword->render(*target, &this->shader, false);
 	
 	for (auto i : this->bullets)
 	{
@@ -476,7 +548,12 @@ void GameState::render(sf::RenderTarget* target)
 	{
 		this->pauseMenu->render(*target);
 	}
-	this->hpBar->render(*target);
+
+	
+	//this->hpBar->render(*target);
+
+
+
 
 	//target->draw(this->debugText);
 	//if (!target)

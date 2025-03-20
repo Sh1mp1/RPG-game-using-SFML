@@ -24,7 +24,7 @@ Tile::Tile()
 	this->type = 0;
 }
 
-Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, const short type, const bool collision)
+Tile::Tile(sf::Vector2u grid_pos, float gridSize, const sf::Texture& texture, const sf::IntRect& texture_rect, short type, const bool collision)
 	:type(type), collision(collision)
 {
 	this->initShape(grid_pos, gridSize);
@@ -73,6 +73,34 @@ const sf::IntRect& Tile::getTextureRect() const
 const short Tile::getType() const
 {
 	return this->type;
+}
+
+const std::string Tile::getTypeString(short type) const
+{
+	switch (type)
+	{
+	case 1:
+		return "DEFAULT";
+		break;
+
+	case 2:
+		return "DAMAGING";
+		break;
+
+	case 3:
+		return "DEFERRED";
+		break;
+
+	default:
+		return "UNKNOWN";
+		break;
+
+	}
+}
+
+const sf::Texture& Tile::getTexture() const
+{
+	return *this->shape.getTexture();
 }
 
 //Functions

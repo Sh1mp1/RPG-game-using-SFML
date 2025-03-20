@@ -32,6 +32,8 @@ public:
 	//Functions
 	const std::string debugPrint();
 
+	const bool isDead() const;
+
 	void gainExp(const int exp);
 	void loseExp(const int exp);
 	void takeDamage(const int damage);

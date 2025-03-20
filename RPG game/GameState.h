@@ -6,6 +6,8 @@
 #include "Gun.h"
 #include "TileMap.h"
 #include "PlayerGUI.h"
+#include "EnemyHandler.h"
+#include "Sword.h"
 
 class State;
 class Player;
@@ -13,6 +15,8 @@ class PlayerGUI;
 class Entity;
 class Gun;
 class TileMap;
+class Enemy;
+class EnemyHandler;
 
 class GameState:
 	public State
@@ -22,28 +26,44 @@ private:
 	sf::RenderTexture renderTexture;
 	sf::Sprite renderSprite;
 
+
+	//Entities
 	Player* player;
 	sf::Texture playerTexture;
 	PlayerGUI* playerGUI;
 
+	std::vector<Enemy*> enemies;
+	EnemyHandler* enemyHandler;
+	Enemy* enemy;
+	sf::Texture ratEnemyTexture;
 
-	sf::Shader shader;
 
-	PauseMenu* pauseMenu;
-	bool isEscapePressed;
-
+	//Weapons
+	Sword* sword;
+	float attackTimer;
+	float attackTimerMax;
+	sf::Texture swordTexture;
 	Gun* gun;
 	sf::Texture gunTexture;
 	bool isGunEquipped;
 	bool isEPressed;
-
-	std::vector<sf::Sound> shootSounds;
-	sf::SoundBuffer shootBuffer;
-
 	std::vector<Entity*> bullets;
 	sf::Texture bulletTexture;
 	float bulletTimer;
 	float bulletTimerMax;
+
+
+	sf::Shader shader;
+
+	//Pause menu
+	PauseMenu* pauseMenu;
+	bool isEscapePressed;	
+
+	//Audio
+	std::vector<sf::Sound> shootSounds;
+	sf::SoundBuffer shootBuffer;
+
+	
 
 	std::map <std::string, int> keybinds;
 
@@ -58,7 +78,7 @@ private:
 	sf::Text debugText;
 
 	sf::Font progressBarFont;
-	gui::ProgressBar* hpBar;
+	//gui::ProgressBar* hpBar;
 	
 	//Initialization functions
 	void initDefferedRender();
@@ -67,9 +87,10 @@ private:
 	void initKeybinds();
 	void initPlayer();
 	void initPlayerGUI();
+	void initEnemyHandler();
 	void initBullet();
 	void initAudio();
-	void initGun();
+	void initWeapons();
 	void initPauseMenu();
 	void initTileMap();
 	void initFps();

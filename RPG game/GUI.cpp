@@ -458,44 +458,30 @@ void gui::TextureSelector::render(sf::RenderTarget& target)
 
 //ToggleButton=================================================================================================================================================
 
-void gui::ToggleButton::initShape(sf::Vector2f& centrePos, sf::Vector2f& size)
+void gui::ToggleButton::initShape(sf::Vector2f& center_pos, const float radius)
 {
-	this->outerRectangle.setSize(size);
+	this->outerCircle.setOrigin(sf::Vector2f(radius, radius));
+	this->innerCircle.setOrigin(sf::Vector2f(0.75f * radius, 0.75f * radius));
 
-	this->outerRectangle.setPosition(sf::Vector2f(centrePos.x - (this->outerRectangle.getSize().x / 2.f), centrePos.y - (this->outerRectangle.getSize().y / 2.f)));
+	this->outerCircle.setRadius(radius);
 
-	this->innerRectangle.setSize(sf::Vector2f(size.x - 15.f, size.y - 15.f));
+	this->outerCircle.setPosition(center_pos);
 
-	this->innerRectangle.setPosition(sf::Vector2f(centrePos.x - (this->innerRectangle.getSize().x / 2.f), centrePos.y - (this->innerRectangle.getSize().y / 2.f)));
+	this->innerCircle.setRadius(0.75f * radius);
+
+	//this->innerCircle.setPosition(sf::Vector2f(center_pos.x + this->outerCircle.getRadius(), center_pos.y + this->outerCircle.getRadius()));
+
+	this->innerCircle.setPosition(center_pos);
 
 
-	this->outerRectangle.setFillColor(sf::Color::White);
-	this->innerRectangle.setFillColor(sf::Color::Black);
-
-
-
-	this->leftCheck.setSize(sf::Vector2f(size.x / 2.5f, size.y / 5.f));
-	this->leftCheck.setPosition(this->outerRectangle.getPosition().x + 5.f, this->outerRectangle.getPosition().y + (this->outerRectangle.getSize().y / 2.f) - (0.f));
-	//this->leftCheck.setRotation(45);
-	this->leftCheck.setFillColor(sf::Color::Black);
-
-	this->rightCheck.setSize(sf::Vector2f(size.x, size.y / 5.f));
-	//this->rightCheck.setPosition(this->leftCheck.getPosition().x + (this->leftCheck.getSize().x / 2.f), 
-	//	this->outerRectangle.getPosition().y + this->outerRectangle.getSize().y - this->rightCheck.getSize().y);
-
-	this->rightCheck.setPosition(this->leftCheck.getPosition().x + (this->leftCheck.getSize().x / 2.f), this->leftCheck.getPosition().y);
-	this->rightCheck.setFillColor(sf::Color::Black);
-
-	sf::FloatRect bounds = this->leftCheck.getGlobalBounds();
-
-	this->leftCheck.setOrigin((bounds.width), 0.f);
-	this->rightCheck.setRotation(-45);
+	this->innerCircle.setFillColor(sf::Color::White);
+	this->innerCircle.setFillColor(sf::Color::Black);
 }
 
-gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, sf::Vector2f size, const bool default_status)
+gui::ToggleButton::ToggleButton(sf::Vector2f centrePos, const float radius, const bool default_status)
 	:isMousePressed(false), enabled(default_status)
 {
-	this->initShape(centrePos, size);
+	this->initShape(centrePos, radius);
 }
 
 const bool& gui::ToggleButton::isEnabled() const
@@ -511,7 +497,7 @@ void gui::ToggleButton::update(sf::Vector2f mousePos)
 		{
 			this->isMousePressed = true;
 
-			if (this->outerRectangle.getGlobalBounds().contains(mousePos))
+			if (this->outerCircle.getGlobalBounds().contains(mousePos))
 			{
 				this->enabled = !this->enabled;
 			}
@@ -525,13 +511,11 @@ void gui::ToggleButton::update(sf::Vector2f mousePos)
 
 void gui::ToggleButton::render(sf::RenderTarget& target)
 {
-	target.draw(this->outerRectangle);
+	target.draw(this->outerCircle);
 
 	if (this->enabled)
 	{
-		//target.draw(this->innerRectangle);
-		target.draw(this->leftCheck);
-		target.draw(this->rightCheck);
+		target.draw(this->innerCircle);
 	}
 }
 
@@ -616,25 +600,55 @@ gui::ProgressBar::ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, c
 
 
 
-
 	this->font = font;
 	this->text.setFont(this->font);
 	this->text.setString(std::to_string(static_cast<int>(current_value)) + "/" + std::to_string(this->maxValue));
 	this->text.setPosition(this->back.getPosition());
 	this->text.setOutlineThickness(1.f);
 	this->text.setOutlineColor(sf::Color::Black);
+	
+	this->drawText = true;
+}
 
+gui::ProgressBar::ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, const float max_value, const float current_value, sf::Color background_color, sf::Color foreground_color)
+{
+	this->back.setPosition(pos);
+	this->back.setFillColor(background_color);
+	this->back.setOutlineThickness(1.f);
+	this->back.setOutlineColor(sf::Color::Black);
+
+	this->inner.setPosition(pos);
+	this->inner.setFillColor(foreground_color);
+
+	this->back.setSize(size);
+	this->inner.setSize(sf::Vector2f((current_value / max_value) * size.x, size.y));
+
+	this->maxValue = max_value;
+
+	this->drawText = false;
 }
 
 gui::ProgressBar::~ProgressBar()
 {
 }
 
+const sf::Vector2f gui::ProgressBar::getSize() const
+{
+	return this->back.getSize();
+}
+
+void gui::ProgressBar::setPosition(const sf::Vector2f pos)
+{
+	this->back.setPosition(pos);
+	this->inner.setPosition(pos);
+}
+
 void gui::ProgressBar::update(const int current_value)
 {
-	this->inner.setSize(sf::Vector2f((current_value / this->maxValue) * this->inner.getSize().x, this->inner.getSize().y));
+	this->inner.setSize(sf::Vector2f((current_value / this->maxValue) * this->back.getSize().x, this->back.getSize().y));
 
 	this->text.setString(std::to_string(static_cast<int>(current_value)) + "/" + std::to_string(this->maxValue));
+
 }
 
 void gui::ProgressBar::render(sf::RenderTarget& target)
@@ -642,6 +656,9 @@ void gui::ProgressBar::render(sf::RenderTarget& target)
 	target.draw(this->back);
 	target.draw(this->inner);
 
-	target.draw(this->text);
+	if (this->drawText)
+	{
+		target.draw(this->text);
+	}
 
 }

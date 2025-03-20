@@ -60,6 +60,6 @@ public:
 											
 	virtual void updateHitboxComponent();
 	virtual void update(const float& dt) = 0;
-	virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr , const bool show_hitbox = 0) = 0;	
+	virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr , const bool show_hitbox = 0, sf::Vector2f lightPos = sf::Vector2f()) = 0;
 };													
 

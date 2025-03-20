@@ -6,7 +6,7 @@ AttributeComponent::AttributeComponent(unsigned level)
 	this->level = level;
 	this->exp = 0;
 
-	this->expNext = static_cast<unsigned>((50 / 3) * (pow(this->level + 1, 3) - pow(this->level + 1, 2) + ((this->level + 1) * 17) - 12));
+	this->expNext = 100;
 	
 	this->strength = 1;
 	this->vitality = 1;
@@ -17,7 +17,7 @@ AttributeComponent::AttributeComponent(unsigned level)
 
 
 
-	this->hp = 1;
+	this->hp = 100;
 	this->hpMax = 100;
 	this->damage = 1;
 	this->damageMax = 1;
@@ -59,6 +59,11 @@ const std::string AttributeComponent::debugPrint()
 	return ss.str();
 }
 
+const bool AttributeComponent::isDead() const
+{
+	return this->hp <= 0;
+}
+
 void AttributeComponent::gainExp(const int exp)
 {
 	this->exp += exp;
@@ -84,6 +89,7 @@ void AttributeComponent::takeDamage(const int damage)
 	{
 		this->hp = 0;
 	}
+
 }
 
 void AttributeComponent::gainHp(const int hp)
@@ -106,7 +112,8 @@ void AttributeComponent::updateLevel()
 		++this->level;
 		this->exp -= this->expNext;
 
-		this->expNext = static_cast<unsigned>((50 / 3) * (pow(this->level, 3) - pow(this->level, 2) + (this->level * 17) - 12));
+		//this->expNext = static_cast<unsigned>((50 / 3) * (pow(this->level, 3) - pow(this->level, 2) + (this->level * 17) - 12));
+		this->expNext += 10;
 	}
 }
 
@@ -117,15 +124,15 @@ void AttributeComponent::update()
 
 void AttributeComponent::updateStats(const bool reset)
 {
-	this->hpMax		= this->vitality * 5 + this->vitality + this->strength + this->intelligence / 5;
-	this->damageMax = this->strength * 2 + this->strength / 2 + this->intelligence / 5;
-	this->damageMin = this->strength * 2 + this->strength / 4 + this->intelligence / 5;
-
-	this->accuracy	= this->dexterity * 4 + this->dexterity / 3 + this->intelligence / 5;
-
-	this->defence	= this->agility * 2 + this->agility / 4 + this->intelligence / 5;
-
-	this->luck		= this->intelligence * 2 + this->intelligence / 5;
+	//this->hpMax		= this->vitality * 5 + this->vitality + this->strength + this->intelligence / 5;
+	//this->damageMax = this->strength * 2 + this->strength / 2 + this->intelligence / 5;
+	//this->damageMin = this->strength * 2 + this->strength / 4 + this->intelligence / 5;
+	//
+	//this->accuracy	= this->dexterity * 4 + this->dexterity / 3 + this->intelligence / 5;
+	//
+	//this->defence	= this->agility * 2 + this->agility / 4 + this->intelligence / 5;
+	//
+	//this->luck		= this->intelligence * 2 + this->intelligence / 5;
 
 	if (reset)
 	{

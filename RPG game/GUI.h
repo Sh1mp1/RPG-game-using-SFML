@@ -132,17 +132,15 @@ namespace gui
 		void render(sf::RenderTarget& target);
 	};
 
+	//TOGGLEBUTTON===================================================================================================================================================================
 
 	class ToggleButton
 	{
 	private:
 		bool enabled;
 
-		sf::RectangleShape outerRectangle;
-		sf::RectangleShape innerRectangle;	//The box inside the button which only renders when the button is set to on/enabled
-
-		sf::RectangleShape leftCheck;
-		sf::RectangleShape rightCheck;
+		sf::CircleShape outerCircle;
+		sf::CircleShape innerCircle;	//The box inside the button which only renders when the button is set to on/enabled
 
 		sf::Font* font;
 		sf::Text text;
@@ -151,9 +149,9 @@ namespace gui
 
 		short unsigned id;
 
-		void initShape(sf::Vector2f& centrePos, sf::Vector2f& size);
+		void initShape(sf::Vector2f& centrePos, const float radius);
 	public:
-		ToggleButton(sf::Vector2f centrePos, sf::Vector2f size, const bool default_status);
+		ToggleButton(sf::Vector2f centrePos, const float radius, const bool default_status);
 
 		//Accessors
 		const bool& isEnabled() const;
@@ -190,6 +188,8 @@ namespace gui
 		void render(sf::RenderTarget& target);
 	};
 
+	//PROGRESS BAR==================================================================================================================================================================
+
 	class ProgressBar
 	{
 	private:
@@ -199,13 +199,19 @@ namespace gui
 
 		sf::Font font;
 		sf::Text text;
+		bool drawText;
 
-		int maxValue;
+		float maxValue;
 
 	public:
 		ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, const float max_value, const float current_value, sf::Color background_color, sf::Color foreground_color,
 			sf::Font& font, const unsigned text_size);
+		ProgressBar(const sf::Vector2f pos, const sf::Vector2f size, const float max_value, const float current_value, sf::Color background_color, sf::Color foreground_color);
 		~ProgressBar();
+
+		const sf::Vector2f getSize() const;
+
+		void setPosition(const sf::Vector2f pos);
 
 		void update(const int current_value);
 		void render(sf::RenderTarget& target);

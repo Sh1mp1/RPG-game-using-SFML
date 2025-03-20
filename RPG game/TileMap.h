@@ -1,9 +1,13 @@
 #pragma once
 #include "Tile.h"
 #include "Entity.h"
+#include "EnemySpawner.h"
+#include "EnemyHandler.h"
 
 class TileMap;
 class Entity;
+class EnemySpawner;
+class EnemyHandler;
 
 class TileMap
 {
@@ -27,6 +31,8 @@ private:
 	sf::RectangleShape collisionBox;
 
 	std::stack<Tile*> deferredTiles;
+
+	std::vector<EnemySpawner*> enemySpawners;
 
 	//Culling
 	int fromX;
@@ -56,12 +62,14 @@ public:
 	void loadFromFile(const std::string path);
 
 	void addTile(const int x, const int y, const sf::IntRect& texture_rect, const short type = 0, const bool collision = false);
+	void addSpawner(const int x, const int y, const sf::IntRect& texture_rect, const short enemy_type);
 	void removeTile(const int x, const int y);
 
 	void updateCollision(Entity* entity, const float& dt);
 
 	void update(Entity* entity, const float& dt);
-	void render(sf::RenderTarget& target,  sf::Vector2i grid_pos , bool draw_collision_box = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
+	void updateSpawners(EnemyHandler& enemy_handler, const float& dt);
+	void render(sf::RenderTarget& target,  sf::Vector2i grid_pos , bool draw_collision_box = false, bool draw_spawners = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 
 	void deferredRender(sf::RenderTarget& target, sf::Vector2i grid_pos, bool draw_collision_box = false, sf::Shader* shader = nullptr, const sf::Vector2f playerPos = sf::Vector2f());
 };

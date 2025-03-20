@@ -149,7 +149,15 @@
   <ItemGroup>
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AttributeComponent.cpp" />
+    <ClCompile Include="BirdEnemy.cpp" />
+    <ClCompile Include="BlobEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="EnemyHandler.cpp" />
+    <ClCompile Include="ScorpionEnemy.cpp" />
+    <ClCompile Include="DefaultEditorMode.cpp" />
+    <ClCompile Include="EditorMode.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="EditorState.cpp" />
@@ -164,8 +172,10 @@
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerGUI.cpp" />
+    <ClCompile Include="RatEnemy.cpp" />
     <ClCompile Include="SettingsState.cpp" />
     <ClCompile Include="SkillComponent.cpp" />
+    <ClCompile Include="SpiderEnemy.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -173,6 +183,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sword.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
@@ -180,7 +191,15 @@
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AttributeComponent.h" />
+    <ClInclude Include="BirdEnemy.h" />
+    <ClInclude Include="BlobEnemy.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="EnemyHandler.h" />
+    <ClInclude Include="ScorpionEnemy.h" />
+    <ClInclude Include="DefaultEditorMode.h" />
+    <ClInclude Include="EditorMode.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="EditorState.h" />
@@ -194,10 +213,13 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerGUI.h" />
+    <ClInclude Include="RatEnemy.h" />
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="SkillComponent.h" />
+    <ClInclude Include="SpiderEnemy.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Sword.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="WeaponComponent.h" />

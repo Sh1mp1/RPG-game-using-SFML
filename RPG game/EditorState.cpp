@@ -35,7 +35,7 @@ void EditorState::initKeybinds()
 }
 
 EditorState::EditorState(StateData* state_data)
-	:State(state_data), pauseMenu(this->stateData->gfxSettings->resolution, *state_data->font), isEscapePressed(false), addTileCooldown(0.f), addTileCooldownMax(0.1f)
+	:State(state_data), pauseMenu(this->stateData->gfxSettings->resolution, *state_data->font), isEscapePressed(false), addTileCooldown(0.f), addTileCooldownMax(0.1f), isTogglePressed(false)
 {
 	this->initView();
 	this->initVariables();
@@ -47,6 +47,8 @@ EditorState::EditorState(StateData* state_data)
 	this->initTextureRect();
 	this->initTileMap();	
 	this->initGUI(); // For selectorRect
+	this->initViewModes();
+	this->initEnemyTextures();
 }
 
 EditorState::~EditorState()
@@ -142,6 +144,66 @@ void EditorState::initTextureRect()
 	this->currentTextureGUI.setTextureRect(this->textureRect);
 }
 
+void EditorState::initViewModes()
+{
+	this->modes.push_back("DEFAULT");
+	this->modes.push_back("COLLIDERS");
+	this->modes.push_back("SPAWNERS");
+
+	this->currentMode = 0;
+
+	this->currentModeText.setFont(*this->stateData->font);
+	this->currentModeText.setString("DEFAULT");
+
+	this->currentModeText.setPosition(this->p2pX(0.83f), this->p2pY(0.101f));
+}
+
+void EditorState::initEnemyTextures()
+{
+	sf::Texture texture;
+
+	if (!texture.loadFromFile("Textures/bird1_61x57.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::INITENEMYTEXTURES::COULDNT LOAD TEXTURES";
+	}
+	this->enemyTextures["BIRD"] = texture;
+
+	if (!texture.loadFromFile("Textures/blob1_60x64.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::INITENEMYTEXTURES::COULDNT LOAD TEXTURES";
+	}
+	this->enemyTextures["BLOB"] = texture;
+
+	if (!texture.loadFromFile("Textures/rat1_60x64.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::INITENEMYTEXTURES::COULDNT LOAD TEXTURES";
+	}
+	this->enemyTextures["RAT"] = texture;
+
+	if (!texture.loadFromFile("Textures/scorpion1_60x64.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::INITENEMYTEXTURES::COULDNT LOAD TEXTURES";
+	}
+	this->enemyTextures["SCORPION"] = texture;
+
+	if (!texture.loadFromFile("Textures/spider1_60x64.png"))
+	{
+		std::cout << "ERROR::EDITORSTATE::INITENEMYTEXTURES::COULDNT LOAD TEXTURES";
+	}
+	this->enemyTextures["SPIDER"] = texture;
+
+
+	this->currentEnemy.setTexture(this->enemyTextures["BIRD"]);
+	this->currentEnemy.setPosition(sf::Vector2f(this->p2pX(0.85f), this->p2pY(0.18f)));
+	this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 61, 57));
+
+	this->currentEnemyBoundary.setPosition(this->currentEnemy.getPosition());
+	this->currentEnemyBoundary.setFillColor(sf::Color(0, 0, 0, 0));
+	this->currentEnemyBoundary.setOutlineThickness(5.f);
+	this->currentEnemyBoundary.setOutlineColor(sf::Color(100, 100, 100, 255));
+	this->currentEnemyBoundary.setSize(sf::Vector2f(this->p2pX(0.036f), this->p2pY(0.064f)));
+}
+
 
 const bool EditorState::isValidPos(const sf::Vector2u mousePosGrid) const
 {
@@ -211,7 +273,14 @@ void EditorState::updateEditorInput(const float& dt)
 
 		if (!this->textureSelector->getIsActive() && this->canAddTile())	//Checks first if mouse is not on the texture selector and then checks if the add tile cooldown is finished
 		{
-			this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->type, this->collision);
+			if (this->type != TileTypes::ENEMY_SPAWNER)
+			{
+				this->tileMap->addTile(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->type, this->collision);
+			}
+			else
+			{
+				this->tileMap->addSpawner(this->mousePosGrid.x, this->mousePosGrid.y, this->textureRect, this->enemyType);
+			}
 		}
 
 		else if (this->isValidPos(this->textureSelector->getGridPos()) && this->textureSelector->getIsActive())
@@ -269,8 +338,100 @@ void EditorState::updateEditorInput(const float& dt)
 	{
 		this->view.move(sf::Vector2f(this->cameraSpeed * dt, 0.f));
 	}
+	
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab) && this->getKeyTime())
+	{
+		
+		
+		++this->enemyType;
 
+		if (this->enemyType >= EnemyTypes::NUMBER_OF_TYPES)
+		{
+			this->enemyType = 0;
+		}
+
+		switch (this->enemyType)
+		{
+		case EnemyTypes::BIRD:
+			this->currentEnemy.setTexture(this->enemyTextures["BIRD"]);
+			this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 61, 57));
+			break;
+
+		case EnemyTypes::BLOB:
+			this->currentEnemy.setTexture(this->enemyTextures["BLOB"]);
+			this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 60, 64));
+			break;
+
+		case EnemyTypes::RAT:
+			this->currentEnemy.setTexture(this->enemyTextures["RAT"]);
+			this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 60, 64));
+			break;
+
+		case EnemyTypes::SCORPION:
+			this->currentEnemy.setTexture(this->enemyTextures["SCORPION"]);
+			this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 60, 64));
+			break;
+
+		case EnemyTypes::SPIDER:
+			this->currentEnemy.setTexture(this->enemyTextures["SPIDER"]);
+			this->currentEnemy.setTextureRect(sf::IntRect(0, 0, 60, 64));
+			break;
+
+		default:
+			std::cout << "ERROR::EDITORSTATE::UPDATE_EDITOR_INPUT::UNEXPECTED ENEMY TYPE" << '\n';
+			break;
+		}
+		
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("toggle_mode"))))
+	{
+		if (!this->isTogglePressed)
+		{
+			this->currentMode++;
+			this->isTogglePressed = true;
+
+			if (this->currentMode >= this->modes.size())
+			{
+				this->currentMode = 0;
+			}
+
+			switch (this->currentMode)
+			{
+			case 0:
+				this->showHitbox = false;
+				this->showSpawners = false;
+				this->currentModeText.setString("DEFAULT");
+				this->type = TileTypes::DEFAULT;
+				this->collision = false;
+				break;
+
+			case 1:
+				this->showHitbox = true;
+				this->showSpawners = false;
+				this->currentModeText.setString("COLLISION");
+				this->collision = true;
+				break;
+
+			case 2:
+				this->showHitbox = false;
+				this->showSpawners = true;
+				this->currentModeText.setString("SPAWNERS");
+				this->type = TileTypes::ENEMY_SPAWNER;
+				this->collision = false;
+				break;
+
+			default:
+				this->currentModeText.setString("FALSE");
+				break;
+			}
+		}
+	}
+	else
+	{
+		this->isTogglePressed = false;
+	}
 
 	////Change texture Rect
 	//
@@ -447,6 +608,8 @@ void EditorState::updateGUI()
 	}
 
 	this->textureSelector->update(this->mousePosWindow);
+
+	
 }
 
 void EditorState::updateCurrentTextureGUI()
@@ -458,14 +621,36 @@ void EditorState::updateCurrentTextureGUI()
 
 void EditorState::updateText()
 {
+	switch (this->type)
+	{
+	case 0:
+		this->typeString = "DEFAULT";
+		break;
+
+	case 1:
+		this->typeString = "DAMAGING";
+		break;
+
+	case 2:
+		this->typeString = "DEFERRED";
+		break;
+
+	case 3:
+		this->typeString = "ENEMY SPAWNER";
+		break; 
+
+	default:
+		this->typeString = "UNKNOWN";
+		break;
+
+	}
 	this->mouseText.setPosition(sf::Vector2f(this->mousePosView.x + 10.f, this->mousePosView.y + 10.f));
 	std::stringstream ss;
-	ss <<  "POS " << this->mousePosView.x << " " << this->mousePosView.y << '\n'
+	ss <<  "POS " << static_cast<int>(this->mousePosView.x) << " " << static_cast<int>(this->mousePosView.y) << '\n'
 		<< "GRID POS " << this->mousePosGrid.x << " " << this->mousePosGrid.y << " " << this->tileMap->getTopLayer(this->mousePosGrid) << '\n'
 		<< "COLLISION " << this->collision << '\n'
-		<< "TYPE " << this->type << '\n';
+		<< "TYPE " << this->typeString << '\n';
 	this->mouseText.setString(ss.str());
-
 
 }
 
@@ -516,6 +701,11 @@ void EditorState::renderGUI(sf::RenderTarget& target)
 
 	target.setView(this->window->getDefaultView());
 	target.draw(this->sidebar);
+	if (this->currentMode == EditorModes::SPAWNER)
+	{
+		target.draw(this->currentEnemy);
+		target.draw(this->currentEnemyBoundary);
+	}
 	target.setView(this->view);
 }
 
@@ -534,8 +724,8 @@ void EditorState::render(sf::RenderTarget* target)
 	//this->tileMap->render(*target, this->mousePosGrid, true);
 	//this->tileMap->deferredRender(*target, this->mousePosGrid, true);
 
-	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), true);
-	this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), true);
+	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), this->showHitbox, this->showSpawners);
+	this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), this->showHitbox);
 
 	target->setView(this->window->getDefaultView());
 
@@ -547,7 +737,12 @@ void EditorState::render(sf::RenderTarget* target)
 	{
 		target->setView(this->view);
 		this->renderGUI(*target);
+
 		target->draw(this->mouseText);
+
+		
 		target->setView(this->window->getDefaultView());
+
+		target->draw(this->currentModeText);
 	}	
 }

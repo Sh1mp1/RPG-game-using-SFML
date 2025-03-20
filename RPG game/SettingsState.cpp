@@ -148,17 +148,17 @@ void SettingsState::initToggleButtons()
 
 	this->toggleButtons["FULLSCREEN"] = new gui::ToggleButton(
 		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.527f)), 
-		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)), 
+		20.f, 
 		this->stateData->gfxSettings->fullScreen);
 
 	this->toggleButtons["VSYNC"] = new gui::ToggleButton(
 		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.63f)),
-		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)),
+		20.f,
 		this->stateData->gfxSettings->vsync);
 
 	this->toggleButtons["SHOW FPS"] = new gui::ToggleButton(
 		sf::Vector2f(this->p2pX(0.57f), this->p2pY(0.74f)),
-		sf::Vector2f(this->p2pX(0.02f), this->p2pY(0.037f)),
+		20.f,
 		this->stateData->gfxSettings->showFps);
 }
 

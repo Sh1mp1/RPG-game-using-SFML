@@ -1,7 +1,31 @@
-﻿  GUI.cpp
+﻿  BirdEnemy.cpp
+  BlobEnemy.cpp
+  DefaultEditorMode.cpp
+  EditorMode.cpp
+  EditorState.cpp
+  Enemy.cpp
+C:\Users\ashis\source\repos\RPG game\RPG game\Enemy.cpp(43,116): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+  (compiling source file '/Enemy.cpp')
+  
+C:\Users\ashis\source\repos\RPG game\RPG game\Enemy.cpp(43,83): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+  (compiling source file '/Enemy.cpp')
+  
+  EnemyHandler.cpp
+  GUI.cpp
+  Game.cpp
+  GameState.cpp
+  MainMenuState.cpp
+  PauseMenu.cpp
+  RatEnemy.cpp
+  ScorpionEnemy.cpp
+  SettingsState.cpp
+  SpiderEnemy.cpp
+  State.cpp
+  TileMap.cpp
+  main.cpp
   Generating code
-  1 of 2167 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  22 of 2368 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    83 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   RPG game.vcxproj -> C:\Users\ashis\source\repos\RPG game\x64\Release\RPG game.exe

@@ -134,7 +134,7 @@ void Player::update(const float& dt)
 	this->hitboxComponent->update();
 }																								
 																								
-void Player::render(sf::RenderTarget& target, sf::Shader* shader, const bool show_hitbox)
+void Player::render(sf::RenderTarget& target, sf::Shader* shader, const bool show_hitbox, sf::Vector2f lightPos)
 {			
 	if (shader)
 	{

@@ -153,6 +153,8 @@ void TileMap::savetoFile(const std::string path)
 		std::cout << "ERROR::TILEMAP::COULDNT SAVE TILEMAP TO PATH : '" << path << "'" << '\n';
 	}
 
+
+
 	out_file.close();
 }
 
@@ -186,6 +188,7 @@ void TileMap::loadFromFile(const std::string path)
 		unsigned texture_rect_top = 0;
 		bool collision = false;;
 		short type = 0;
+		short enemy_type = -1;
 
 		//Basics
 		in_file >> size.x >> size.y >> grid_size >> layers >> texture_path;
@@ -223,8 +226,21 @@ void TileMap::loadFromFile(const std::string path)
 		//Load all tiles
 		while (in_file >> x >> y >> z >> texture_rect_left >> texture_rect_top >> collision >> type)
 		{
-			this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, sf::IntRect(texture_rect_left, texture_rect_top,
-				this->gridSizeI, this->gridSizeI),type, collision);
+			
+			if (type == TileTypes::ENEMY_SPAWNER)
+			{
+				in_file >> enemy_type;
+
+				this->enemySpawners.push_back(new EnemySpawner(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, sf::IntRect(texture_rect_left, texture_rect_top,
+					this->gridSizeI, this->gridSizeI), enemy_type));
+
+				this->map[x][y][z] = this->enemySpawners.back();
+			}
+			else
+			{
+				this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, sf::IntRect(texture_rect_left, texture_rect_top,
+					this->gridSizeI, this->gridSizeI), type, collision);
+			}
 		}
 
 	}
@@ -233,6 +249,9 @@ void TileMap::loadFromFile(const std::string path)
 		std::cout << "ERROR::TILEMAP::COULDNT LOAD TILEMAP FROM PATH : '" << path << "'" << '\n';
 	}
 	in_file.close();
+
+
+	
 }
 
 void TileMap::addTile(const int x, const int y, const sf::IntRect& texture_rect, const short type, const bool collision)
@@ -255,14 +274,49 @@ void TileMap::addTile(const int x, const int y, const sf::IntRect& texture_rect,
 			}
 
 
-			if (this->map[x][y][z] == nullptr && texture_rect != previous_texture_rect)	//Checks if the tile already added previously doesnt have the texture to be added now
+			if (this->map[x][y][z] == nullptr && texture_rect != previous_texture_rect && type != TileTypes::ENEMY_SPAWNER)	//Checks if the tile already added previously doesnt have the texture to be added now
 			{
 				this->map[x][y][z] = new Tile(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect, type, collision);
 				break;
 			}
+
+			//else if (this->map[x][y][z] == nullptr && texture_rect != previous_texture_rect && type == TileTypes::ENEMY_SPAWNER)
+			//{
+			//	this->map[x][y][z] = new EnemySpawner(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect);
+			//	break;
+			//}
 		}
 	}
 
+}
+
+void TileMap::addSpawner(const int x, const int y, const sf::IntRect& texture_rect, const short enemy_type)
+{
+	/*
+	Takes 3 coordinates from mouse position and adds an enemy spawner tile to that position
+	*/
+
+
+	if (x < this->maxSizeGrid.x && y < this->maxSizeGrid.y &&
+		x >= 0 && y >= 0)
+	{
+		sf::IntRect previous_texture_rect(0, 0, 0, 0);
+		for (int z = 0; z < this->layers; ++z)
+		{
+
+			if (this->map[x][y][z])
+			{
+				previous_texture_rect = this->map[x][y][z]->getTextureRect();
+			}
+
+
+			if (this->map[x][y][z] == nullptr && texture_rect != previous_texture_rect)	//Checks if the tile already added previously doesnt have the texture to be added now
+			{
+				this->map[x][y][z] = new EnemySpawner(sf::Vector2u(x, y), this->gridSizeF, this->tileSheet, texture_rect, enemy_type);
+				break;
+			}
+		}
+	}
 }
 
 void TileMap::removeTile(const int x, const int y)
@@ -547,9 +601,22 @@ void TileMap::updateCollision(Entity* entity, const float& dt)
 void TileMap::update(Entity* entity, const float& dt)													 
 {																										 
 	this->updateCollision(entity, dt);																	 
-}																										 
+}
+
+void TileMap::updateSpawners(EnemyHandler& enemy_handler, const float& dt)
+{
+	for (auto& i : this->enemySpawners)
+	{
+		i->update(dt);
+
+		if (i->getCanSpawn())
+		{
+			enemy_handler.spawnEnemy(i->getEnemyType(), i->getPosition(), *i);
+		}
+	}
+}
 																										 
-void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw_collision_box, sf::Shader* shader, const sf::Vector2f playerPos)
+void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw_collision_box, bool draw_spawners, sf::Shader* shader, const sf::Vector2f playerPos)
 {
 	
 	sf::Vector2i window_size = static_cast<sf::Vector2i>(target.getView().getSize());
@@ -561,7 +628,7 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 		this->fromX = 0;
 	}
 
-	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 1);
+	this->toX = grid_pos.x + ((number_of_tiles.x / 2) + 2);
 	if (this->toX > this->maxSizeGrid.x)
 	{
 		this->toX = this->maxSizeGrid.x;
@@ -573,7 +640,7 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 		this->fromY = 0;
 	}
 
-	this->toY = grid_pos.y + ((number_of_tiles.y / 2) + 1);
+	this->toY = grid_pos.y + ((number_of_tiles.y / 2) + 2);
 	if (this->toY > this->maxSizeGrid.y)
 	{
 		this->toY = this->maxSizeGrid.y;
@@ -601,6 +668,12 @@ void TileMap::render(sf::RenderTarget& target,  sf::Vector2i grid_pos, bool draw
 						this->map[x][y][z]->render(target);
 					}
 					if (this->map[x][y][z]->hasCollision() && draw_collision_box)
+					{
+						this->collisionBox.setPosition(this->map[x][y][z]->getPosition());
+						target.draw(this->collisionBox);
+					}
+
+					if (this->map[x][y][z]->getType() == TileTypes::ENEMY_SPAWNER && draw_spawners)
 					{
 						this->collisionBox.setPosition(this->map[x][y][z]->getPosition());
 						target.draw(this->collisionBox);

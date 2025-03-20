@@ -5,10 +5,13 @@ WeaponComponent::WeaponComponent()
 {
 }
 
-WeaponComponent::WeaponComponent(sf::Texture& texture, sf::Vector2f pos)
+WeaponComponent::WeaponComponent(sf::Texture& texture, sf::Vector2f pos, const int damage, const int range)
 {
 	this->sprite.setTexture(texture);
 	this->sprite.setPosition(pos);
+
+	this->damage = damage;
+	this->range = range;
 
 }
 
@@ -16,14 +19,9 @@ WeaponComponent::~WeaponComponent()
 {
 }
 
-
-void WeaponComponent::update(const sf::Vector2f& playerPos, const float& angle)
+const int WeaponComponent::getDamage() const
 {
-	this->sprite.setPosition(playerPos);
-	this->sprite.rotate(angle);
+	return this->damage;
 }
 
-void WeaponComponent::render(sf::RenderTarget& target)
-{
-	target.draw(this->sprite);
-}
+
