@@ -13,12 +13,13 @@ class EnemyHandler
 {
 private:
 	std::vector<Enemy*>& enemies;
+	AttributeComponent& playerAttribute;
 
 	float move;
 	sf::Vector2f direction;
 
 public:
-	EnemyHandler(std::vector<Enemy*>& enemies);
+	EnemyHandler(std::vector<Enemy*>& enemies, AttributeComponent& player_attribute);
 	~EnemyHandler();
 
 	//Functions

@@ -82,7 +82,7 @@ void GameState::initPlayerGUI()
 
 void GameState::initEnemyHandler()
 {
-	this->enemyHandler = new EnemyHandler(this->enemies);
+	this->enemyHandler = new EnemyHandler(this->enemies, *this->player->getAttributeComponent());
 }
 
 void GameState::initBullet()
@@ -106,6 +106,13 @@ void GameState::initAudio()
 	{
 		this->shootSounds.push_back(sf::Sound(this->shootBuffer));		
 	}
+
+	if (!this->deathBuffer.loadFromFile("Audio/mariodeathsfx.mp3"))
+	{
+		std::cout << "ERROR::GAMESTATE::INIT_AUDIO::COULDNT LOAD AUDIO" << '\n';
+	}
+	this->deathSound.setBuffer(this->deathBuffer);
+	this->deathSoundPlayed = false;
 }
 
 void GameState::initWeapons()
@@ -136,6 +143,18 @@ void GameState::initPauseMenu()
 		static_cast<unsigned>(this->stateData->gfxSettings->resolution.width * 0.026));
 
 	this->pauseMenu->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.74f), "EXIT", 
+		static_cast<unsigned>(this->stateData->gfxSettings->resolution.width * 0.026));
+}
+
+void GameState::initDeathScreen()
+{
+	if (!this->endFont.loadFromFile("Font/OptimusPrinceps.ttf"))
+	{
+		std::cout << "ERROR::GAMESTATE::INIT_DEATH_SCREEN::COULDNT LOAD FONT" << '\n';
+	}
+	this->endScreen = new DeathScreen(this->stateData->gfxSettings->resolution, this->endFont);
+
+	this->endScreen->addButton(sf::Vector2f(this->window->getSize().x / 2.f, this->window->getSize().y * 0.74f), "EXIT",
 		static_cast<unsigned>(this->stateData->gfxSettings->resolution.width * 0.026));
 }
 
@@ -196,6 +215,7 @@ GameState::GameState(StateData* state_data)
 	this->initBullet();
 	this->initWeapons();
 	this->initPauseMenu();
+	this->initDeathScreen();
 	this->initTileMap();
 	this->initFps();
 	this->initShaders();
@@ -234,6 +254,8 @@ GameState::~GameState()
 		if (i)
 			delete i;
 	}
+
+	delete this->endScreen;
 }
 
 
@@ -460,45 +482,69 @@ void GameState::updateDebugText()
 void GameState::update(const float& dt)
 {
 	
-	this->updateMousePositions(&this->view);
-	this->updateInput(dt);
-	if (!this->paused)	//Unpaused update;
+	if (!this->player->isDead())
 	{
-		this->updateWeaponAngle();
-		this->updatePlayerInput(dt);
+		this->updateMousePositions(&this->view);
+		this->updateInput(dt);
+		if (!this->paused)	//Unpaused update;
+		{
+			this->updateWeaponAngle();
+			this->updatePlayerInput(dt);
 
-		this->updateBullets(dt);
-		
-		if (this->isGunEquipped)
-			this->updateGun(dt);
-		else
-			this->sword->update(dt, this->player->getCenter(), this->weaponAngle * (180.f / 3.14f));
+			this->updateBullets(dt);
+
+			if (this->isGunEquipped)
+				this->updateGun(dt);
+			else
+				this->sword->update(dt, this->player->getCenter(), this->weaponAngle * (180.f / 3.14f));
 
 
-		this->player->update(dt);
+			this->player->update(dt);
+			this->playerGUI->updateExpBar();
+			this->playerGUI->updateHpBar();
 
-		this->tileMap->update(this->player, dt);
-		this->tileMap->update(this->enemy, dt);
+			this->tileMap->update(this->player, dt);
+			this->tileMap->update(this->enemy, dt);
 
-		this->tileMap->updateSpawners(*this->enemyHandler, dt);
+			for (auto& enemy : this->enemies)
+			{
+				this->tileMap->update(enemy, dt);
+			}
 
-		this->enemyHandler->update(dt, this->player->getCenter(), *this->player->getAttributeComponent());
-		this->updateView();
-		this->playerGUI->update(dt);
-		this->updateFps(dt);
+			this->tileMap->updateSpawners(*this->enemyHandler, dt);
 
-		//this->enemy->update(dt);
+			this->enemyHandler->update(dt, this->player->getCenter(), *this->player->getAttributeComponent());
+			this->updateView();
+			this->playerGUI->update(dt);
+			this->updateFps(dt);
+
+			//this->enemy->update(dt);
+		}
+		else	//Paused update;
+		{
+
+			this->pauseMenu->update(this->mousePosWindow);
+			this->updatePauseMenu();
+			this->bulletTimer = -0.1f;
+		}
+		this->updateDebugText();
 	}
-	else	//Paused update;
+	else
 	{
+		this->updateMousePositions(&this->view);
+		this->endScreen->update(dt, this->mousePosWindow);
 		
-		this->pauseMenu->update(this->mousePosWindow);
-		this->updatePauseMenu();
-		this->bulletTimer = -0.1f;
+		
+		if (this->endScreen->isPressed("EXIT"))
+		{
+			this->endState();
+		}
+		//this->updateInput(dt);
+		//
+		//this->pauseMenu->update(this->mousePosWindow);
+		//this->updatePauseMenu();
 	}
-	this->updateDebugText();
 
-	//this->ratEnemy->update(dt);
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -510,43 +556,68 @@ void GameState::render(sf::RenderTarget* target)
 	target->setView(this->view);
 	
 	
-	//this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
-
-	this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, false, &this->shader, this->player->getCenter());
-
-	//this->enemy->render(*target, &this->shader, false, this->player->getCenter());
-	//this->ratEnemy->render(*target, &this->shader, true, this->player->getCenter());
-
-	this->enemyHandler->render(*target, &this->shader, false, this->player->getCenter());
-
-	this->player->render(*target, &this->shader);
-	
-	
-	if (this->isGunEquipped)
-		this->gun->render(*target, &this->shader);
-	else
-		this->sword->render(*target, &this->shader, false);
-	
-	for (auto i : this->bullets)
+	if (!this->player->isDead())
 	{
-		if (i)
-			i->render(*target, &this->shader);
-	}
+		//this->tileMap->render(*target, static_cast<sf::Vector2i>(this->player->getGridPosition(static_cast<unsigned>(this->gridSize))), false, &this->shader, this->player->getCenter());
 
-	this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
+		this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, false, &this->shader, this->player->getCenter());
 
-	target->setView(this->window->getDefaultView());
-	if (!this->paused)
-	{
-		this->playerGUI->render(*target);	
-		if (this->gfxSettings.showFps)
+		//this->enemy->render(*target, &this->shader, false, this->player->getCenter());
+		//this->ratEnemy->render(*target, &this->shader, true, this->player->getCenter());
+
+		this->enemyHandler->render(*target, &this->shader, false, this->player->getCenter());
+
+		this->player->render(*target, &this->shader);
+
+
+		if (this->isGunEquipped)
+			this->gun->render(*target, &this->shader);
+		else
+			this->sword->render(*target, &this->shader, false);
+
+		for (auto i : this->bullets)
 		{
-			this->fps->render(*target);
+			if (i)
+				i->render(*target, &this->shader);
 		}
-	}	
+
+		this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
+
+		target->setView(this->window->getDefaultView());
+		if (!this->paused)
+		{
+			this->playerGUI->render(*target);
+			if (this->gfxSettings.showFps)
+			{
+				this->fps->render(*target);
+			}
+		}
+		else
+		{
+			this->pauseMenu->render(*target);
+		}
+	}
 	else
 	{
-		this->pauseMenu->render(*target);
+		target->setView(this->view);
+		this->tileMap->render(*target, this->pos2GridPos(this->view.getCenter()), false, false, &this->shader, this->player->getCenter());
+		this->enemyHandler->render(*target, &this->shader, false, this->player->getCenter());
+		this->tileMap->deferredRender(*target, this->pos2GridPos(this->view.getCenter()), false, &this->shader, this->player->getCenter());
+
+
+		target->setView(this->window->getDefaultView());
+		this->endScreen->render(*target);
+
+		if (this->paused)
+		{
+			this->pauseMenu->render(*target);
+		}
+
+		if (!this->deathSoundPlayed)
+		{
+			this->deathSound.play();
+			this->deathSoundPlayed = true;
+		}
 	}
 
 	

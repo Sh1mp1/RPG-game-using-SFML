@@ -32,6 +32,9 @@ ScorpionEnemy::ScorpionEnemy(const float pos_x, const float pos_y, EnemySpawner&
 		std::cout << "ERROR::SCORPIONENEMY::COULDNT LOAD TEXTURE" << '\n';
 	}
 	this->initComponents(this->scorpionTexture);
+
+	this->damage = 7;
+	this->exp = 15;
 }
 
 ScorpionEnemy::~ScorpionEnemy()

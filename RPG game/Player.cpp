@@ -73,6 +73,11 @@ AttributeComponent* Player::getAttributeComponent() const
 	return this->attributeComponent;
 }
 
+const bool Player::isDead() const
+{
+	return this->attributeComponent->hp <= 0;
+}
+
 void Player::updateText()
 {
 	std::stringstream ss;

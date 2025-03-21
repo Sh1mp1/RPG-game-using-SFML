@@ -8,6 +8,7 @@
 #include "PlayerGUI.h"
 #include "EnemyHandler.h"
 #include "Sword.h"
+#include "DeathScreen.h"
 
 class State;
 class Player;
@@ -59,9 +60,17 @@ private:
 	PauseMenu* pauseMenu;
 	bool isEscapePressed;	
 
+	//Deathscreen
+	DeathScreen* endScreen;
+	sf::Font endFont;
+
 	//Audio
 	std::vector<sf::Sound> shootSounds;
 	sf::SoundBuffer shootBuffer;
+
+	sf::Sound deathSound;
+	sf::SoundBuffer deathBuffer;
+	bool deathSoundPlayed;
 
 	
 
@@ -92,6 +101,7 @@ private:
 	void initAudio();
 	void initWeapons();
 	void initPauseMenu();
+	void initDeathScreen();
 	void initTileMap();
 	void initFps();
 	void initShaders();

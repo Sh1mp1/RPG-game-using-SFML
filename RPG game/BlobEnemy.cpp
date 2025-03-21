@@ -34,6 +34,9 @@ BlobEnemy::BlobEnemy(const float pos_x, const float pos_y, EnemySpawner& enemy_s
 		std::cout << "ERROR::SCORPIONENEMY::COULDNT LOAD TEXTURE" << '\n';
 	}
 	this->initComponents(this->blobTexture);
+
+	this->damage = 7;
+	this->exp = 10;
 }
 
 BlobEnemy::~BlobEnemy()

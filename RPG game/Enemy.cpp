@@ -45,7 +45,7 @@ void Enemy::initHpBar()
 }
 
 Enemy::Enemy(const float pos_x, const float pos_y, sf::Texture& texture_sheet, EnemySpawner& enemy_spawner)
-	:enemySpawner(enemy_spawner), Entity(pos_x, pos_y, texture_sheet)
+	:enemySpawner(enemy_spawner), Entity(pos_x, pos_y, texture_sheet), attackCooldownMax(2.f), attackCooldown(2.f)
 {
 	this->initComponents(texture_sheet);
 	this->initHpBar();
@@ -66,9 +66,32 @@ AttributeComponent& Enemy::getAttributeComponent() const
 	return *this->attributeComponent;
 }
 
+const bool Enemy::canAttack()
+{
+	if (this->attackCooldown >= this->attackCooldownMax)
+	{
+		this->attackCooldown = 0;
+		return true;
+	}
+	return false;
+}
+
+const int Enemy::getExp() const
+{
+	return this->exp;
+}
+
 void Enemy::removeEnemy()
 {
 	this->enemySpawner.removeEnemy();
+}
+
+void Enemy::updateAttackCooldown(const float& dt)
+{
+	if (this->attackCooldown < this->attackCooldownMax)
+	{
+		this->attackCooldown += dt;
+	}
 }
 
 void Enemy::update(const float& dt)

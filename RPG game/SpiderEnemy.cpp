@@ -32,6 +32,9 @@ SpiderEnemy::SpiderEnemy(const float pos_x, const float pos_y, EnemySpawner& ene
 		std::cout << "ERROR::SCORPIONENEMY::COULDNT LOAD TEXTURE" << '\n';
 	}
 	this->initComponents(this->spiderTexture);
+
+	this->damage = 7;
+	this->exp = 15;
 }
 
 SpiderEnemy::~SpiderEnemy()

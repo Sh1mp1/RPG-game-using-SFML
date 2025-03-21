@@ -23,6 +23,8 @@ public:
 
 	//Accessor
 	AttributeComponent* getAttributeComponent() const;
+
+	const bool isDead() const;
 																											  
 	void updateText();																						  
 	void updateMovement(const float& dt, sf::Vector2f dir);													  

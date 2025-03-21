@@ -33,6 +33,9 @@ RatEnemy::RatEnemy(const float pos_x, const float pos_y, EnemySpawner& enemy_spa
 		std::cout << "ERROR::RATENEMY::COULDNT LOAD TEXTURE" << '\n';
 	}
 	this->initComponents(this->ratTexture);
+
+	this->damage = 5;
+	this->exp = 7;
 }
 
 RatEnemy::~RatEnemy()

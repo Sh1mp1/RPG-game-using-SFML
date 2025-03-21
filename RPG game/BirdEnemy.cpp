@@ -36,6 +36,9 @@ BirdEnemy::BirdEnemy(const float pos_x, const float pos_y, EnemySpawner& enemy_s
 		std::cout << "ERROR::SCORPIONENEMY::COULDNT LOAD TEXTURE" << '\n';
 	}
 	this->initComponents(this->birdTexture);
+
+	this->damage = 80;
+	this->exp = 20;
 }
 
 BirdEnemy::~BirdEnemy()

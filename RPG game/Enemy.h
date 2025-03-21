@@ -17,15 +17,24 @@ protected:
     gui::ProgressBar* hpBar;
     sf::Vector2f hpBarPos;
 
+    int damage;
+    int exp;
+
+    float attackCooldown;
+    float attackCooldownMax;
+
 public:
     Enemy(const float pos_x, const float pos_y, sf::Texture& texture_sheet, EnemySpawner& enemy_spawner);
     ~Enemy();
 
     const EnemySpawner& getSpawner() const;
     AttributeComponent& getAttributeComponent() const;
+    const bool canAttack();
+    const int getExp() const;
 
     void removeEnemy();
 
+    void updateAttackCooldown(const float& dt);
     virtual void updateAnimation(const float& dt) = 0;
 
     virtual void update(const float& dt) = 0;

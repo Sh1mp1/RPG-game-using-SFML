@@ -153,6 +153,9 @@
     <ClCompile Include="Sword.cpp">
       <Filter>Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="DeathScreen.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="Sword.h">
       <Filter>Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathScreen.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

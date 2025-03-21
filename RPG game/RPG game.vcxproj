@@ -152,6 +152,7 @@
     <ClCompile Include="BirdEnemy.cpp" />
     <ClCompile Include="BlobEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DeathScreen.cpp" />
     <ClCompile Include="EnemyHandler.cpp" />
     <ClCompile Include="ScorpionEnemy.cpp" />
     <ClCompile Include="DefaultEditorMode.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="BirdEnemy.h" />
     <ClInclude Include="BlobEnemy.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="EnemyHandler.h" />
     <ClInclude Include="ScorpionEnemy.h" />
     <ClInclude Include="DefaultEditorMode.h" />

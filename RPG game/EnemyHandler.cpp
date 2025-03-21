@@ -3,8 +3,8 @@
 
 
 
-EnemyHandler::EnemyHandler(std::vector<Enemy*>& enemies)
-	:enemies(enemies)
+EnemyHandler::EnemyHandler(std::vector<Enemy*>& enemies, AttributeComponent& player_attribute)
+	:enemies(enemies), playerAttribute(player_attribute)
 {
 }
 
@@ -36,6 +36,7 @@ void EnemyHandler::damageEnemy(int damage, const sf::Vector2f mouse_pos, const s
 
 				if (this->enemies[i]->getAttributeComponent().isDead())
 				{
+					this->playerAttribute.gainExp(this->enemies[i]->getExp());
 					this->despawnEnemy(i);
 					--i;
 				}
@@ -88,6 +89,7 @@ void EnemyHandler::update(const float& dt, const sf::Vector2f player_pos, Attrib
 	for (auto& i : this->enemies)
 	{
 		i->update(dt);
+		i->updateAttackCooldown(dt);
 
 		sf::Vector2f distance = player_pos - i->getCenter();
 
@@ -101,7 +103,10 @@ void EnemyHandler::update(const float& dt, const sf::Vector2f player_pos, Attrib
 		if (this->isValidDistance(i->getCenter(), player_pos, 100.f))
 		{
 			//Attack the player
-			player_attribute.takeDamage(i->getAttributeComponent().damage);
+			if (i->canAttack())
+			{
+				player_attribute.takeDamage(i->getAttributeComponent().damage);
+			}
 		}
 
 	}
